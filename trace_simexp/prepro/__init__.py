@@ -1,4 +1,4 @@
-"""Module to preprocessed the input files and make spawned tracin
+"""Package to carry out preprocessing phase of the simulation experiment
 """
 from . import rescaled_design
 from . import tracin_template
