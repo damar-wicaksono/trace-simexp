@@ -13,12 +13,40 @@ def inp_to_dict(param_list_file, verbose=True, comment_char="#"):
     :returns: (list of dict) the parameter perturbation specification in a list
         of dictionary
     """
+    # the list of supported component type
+    components = ["pipe", "vessel", "power", "fill", "break"]
+
+    # the list of dictionary of parameters list
+    params_dict = []
 
     # Open and read list of parameters file
     with open(param_list_file, "rt") as params_file:
         for line in params_file.readlines():
             if not line.startswith(comment_char):
-                print(line.strip())
+                line = line.strip()
+                keyword = line.split()[1].lower()
+
+                if keyword == "spacer":
+                    # spacer grid data is specified, update params_dict
+                    parse_spacer(line, params_dict, verbose)
+
+                elif keyword == "matprop":
+                    # material properties data is specified, update params_dict
+                    parse_matprop(line, params_dict, verbose)
+
+                elif keyword =="senscoef":
+                    # sensitivity coefficient is specified, update params_dict
+                    parse_senscoef(line, params_dict, verbose)
+
+                elif keyword in components:
+                    # component parameter is specified, update params_dict
+                    parse_comp(line, params_dict, verbose)
+
+                else:
+                    raise NameError("*{}* component is not supported!"
+                                    .format(keyword))
+
+    return params_dict
 
 
 def parse_senscoef(line, params_dict, verbose=True):
@@ -31,7 +59,7 @@ def parse_senscoef(line, params_dict, verbose=True):
     :param verbose: (bool) terminal printing or not
     :returns: (list of dict) an updated params_dict with senscoef specification
     """
-    pass
+    print(line)
 
 
 def parse_spacer(line, params_dict, verbose=True):
@@ -44,7 +72,7 @@ def parse_spacer(line, params_dict, verbose=True):
     :param verbose: (bool) terminal printing or not
     :returns: (list of dict) an updated params_dict with spacer specification
     """
-    pass
+    print(line)
 
 
 def parse_matprop(line, params_dict, verbose=True):
@@ -57,7 +85,7 @@ def parse_matprop(line, params_dict, verbose=True):
     :param verbose: (bool) terminal printing or not
     :returns: (list of dict) an updated params_dict with matprop specification
     """
-    pass
+    print(line)
 
 
 def parse_comp(line, params_dict, verbose=True):
@@ -70,4 +98,4 @@ def parse_comp(line, params_dict, verbose=True):
     :param verbose: (bool) terminal printing or not
     :returns: (list of dict) an updated params_dict with comp specification
     """
-    pass
+    print(line)
