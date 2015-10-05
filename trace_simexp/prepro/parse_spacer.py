@@ -24,11 +24,11 @@ def parse_spacer(line, params_dict, verbose=True):
         "data_type": "spacer",
         "var_num": int(spacer_data[2]),
         "var_name": spacer_data[3].lower(),
-        "var_type": spacer_data[4],
+        "var_type": spacer_data[4].lower(),
         "var_mode": int(spacer_data[5]),
         "var_card": int(spacer_data[6]),
         "var_word": int(spacer_data[7]),
-        "var_dist": spacer_data[8],
+        "var_dist": spacer_data[8].lower(),
     }
     if spacer_dict["var_name"] == "spmatid":
         spacer_dict["var_par1"] = spacer_data[9].split(",")
