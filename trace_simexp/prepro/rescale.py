@@ -29,6 +29,33 @@ def uniform(quantile, min_val, max_val):
     return unif
 
 
+def discunif(quantile, choices):
+    r"""Rescale uniform random number according to a discrete unif distribution
+
+    :param quantile: (float) the sample taken from univariate distribution [0,1]
+    :param choices: (list of int) the choices of value
+    :return: (int) the choice picked based on the sampled quantile
+    """
+    if quantile > 1.0:
+        raise ValueError("{} is not a valid [0, 1] quantile" .format(quantile))
+    elif quantile < 0.0:
+        raise ValueError("{} is not a valid [0, 1] quantile" .format(quantile))
+    elif not isinstance(choices, list):
+        raise ValueError("{} is not a valid list of choices" .format(choices))
+    else:
+        num_choices = len(choices)
+        choice_odd = []
+        for i in range(1, num_choices):
+            choice_odd.append(i/float(num_choices))
+        for i, odd in enumerate(choice_odd):
+            if quantile < odd:
+                choice = choices[i]
+                break
+            else:
+                choice = choices[i+1]
+    return choice
+
+
 def loguniform(quantile, min_val, max_val):
     """Rescale uniform random number into a log-uniform distribution
 
