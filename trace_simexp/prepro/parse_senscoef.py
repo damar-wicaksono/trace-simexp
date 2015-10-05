@@ -22,10 +22,10 @@ def parse_senscoef(line, params_dict, verbose=True):
         "var_num": int(senscoef_data[2]),
         "var_name": None,
         "var_type": senscoef_data[4].lower(),
-        "var_mode": senscoef_data[5],
+        "var_mode": int(senscoef_data[5]),
         "var_card": None,
         "var_word": None,
-        "var_dist": senscoef_data[8],
+        "var_dist": senscoef_data[8].lower(),
         "var_par1": float(senscoef_data[9]),
         "var_par2": float(senscoef_data[10])
     }
@@ -62,7 +62,7 @@ def print_msg(param_dict):
     print("Parameter type: {}" .format(param_dict["var_type"]))
     print("Parameter perturbation mode: {} ({})"
           .format(param_dict["var_mode"],
-                  var_type_str(int(param_dict["var_mode"]))))
+                  var_type_str(param_dict["var_mode"])))
     print("Parameter distribution: {}" .format(param_dict["var_dist"]))
     print("1st distribution parameter: {:.3f}" .format(param_dict["var_par1"]))
     print("2nd distribution parameter: {:.3f}" .format(param_dict["var_par2"]))
@@ -70,8 +70,8 @@ def print_msg(param_dict):
 
 def var_type_str(var_type):
     if var_type == 1:
-        return "scalar, substitutive"
+        return "substitutive"
     elif var_type == 2:
-        return "scalar, additive"
+        return "additive"
     elif var_type == 3:
-        return "scalar, multiplicative"
+        return "multiplicative"
