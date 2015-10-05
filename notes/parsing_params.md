@@ -1,5 +1,28 @@
 # Parsing Input Parameters for Simulation Experiment (trace_simexp package)
 
+## General formats
+
+The *list of parameters file* contains the specification of perturbed parameters
+of a TRACE model specified by the user.
+In general, for each line, it contains the following information:
+
+  1. `enum`: the enumeration of the specified parameter in the list. The list
+      will be read as a list of python dictionary
+  2. `data_type`: is the type of parameters available to the user
+  3. `var_num`: the number of the parameters (typically a unique TRACE ID)
+  4. `var_name`: the name of the parameter
+  5. `var_type`: the type of the parameter, depends on the data type. e.g.,
+     `scalar`, `array`, `table`
+  6. `var_mode`: the mode of perturbation (i.e., substitutive, additive,
+     multiplicative)
+  7. `var_card`: the card of which the specific parameter to be perturbed is
+     located
+  8. `var_word`: the word in a card of which the specific parameter to be
+     perturbed is located
+  9. `var_dist`: the distribution of the perturb parameter
+ 10. `var_par1`: the 1st parameter of the distribution
+ 11. `var_par2`: then 2nd parameter of the distribution
+
 Several parameters in a TRACE model can be substituted with a random values
 for simulation experiment purpose.
 The parameters are classified into several categories or *data types*.
@@ -13,9 +36,10 @@ The currently supported *data types* are:
 The parameters that can be accessed for each of these different data types are
 of course differ. This difference will be explained in the following section:
 
-## General formats
-
 ## 1. Spacer Grid Parameter
+
+An example of spacer grid data specification int the TRACE input deck is shown
+below,
 
     ********************
     * Spacer Grid Data *
@@ -31,6 +55,16 @@ of course differ. This difference will be explained in the following section:
     *   height      strthick     spmatid
         0.045       0.001           2
 
+The definition of the parameters are the following
+
+| variable | unit | description |
+---------------------------------
+
+
+All the parameters characterizing the spacer grid are accessible from
+the list of parameters file. However, each of these parameters is perturbed
+**independently**.
+
 
 ## 2. Material Properties
 
@@ -42,6 +76,19 @@ properties are:
  - `cond`: the thermal conductivity
  - `cp`: the thermal capacity
  - `emis`: the emissivity
+
+  1. `enum`: the enumeration of perturbed model parameters in the list file
+  2. `data_type`: the type of perturbed model parameters (key == `spacer`)
+  3. `num`: the `gridid` identifying a unique spacer grid in the model)
+  4. `var_name`: the spacer grid parameter name (for completeness)
+  5. `var_type`: the `mode` of perturbation (`1 | 2 | 3`)
+  6. `var_card`: the card number of spacer grid specifications (`2 | 3`)
+  7. `var_word`: the word number of spacer grid specifications
+     (`1|2|3|4` if `var_card == 2` and
+      `1|2|3` if `var_card == 3`)
+  8. `var_dist`: distribution of the random variable
+  9. `var_par1`: the minimum or 1st parameter of the distribution
+ 10. `var_par2`: the maximum or 2nd parameter of the distribution
 
 ## 3. Sensitivity Coefficient
 
@@ -101,8 +148,19 @@ specified sensitivity coefficients:
  5. `var_type`: the `mode` of perturbation (`1 | 2 | 3`)
  6. `var_card`: **not used** (`-`)
  7. `var_word`: **not used** (`-`)
- 8. `dist`: distribution of the random variable
- 9. `min`: the minimum or 1st parameter of the distribution
- 10. `max`: the maximum or 2nd parameter of the distribution
+ 8. `var_dist`: distribution of the random variable
+ 9. `var_par1`: the minimum or 1st parameter of the distribution
+ 10. `var_par2`: the maximum or 2nd parameter of the distribution
 
 ## 4. Components parameter
+
+Parameters which are associated with a TRACE component are classified into
+three different categories:
+
+ 1. `scalar`: simple single value
+ 2. `table`: sets of values of different type, usually multiple lines without
+    continuation
+ 3. `array`: a set of values of the same type, usually written in multiple
+    lines with continuation
+
+ ## Specifying Distribution
