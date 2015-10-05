@@ -1,5 +1,6 @@
 """Module to parse list of parameters file and convert it into python dictionary
 """
+from .parse_spacer import parse_spacer
 
 __author__ = "Damar Wicaksono"
 
@@ -34,7 +35,7 @@ def inp_to_dict(param_list_file, verbose=True, comment_char="#"):
                     # material properties data is specified, update params_dict
                     parse_matprop(line, params_dict, verbose)
 
-                elif keyword =="senscoef":
+                elif keyword == "senscoef":
                     # sensitivity coefficient is specified, update params_dict
                     parse_senscoef(line, params_dict, verbose)
 
@@ -74,7 +75,7 @@ def parse_senscoef(line, params_dict, verbose=True):
     params_dict.append(senscoef_dict)
 
     if verbose:
-        print("***")
+        print("***{:2d}***" .format(int(senscoef_data[0])))
         print("Sensitivity coefficients with ID *{}* is specified"
               .format(senscoef_dict["num"]))
         print("Parameter distribution is *{}*"
@@ -83,19 +84,6 @@ def parse_senscoef(line, params_dict, verbose=True):
               .format(senscoef_dict["var_par1"]))
         print("2nd distribution parameter: {:.3f}"
               .format(senscoef_dict["var_par2"]))
-
-
-def parse_spacer(line, params_dict, verbose=True):
-    r"""Parse spacer grid specification from a list of parameters file
-
-    note that the input argument `params_dict` is mutable and will be modified
-
-    :param line: (list of str) a line read from list of parameters file
-    :param params_dict: (list of dict) the list of parameters in a dictionary
-    :param verbose: (bool) terminal printing or not
-    :returns: (list of dict) an updated params_dict with spacer specification
-    """
-    print(line)
 
 
 def parse_matprop(line, params_dict, verbose=True):
