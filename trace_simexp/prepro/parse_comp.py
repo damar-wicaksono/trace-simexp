@@ -22,13 +22,13 @@ def parse_comp(line, params_dict, verbose=True):
     comp_dict = {
         "enum": int(comp_data[0]),
         "data_type": comp_data[1],
-        "var_num": comp_data[2],
-        "var_name": comp_data[3],
-        "var_type": comp_data[4],
+        "var_num": int(comp_data[2]),
+        "var_name": comp_data[3].lower(),
+        "var_type": comp_data[4].lower(),
         "var_mode": int(comp_data[5]),
         "var_card": int(comp_data[6]),
         "var_word": int(comp_data[7]),
-        "var_dist": comp_data[8],
+        "var_dist": comp_data[8].lower(),
         "var_par1": float(comp_data[9]),
         "var_par2": float(comp_data[10])
     }
