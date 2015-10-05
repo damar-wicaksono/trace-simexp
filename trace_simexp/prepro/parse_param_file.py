@@ -59,7 +59,30 @@ def parse_senscoef(line, params_dict, verbose=True):
     :param verbose: (bool) terminal printing or not
     :returns: (list of dict) an updated params_dict with senscoef specification
     """
-    print(line)
+    senscoef_data = line.split()
+    senscoef_dict = {
+        "data_type": "senscoef",
+        "num": senscoef_data[2],
+        "var_name": None,
+        "var_type": senscoef_data[4],
+        "var_card": None,
+        "var_word": None,
+        "var_dist": senscoef_data[7],
+        "var_par1": float(senscoef_data[8]),
+        "var_par2": float(senscoef_data[9])
+    }
+    params_dict.append(senscoef_dict)
+
+    if verbose:
+        print("***")
+        print("Sensitivity coefficients with ID *{}* is specified"
+              .format(senscoef_dict["num"]))
+        print("Parameter distribution is *{}*"
+              .format(senscoef_dict["var_dist"]))
+        print("1st distribution parameter: {:.3f}"
+              .format(senscoef_dict["var_par1"]))
+        print("2nd distribution parameter: {:.3f}"
+              .format(senscoef_dict["var_par2"]))
 
 
 def parse_spacer(line, params_dict, verbose=True):
