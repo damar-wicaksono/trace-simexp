@@ -1,6 +1,9 @@
 """Module to parse list of parameters file and convert it into python dictionary
 """
+from .parse_senscoef import parse_senscoef
+from .parse_matprop import parse_matprop
 from .parse_spacer import parse_spacer
+from .parse_comp import parse_comp
 
 __author__ = "Damar Wicaksono"
 
@@ -44,69 +47,9 @@ def inp_to_dict(param_list_file, verbose=True, comment_char="#"):
                     parse_comp(line, params_dict, verbose)
 
                 else:
-                    raise NameError("*{}* component is not supported!"
+                    raise NameError("*{}* data type is not supported!"
                                     .format(keyword))
 
     return params_dict
 
 
-def parse_senscoef(line, params_dict, verbose=True):
-    r"""Parse sensitivity coefficient specification from list of parameters file
-
-    note that the input argument `params_dict` is mutable and will be modified
-
-    :param line: (list of str) a line read from list of parameters file
-    :param params_dict: (list of dict) the list of parameters in a dictionary
-    :param verbose: (bool) terminal printing or not
-    :returns: (list of dict) an updated params_dict with senscoef specification
-    """
-    senscoef_data = line.split()
-    senscoef_dict = {
-        "data_type": "senscoef",
-        "num": senscoef_data[2],
-        "var_name": None,
-        "var_type": senscoef_data[4],
-        "var_card": None,
-        "var_word": None,
-        "var_dist": senscoef_data[7],
-        "var_par1": float(senscoef_data[8]),
-        "var_par2": float(senscoef_data[9])
-    }
-    params_dict.append(senscoef_dict)
-
-    if verbose:
-        print("***{:2d}***" .format(int(senscoef_data[0])))
-        print("Sensitivity coefficients with ID *{}* is specified"
-              .format(senscoef_dict["num"]))
-        print("Parameter distribution is *{}*"
-              .format(senscoef_dict["var_dist"]))
-        print("1st distribution parameter: {:.3f}"
-              .format(senscoef_dict["var_par1"]))
-        print("2nd distribution parameter: {:.3f}"
-              .format(senscoef_dict["var_par2"]))
-
-
-def parse_matprop(line, params_dict, verbose=True):
-    r"""Parse material property specification from a list of parameters file
-
-    note that the input argument `params_dict` is mutable and will be modified
-
-    :param line: (list of str) a line read from list of parameters file
-    :param params_dict: (list of dict) the list of parameters in a dictionary
-    :param verbose: (bool) terminal printing or not
-    :returns: (list of dict) an updated params_dict with matprop specification
-    """
-    print(line)
-
-
-def parse_comp(line, params_dict, verbose=True):
-    r"""Parse component parameter specification from a list of parameters file
-
-    note that the input argument `params_dict` is mutable and will be modified
-
-    :param line: (list of str) a line read from list of parameters file
-    :param params_dict: (list of dict) the list of parameters in a dictionary
-    :param verbose: (bool) terminal printing or not
-    :returns: (list of dict) an updated params_dict with comp specification
-    """
-    print(line)
