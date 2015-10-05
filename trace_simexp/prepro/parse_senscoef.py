@@ -46,11 +46,6 @@ def check_senscoef(senscoef_dict):
 
     :param senscoef_data: (list of str) list of sensivitivity coefficient data
     """
-    # Check the enumeration
-    if not isinstance(senscoef_dict["enum"], int):
-        raise TypeError("Enumeration *{}* is not an integer!"
-                        .format(senscoef_dict[0]))
-
     # Check the type
     if senscoef_dict["var_type"] != "scalar":
         raise TypeError("Only scalar type is supported for senscoef!")
