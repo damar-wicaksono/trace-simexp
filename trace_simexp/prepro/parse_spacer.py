@@ -157,8 +157,8 @@ def check_spacer(spacer_data):
 
 def var_type_str(var_type):
     if var_type == 1:
-        return "scalar, substitutive"
+        return "substitutive"
     elif var_type == 2:
-        return "scalar, additive"
+        return "additive"
     elif var_type == 3:
-        return "scalar, multiplicative"
+        return "multiplicative"
