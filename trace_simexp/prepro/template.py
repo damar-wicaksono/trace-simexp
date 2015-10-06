@@ -34,7 +34,6 @@ def get_nominal_values(tracin_file, params_dict):
     from .template_parser import tracin_matprop
     from .template_parser import tracin_comp
 
-
     # Read file and put the lines into python list (and strip them directly)
     with open(tracin_file, "rt") as tracin:
         tracin_lines = tracin.read().splitlines()
