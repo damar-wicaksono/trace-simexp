@@ -45,9 +45,9 @@ def get_nominal_values(tracin_file, params_dict):
 
         if param["data_type"] == "matprop":
             # material property specified, look for it in the tracin
-            params_dict[num]["var_val"] = tracin_matprop.get_nom_val(tracin_lines,
-                                                                     param)
-            
+            params_dict[num]["var_val"] = tracin_matprop.get_nom_val(
+                    tracin_lines, param)
+
         if param["data_type"] == "senscoef":
             # sensitivity coefficient specified, look for it in the tracin
             params_dict[num]["var_val"] = tracin_senscoef.get_nom_val(tracin_lines,
