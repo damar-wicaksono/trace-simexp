@@ -1,9 +1,9 @@
 """Module to parse list of parameters file and convert it into python dictionary
 """
-from .parse_senscoef import parse_senscoef
-from .parse_matprop import parse_matprop
-from .parse_spacer import parse_spacer
-from .parse_comp import parse_comp
+from .paramfile_parser import parser_senscoef
+from .paramfile_parser import parser_matprop
+from .paramfile_parser import parser_spacer
+from .paramfile_parser import parser_comp
 
 __author__ = "Damar Wicaksono"
 
@@ -28,23 +28,24 @@ def inp_to_dict(param_list_file, verbose=True, comment_char="#"):
         for line in params_file.readlines():
             if not line.startswith(comment_char):
                 line = line.strip()
+                # the keyword for data type is the second entry in each line
                 keyword = line.split()[1].lower()
 
                 if keyword == "spacer":
                     # spacer grid data is specified, update params_dict
-                    parse_spacer(line, params_dict, verbose)
+                    parser_spacer.parse(line, params_dict, verbose)
 
                 elif keyword == "matprop":
                     # material properties data is specified, update params_dict
-                    parse_matprop(line, params_dict, verbose)
+                    parser_matprop.parse(line, params_dict, verbose)
 
                 elif keyword == "senscoef":
                     # sensitivity coefficient is specified, update params_dict
-                    parse_senscoef(line, params_dict, verbose)
+                    parser_senscoef.parse(line, params_dict, verbose)
 
                 elif keyword in components:
                     # component parameter is specified, update params_dict
-                    parse_comp(line, params_dict, verbose)
+                    parser_comp.parse(line, params_dict, verbose)
 
                 else:
                     raise NameError("*{}* data type is not supported!"
