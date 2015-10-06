@@ -5,7 +5,7 @@ __author__ = "Damar Wicaksono"
 
 
 def get_nom_val(tracin_lines, param_dict):
-    r"""Get the nominal values of sensitivity coefficient from tracin base
+    r"""Get the nominal value of sensitivity coefficient from tracin base
 
     :param tracin_lines: (list of str) the tracin base in python list
     :param param_dict: (dict) the dictionary of senscoef parameter

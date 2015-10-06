@@ -5,7 +5,7 @@ __author__ = "Damar Wicaksono"
 
 
 def get_nom_val(tracin_lines, param_dict):
-    r"""Get nominal values of spacer grid parameters from the tracin base
+    r"""Get nominal value of spacer grid parameters from the tracin base
 
     :param tracin_lines: (list of str) the tracin read into python as list
     :param param_dict: (dict) dictionary of the parameter to be updated
