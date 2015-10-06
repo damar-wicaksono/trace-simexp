@@ -27,12 +27,26 @@ def get_nominal_values(tracin_file, params_dict):
     :parameter tracin_file: (str) the fullname of the base tracin
     :parameter params_dict: (list of dict) list of parameters in dictionaries
     """
+    from .template_parser import tracin_spacer
+    from .template_parser import tracin_senscoef
+
     # Read file and put the lines into python list (and strip them directly)
     with open(tracin_file, "rt") as tracin:
         tracin_lines = tracin.read().splitlines()
 
-    # Loop over line
-    for tracin_line in tracin_lines:
-        print(tracin_line)
+    # Loop over all parameters specified in params_dict
+    for num, param in enumerate(params_dict):
 
-    # if keyword is found, call data-type-specific parser to update the dicts
+        if param["data_type"] == "spacer":
+            # spacer specified, look for it in the tracin
+            params_dict[num]["var_val"] = tracin_spacer.get_nom_val(tracin_lines,
+                                                                    param)
+
+        # material property specified, look for it in the tracin
+
+        if param["data_type"] == "senscoef":
+            # sensitivity coefficient specified, look for it in the tracin
+            params_dict[num]["var_val"] = tracin_senscoef.get_nom_val(tracin_lines,
+                                                                      param)
+
+        # component parameters specified, look for it in the tracin
