@@ -59,7 +59,7 @@ def read_table(tracin_lines, param_dict):
                         col_num = param_dict["var_card"] + 2 # offset column
                         val = tracin_lines[line_num+offset].split()[col_num]
                         if param_dict["var_card"] != 4:
-                            # no continuation line
+                            # no continuation , matprop definitely has 5 columns
                             nom_val.append(float(val))
                         else:
                             # last column has a continuation symbol, skip it
