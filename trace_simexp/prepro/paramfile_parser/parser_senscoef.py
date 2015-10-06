@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def parse_senscoef(line, params_dict, verbose=True):
+def parse(line, params_dict, verbose=True):
     r"""Parse sensitivity coefficient specification from list of parameters file
 
     note that the input argument `params_dict` is mutable and will be modified
