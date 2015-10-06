@@ -5,6 +5,8 @@ from .paramfile import inp_to_dict
 
 __author__ = "Damar Wicaksono"
 
+# List of supported components
+COMPONENTS = ["pipe", "vessel", "power", "fill", "break"]
 
 def create(param_list_file, tracin_base_file, tracin_temp_file):
     r"""Procedure to create tracin template file
@@ -30,6 +32,8 @@ def get_nominal_values(tracin_file, params_dict):
     from .template_parser import tracin_spacer
     from .template_parser import tracin_senscoef
     from .template_parser import tracin_matprop
+    from .template_parser import tracin_comp
+
 
     # Read file and put the lines into python list (and strip them directly)
     with open(tracin_file, "rt") as tracin:
@@ -40,17 +44,27 @@ def get_nominal_values(tracin_file, params_dict):
 
         if param["data_type"] == "spacer":
             # spacer specified, look for it in the tracin
-            params_dict[num]["var_val"] = tracin_spacer.get_nom_val(tracin_lines,
-                                                                    param)
+            params_dict[num]["var_val"] = tracin_spacer.get_nom_val(
+                tracin_lines, param
+            )
 
-        if param["data_type"] == "matprop":
+        elif param["data_type"] == "matprop":
             # material property specified, look for it in the tracin
             params_dict[num]["var_val"] = tracin_matprop.get_nom_val(
-                    tracin_lines, param)
+                    tracin_lines, param
+            )
 
-        if param["data_type"] == "senscoef":
+        elif param["data_type"] == "senscoef":
             # sensitivity coefficient specified, look for it in the tracin
-            params_dict[num]["var_val"] = tracin_senscoef.get_nom_val(tracin_lines,
-                                                                      param)
+            params_dict[num]["var_val"] = tracin_senscoef.get_nom_val(
+                tracin_lines, param
+            )
 
         # component parameters specified, look for it in the tracin
+        elif param["data_type"] in COMPONENTS:
+            params_dict[num]["var_val"] = tracin_comp.get_nom_val(
+                tracin_lines, param
+            )
+
+        else:
+            raise TypeError("Not a recognized data type")
