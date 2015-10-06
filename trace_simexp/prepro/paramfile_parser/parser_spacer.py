@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def parse_spacer(line, params_dict, verbose=True):
+def parse(line, params_dict, verbose=True):
     r"""Parse spacer grid specification from a list of parameters file
 
     note that the input argument `params_dict` is mutable and will be modified
