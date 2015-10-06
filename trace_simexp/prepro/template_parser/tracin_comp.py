@@ -41,22 +41,25 @@ def read_scalar(tracin_lines, param_dict):
     # loop over lines
     for line_num, tracin_line in enumerate(tracin_lines):
         if tracin_line.startswith(param_dict["data_type"]):
-            # "var_card" specify the line
-            offset = 2 * param_dict["var_card"] - 2
-            # "var_word" specify the element
-            word = param_dict["var_word"] - 1
-            # grab the nominal value
-            nom_val = tracin_lines[line_num+offset].split()[word]
-            # check what kind of numeric is nom_val
-            if "." in nom_val:
-                # float
-                nom_val = float(nom_val)
-            elif "E" in nom_val or "e" in nom_val:
-                # float in scientific notation
-                nom_val = float(nom_val)
-            else:
-                # integer
-                nom_val = int(nom_val)
+            # Check if the number corresponds to what specified
+            if str(param_dict["var_num"]) in tracin_line:
+                # "var_card" specify the line
+                offset = 2 * param_dict["var_card"] - 2
+                # "var_word" specify the element
+                word = param_dict["var_word"] - 1
+                # grab the nominal value
+                nom_val = tracin_lines[line_num+offset].split()[word]
+
+                # check what kind of numeric is nom_val
+                if "." in nom_val:
+                    # float
+                    nom_val = float(nom_val)
+                elif "E" in nom_val or "e" in nom_val:
+                    # float in scientific notation
+                    nom_val = float(nom_val)
+                else:
+                    # integer
+                    nom_val = int(nom_val)
     return nom_val
 
 
@@ -72,10 +75,35 @@ def read_table(tracin_lines, param_dict):
     :param param_dict: (dict) the dictionary of the comp parameter
     :return: (list) the nominal values of the comp parameter
     """
+    import re
+
+    nom_val = []
+
+    # loop over lines
     for line_num, tracin_line in enumerate(tracin_lines):
         if tracin_line.startswith(param_dict["data_type"]):
-            print(tracin_line)
-    return None
+            # Check if the number corresponds to what specified
+            if str(param_dict["var_num"]) in tracin_line:
+                offset = 0
+                while True:
+                    # loop to go the line where the parameter is first specified
+                    if param_dict["var_name"] in tracin_lines[line_num+offset]:
+                        break
+                    else:
+                        pass
+                    offset += 1
+                while True:
+                    # loop to read all the available nominal values
+                    if param_dict["var_name"] not in tracin_lines[line_num+offset]:
+                        break
+                    else:
+                        # grab the line and take only numerical values
+                        vals = re.findall(r"\d+[\.]?\d*[Ee]?\d+",
+                                          tracin_lines[line_num+offset])
+                        # grab the value according to the "var_word"
+                        nom_val.append(float(vals[param_dict["var_card"]-1]))
+                    offset += 1
+    return nom_val
 
 
 def read_array(tracin_lines, param_dict):
