@@ -19,7 +19,7 @@ def parse(line, params_dict, verbose=True):
     matprop_dict = {
         "enum": int(matprop_data[0]),
         "data_type": "matprop",
-        "num": int(matprop_data[2]),
+        "var_num": int(matprop_data[2]),
         "var_name": matprop_data[3].lower(),
         "var_type": matprop_data[4].lower(),
         "var_mode": int(matprop_data[5]),
@@ -44,7 +44,7 @@ def print_msg(matprop_dict):
     """
     print("***{:2d}***" .format(matprop_dict["enum"]))
     print("Material ID *{}* property *{}* (Card *{}*)"
-          .format(matprop_dict["num"],
+          .format(matprop_dict["var_num"],
                   matprop_dict["var_name"],
                   matprop_dict["var_card"]))
     print("Parameter type: {}" .format(matprop_dict["var_type"]))
