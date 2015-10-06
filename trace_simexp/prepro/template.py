@@ -29,6 +29,7 @@ def get_nominal_values(tracin_file, params_dict):
     """
     from .template_parser import tracin_spacer
     from .template_parser import tracin_senscoef
+    from .template_parser import tracin_matprop
 
     # Read file and put the lines into python list (and strip them directly)
     with open(tracin_file, "rt") as tracin:
@@ -42,8 +43,11 @@ def get_nominal_values(tracin_file, params_dict):
             params_dict[num]["var_val"] = tracin_spacer.get_nom_val(tracin_lines,
                                                                     param)
 
-        # material property specified, look for it in the tracin
-
+        if param["data_type"] == "matprop":
+            # material property specified, look for it in the tracin
+            params_dict[num]["var_val"] = tracin_matprop.get_nom_val(tracin_lines,
+                                                                     param)
+            
         if param["data_type"] == "senscoef":
             # sensitivity coefficient specified, look for it in the tracin
             params_dict[num]["var_val"] = tracin_senscoef.get_nom_val(tracin_lines,
