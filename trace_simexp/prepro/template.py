@@ -8,15 +8,29 @@ __author__ = "Damar Wicaksono"
 # List of supported components
 COMPONENTS = ["pipe", "vessel", "power", "fill", "break"]
 
-def create(param_list_file, tracin_base_file, tracin_temp_file):
-    r"""Procedure to create tracin template file
 
-    :param param_list_file: (str) the fullname of list of parameters file
-    :param tracin_base_file: (str) the fullname of base case tracin file
-    :param tracin_temp_file: (str) the fullname of template tracin file to be
+def create(params_dict, tracin_file):
+    r"""Procedure to create tracin template string
+
+    The string contains `keys` to be substituted with values based on the
+    design matrix.
+
+    :param params_dict: (str) the fullname of list of parameters file
+    :param tracin_file: (str) the fullname of base case tracin file
         produced
+    :returns: (str) the template of tracin in string format
     """
-    params_dict = inp_to_dict(param_list_file, verbose=False)
+
+    # Read tracin base case file
+    with open(tracin_file, "rt") as tracin:
+        tracin_lines = tracin.read().splitlines()
+
+    # Do something here to make the template
+
+    # Join the list of strings again with newline
+    tracin_lines = "\n".join(tracin_lines)
+
+    return tracin_lines
 
 
 def get_nominal_values(tracin_file, params_dict):
