@@ -67,7 +67,7 @@ def put_key(tracin_lines, param_dict):
                 # Replace the particular word with keys
                 card = tracin_lines[line_num+offset].split()
                 card[word] = "${}_{}" .format(param_dict["data_type"],
-                                                 param_dict["enum"])
+                                              param_dict["enum"])
                 card = "".join("%14s" %k for k in card)
                 # replace the line of tracin with the new one
                 tracin_lines[line_num+offset] = card
