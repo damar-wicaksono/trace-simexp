@@ -43,10 +43,15 @@ def get_nom_val(tracin_lines, param_dict):
 
 
 def put_key(tracin_lines, param_dict):
-    r"""Procedure to replace the nominal value of grid parameters with key
+    r"""Function to replace the nominal value of grid parameters with key
 
     the key is used for templating purpose and will later be substituted with
     sampled value
+
+    :param tracin_lines: (list of str) the base tracin as a list of string
+    :param param_dict: (dict) the dictionary of grid parameters
+    :returns: (list of str) the base tracin with line(s) replaced with key
+        according to the grid parameters specification
     """
     import re
 
