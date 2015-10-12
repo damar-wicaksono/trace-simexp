@@ -60,6 +60,9 @@ def read_scalar(tracin_lines, param_dict):
                 else:
                     # integer
                     nom_val = int(nom_val)
+
+                break
+
     return nom_val
 
 
@@ -119,3 +122,58 @@ def read_array(tracin_lines, param_dict):
     """
     # TODO: Complete read_array function()
     return None
+
+
+def put_key(tracin_lines, param_dict):
+    r"""
+
+    :param tracin_lines:
+    :param param_dict:
+    :return:
+    """
+    # select the type of variable
+    if param_dict["var_type"] == "scalar":
+        tracin_lines = edit_scalar(tracin_lines, param_dict)
+    #elif param_dict["var_type"] == "table":
+     #   tracin_lines = edit_table(tracin_lines, param_dict)
+    #elif param_dict["var_type"] == "array":
+     #   tracin_lines = edit_array(tracin_lines, param_dict)
+    #else:
+     #   raise TypeError("Component parameter variable type not recognized!")
+
+    return tracin_lines
+
+
+def edit_scalar(tracin_lines, param_dict):
+    r"""Replace the nominal value of scalar-type component parameters with key
+
+    Scalar-type component parameters are straightforward. Their location is
+    directly defined by the card and word identifiers.
+
+    :param tracin_lines: (list of str) the tracin base as a list
+    :param param_dict: (dict) the dictionary of the comp parameter
+    :returns: (list of str) the modified base tracin
+    """
+    nom_val = None
+
+    # loop over lines
+    for line_num, tracin_line in enumerate(tracin_lines):
+        if tracin_line.startswith(param_dict["data_type"]):
+            # Check if the number corresponds to what specified
+            if str(param_dict["var_num"]) in tracin_line:
+                # "var_card" specify the line, grab the card
+                offset = 2 * param_dict["var_card"] - 2
+                card = tracin_lines[line_num+offset].split()
+                # "var_word" specify the element
+                word = param_dict["var_word"] - 1
+                # Replace the word in the card
+                card[word] = "${}_{}" .format(param_dict["data_type"],
+                                              param_dict["enum"])
+                # concatenate the list of string to remake the card
+                card = "".join("%14s" % k for k in card)
+                # replace the input with modified card
+                tracin_lines[line_num+offset] = card
+
+                break
+
+    return tracin_lines

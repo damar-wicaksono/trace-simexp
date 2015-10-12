@@ -24,6 +24,7 @@ def create(params_dict, tracin_file):
 
     from .template_parser import tracin_spacer
     from .template_parser import tracin_senscoef
+    from .template_parser import tracin_comp
 
     # Read tracin base case file
     with open(tracin_file, "rt") as tracin:
@@ -40,6 +41,10 @@ def create(params_dict, tracin_file):
         if param["data_type"] == "senscoef":
             # spacer specified, look for it in the tracin
             tracin_tmp_lines = tracin_senscoef.put_key(tracin_tmp_lines, param)
+
+        if param["data_type"] in COMPONENTS:
+            # spacer specified, look for it in the tracin
+            tracin_tmp_lines = tracin_comp.put_key(tracin_tmp_lines, param)
 
     # Join the list of strings again with newline
     tracin_tmp_lines = " \n".join(tracin_lines)
