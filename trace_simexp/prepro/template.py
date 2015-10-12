@@ -25,6 +25,7 @@ def create(params_dict, tracin_file):
     from .template_parser import tracin_spacer
     from .template_parser import tracin_senscoef
     from .template_parser import tracin_comp
+    from .template_parser import tracin_matprop
 
     # Read tracin base case file
     with open(tracin_file, "rt") as tracin:
@@ -37,6 +38,10 @@ def create(params_dict, tracin_file):
         if param["data_type"] == "spacer":
             # spacer specified, look for it in the tracin
             tracin_tmp_lines = tracin_spacer.put_key(tracin_tmp_lines, param)
+
+        elif param["data_type"] == "matprop":
+            # material property specified, look for it in the tracin
+            tracin_tmp_lines = tracin_matprop.put_key(tracin_lines, param)
 
         if param["data_type"] == "senscoef":
             # spacer specified, look for it in the tracin
