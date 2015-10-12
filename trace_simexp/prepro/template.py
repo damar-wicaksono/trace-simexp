@@ -18,19 +18,33 @@ def create(params_dict, tracin_file):
     :param params_dict: (str) the fullname of list of parameters file
     :param tracin_file: (str) the fullname of base case tracin file
         produced
-    :returns: (str) the template of tracin in string format
+    :returns: (str template) the template of tracin in string format
     """
+    import string
+
+    from .template_parser import tracin_spacer
+    from .template_parser import tracin_senscoef
 
     # Read tracin base case file
     with open(tracin_file, "rt") as tracin:
         tracin_lines = tracin.read().splitlines()
 
+    tracin_tmp_lines = tracin_lines
     # Do something here to make the template
+    for num, param in enumerate(params_dict):
+
+        if param["data_type"] == "spacer":
+            # spacer specified, look for it in the tracin
+            tracin_tmp_lines = tracin_spacer.put_key(tracin_tmp_lines, param)
+
+        if param["data_type"] == "senscoef":
+            # spacer specified, look for it in the tracin
+            tracin_tmp_lines = tracin_senscoef.put_key(tracin_tmp_lines, param)
 
     # Join the list of strings again with newline
-    tracin_lines = "\n".join(tracin_lines)
+    tracin_tmp_lines = " \n".join(tracin_lines)
 
-    return tracin_lines
+    return string.Template(tracin_tmp_lines)
 
 
 def get_nominal_values(tracin_file, params_dict):
