@@ -106,6 +106,8 @@ def read_table(tracin_lines, param_dict):
                         # grab the value according to the "var_word"
                         nom_val.append(float(vals[param_dict["var_card"]-1]))
                     offset += 1
+                break
+
     return nom_val
 
 
@@ -134,12 +136,12 @@ def put_key(tracin_lines, param_dict):
     # select the type of variable
     if param_dict["var_type"] == "scalar":
         tracin_lines = edit_scalar(tracin_lines, param_dict)
-    #elif param_dict["var_type"] == "table":
-     #   tracin_lines = edit_table(tracin_lines, param_dict)
-    #elif param_dict["var_type"] == "array":
-     #   tracin_lines = edit_array(tracin_lines, param_dict)
-    #else:
-     #   raise TypeError("Component parameter variable type not recognized!")
+    elif param_dict["var_type"] == "table":
+       tracin_lines = edit_table(tracin_lines, param_dict)
+    elif param_dict["var_type"] == "array":
+       tracin_lines = edit_array(tracin_lines, param_dict)
+    else:
+       raise TypeError("Component parameter variable type not recognized!")
 
     return tracin_lines
 
@@ -152,7 +154,8 @@ def edit_scalar(tracin_lines, param_dict):
 
     :param tracin_lines: (list of str) the tracin base as a list
     :param param_dict: (dict) the dictionary of the comp parameter
-    :returns: (list of str) the modified base tracin
+    :returns: (list of str) the modified base tracin with key for the parameter
+        as specified by param_dict
     """
     nom_val = None
 
@@ -177,3 +180,78 @@ def edit_scalar(tracin_lines, param_dict):
                 break
 
     return tracin_lines
+
+
+def edit_table(tracin_lines, param_dict):
+    r"""Replace the nominal values of table-type component parameters with keys
+
+    :param tracin_lines: (list of str) the base tracin as a list of string
+    :param param_dict: (dict) the dictionary of table-type comp. parameter
+    :return: (list of str) the modified base tracin with relevant nominal
+        parameter values replaced with keys
+    """
+    import re
+
+    # loop over lines
+    for line_num, tracin_line in enumerate(tracin_lines):
+        if tracin_line.startswith(param_dict["data_type"]):
+            # Check if the number corresponds to what specified
+            if str(param_dict["var_num"]) in tracin_line:
+                i = 1 # table multiple values identifier
+                offset = 0
+                while True:
+                    # loop to go the line where the parameter is first specified
+                    if param_dict["var_name"] in tracin_lines[line_num+offset]:
+                        break
+                    else:
+                        pass
+                    offset += 1
+                while True:
+                    # loop to replace all the available nominal values
+                    if param_dict["var_name"] not in tracin_lines[line_num+offset]:
+                        break
+                    else:
+                        # grab the comment in the line
+                        comment = re.findall(r"\*\s*\w*\s*\*",
+                                             tracin_lines[line_num+offset])[0]
+                        # grab the line and take only numerical values
+                        vals = re.findall(r"\d+[\.]?\d*[Ee]?\d+",
+                                          tracin_lines[line_num+offset])
+                        # grab the continuation character
+                        cont = re.findall(r".$",
+                                          tracin_lines[line_num+offset])[0]
+                        # Create key, enclosed because of the continuation char
+                        # three-value key due to enumeration of tabular values
+                        key = "${{{}_{}_{}}}" .format(param_dict["data_type"],
+                                                  param_dict["enum"],
+                                                  i)
+                        # replace the value according to the "var_word" w/ key
+                        vals[param_dict["var_card"]-1] = key
+                        vals = "".join("%14s" % k for k in vals)
+
+                        # Replace the line with modified line
+                        tracin_lines[line_num+offset] = "{} {}{}" .format(
+                            comment, vals, cont
+                        )
+
+                    i += 1
+                    offset += 1
+
+                break
+
+    return tracin_lines
+
+
+def edit_array(tracin_lines, param_dict):
+    r"""Get the nominal values of array-type component parameters
+
+    Array time simply means that all values are of single type, not a set of
+    types (e.g., time - power pair). Initial fluid velocity in a pipe is an
+    array type variable.
+
+    :param tracin_lines: (list of str) the tracin base as a list
+    :param param_dict: (dict) the dictionary of the comp parameter
+    :return: (list) the nominal values of the comp parameter
+    """
+    # TODO: Complete edit_array function()
+    return None
