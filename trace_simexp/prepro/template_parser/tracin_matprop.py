@@ -7,6 +7,7 @@ __author__ = "Damar Wicaksono"
 MATPROP_TRACIN_KEY = "User Defined Material"
 MATPROP_TABLE_KEY = "prptb"
 
+
 def get_nom_val(tracin_lines, param_dict):
     r"""Get the nominal value of material property parameter from tracin base
 
@@ -136,8 +137,8 @@ def edit_table(tracin_lines, param_dict):
                         # Create key, enclosed because of the continuation char
                         # three-value key due to enumeration of tabular values
                         key = "${{{}_{}_{}}}" .format(param_dict["var_name"],
-                                                  param_dict["enum"],
-                                                  i)
+                                                      param_dict["enum"],
+                                                      i)
                         # Replace the nominal value with key
                         col_num = param_dict["var_card"] + 2 # offset column
                         card[col_num] = key
