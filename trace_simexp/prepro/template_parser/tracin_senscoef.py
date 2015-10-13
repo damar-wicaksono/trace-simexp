@@ -44,8 +44,9 @@ def put_key(tracin_lines, param_dict):
             # the sensitivity coefficient identifier is the beginning of line
             card = tracin_line.split()
             # Create the key and replace the word in the card
-            card[2] = "${}_{}" .format(param_dict["data_type"],
-                                       param_dict["var_num"])
+            word = 2 # the parameter values always located as the 3rd values
+            card[word] = "${}_{}" .format(param_dict["data_type"],
+                                          param_dict["enum"])
             # Sensitivity coefficient always have 3 cards
             card = "{:<8s}{:1s}{:>16s} " .format(card[0], card[1], card[2])
             # replace the line in tracin with the modified line
