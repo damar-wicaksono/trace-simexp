@@ -27,7 +27,8 @@ def parse(line, params_dict, verbose=True):
         "var_word": int(matprop_data[7]),
         "var_dist": matprop_data[8].lower(),
         "var_par1": float(matprop_data[9]),
-        "var_par2": float(matprop_data[10])
+        "var_par2": float(matprop_data[10]),
+        "str_fmt": matprop_data[11]
     }
 
     # Append the new dictionary to the current list

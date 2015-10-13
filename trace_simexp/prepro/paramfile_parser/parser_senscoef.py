@@ -27,7 +27,8 @@ def parse(line, params_dict, verbose=True):
         "var_word": None,
         "var_dist": senscoef_data[8].lower(),
         "var_par1": float(senscoef_data[9]),
-        "var_par2": float(senscoef_data[10])
+        "var_par2": float(senscoef_data[10]),
+        "str_fmt": senscoef_data[11]
     }
 
     # Check the validity

@@ -33,9 +33,11 @@ def parse(line, params_dict, verbose=True):
     if spacer_dict["var_name"] == "spmatid":
         spacer_dict["var_par1"] = spacer_data[9].split(",")
         spacer_dict["var_par2"] = None
+        spacer_dict["str_fmt"] = "%14d"
     else:
         spacer_dict["var_par1"] = float(spacer_data[9])
         spacer_dict["var_par2"] = float(spacer_data[10])
+        spacer_dict["str_fmt"] = spacer_data[11]
 
     # Append the new dictionary to the current list
     params_dict.append(spacer_dict)
@@ -77,7 +79,7 @@ def check_spacer(spacer_data):
     :param spacer_data: (list) list of specifications for spacer grid data
     """
     # Check the number of parameters in the data
-    num_params = 11
+    num_params = 12
     if spacer_data[3].lower() == "spmatid":
         if len(spacer_data) != num_params - 1:
             raise TypeError("The amount of information specified does not match."

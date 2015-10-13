@@ -30,7 +30,8 @@ def parse(line, params_dict, verbose=True):
         "var_word": int(comp_data[7]),
         "var_dist": comp_data[8].lower(),
         "var_par1": float(comp_data[9]),
-        "var_par2": float(comp_data[10])
+        "var_par2": float(comp_data[10]),
+        "str_fmt": comp_data[11]
     }
 
     # Append the new dictionary to the current list
