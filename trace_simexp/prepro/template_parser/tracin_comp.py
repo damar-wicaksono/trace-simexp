@@ -197,7 +197,7 @@ def edit_table(tracin_lines, param_dict):
         if tracin_line.startswith(param_dict["data_type"]):
             # Check if the number corresponds to what specified
             if str(param_dict["var_num"]) in tracin_line:
-                i = 1 # table multiple values identifier
+                i = 0   # table multiple values identifier
                 offset = 0
                 while True:
                     # loop to go the line where the parameter is first specified
@@ -222,9 +222,9 @@ def edit_table(tracin_lines, param_dict):
                                           tracin_lines[line_num+offset])[0]
                         # Create key, enclosed because of the continuation char
                         # three-value key due to enumeration of tabular values
-                        key = "${{{}_{}_{}}}" .format(param_dict["data_type"],
-                                                  param_dict["enum"],
-                                                  i)
+                        key = "${{{}_{}_{}}}" .format(param_dict["var_name"],
+                                                      param_dict["enum"],
+                                                      i)
                         # replace the value according to the "var_word" w/ key
                         vals[param_dict["var_card"]-1] = key
                         vals = "".join("%14s" % k for k in vals)
