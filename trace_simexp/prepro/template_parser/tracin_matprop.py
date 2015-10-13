@@ -114,7 +114,7 @@ def edit_table(tracin_lines, param_dict):
             # match the keyword for material property specification block
             if str(param_dict["var_num"]) in tracin_line:
                 # match the specified material number
-                i = 1           # multiple values identifier in tabular format
+                i = 0           # multiple values identifier in tabular format
                 offset = 0
                 while True:
                     # loop to go to where the values defined
