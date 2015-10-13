@@ -81,25 +81,25 @@ def get_nominal_values(tracin_file, params_dict):
 
         if param["data_type"] == "spacer":
             # spacer specified, look for it in the tracin
-            params_dict[num]["var_val"] = tracin_spacer.get_nom_val(
+            params_dict[num]["nom_val"] = tracin_spacer.get_nom_val(
                 tracin_lines, param
             )
 
         elif param["data_type"] == "matprop":
             # material property specified, look for it in the tracin
-            params_dict[num]["var_val"] = tracin_matprop.get_nom_val(
+            params_dict[num]["nom_val"] = tracin_matprop.get_nom_val(
                     tracin_lines, param
             )
 
         elif param["data_type"] == "senscoef":
             # sensitivity coefficient specified, look for it in the tracin
-            params_dict[num]["var_val"] = tracin_senscoef.get_nom_val(
+            params_dict[num]["nom_val"] = tracin_senscoef.get_nom_val(
                 tracin_lines, param
             )
 
         # component parameters specified, look for it in the tracin
         elif param["data_type"] in COMPONENTS:
-            params_dict[num]["var_val"] = tracin_comp.get_nom_val(
+            params_dict[num]["nom_val"] = tracin_comp.get_nom_val(
                 tracin_lines, param
             )
 
