@@ -17,7 +17,7 @@ def create(template_lines, params_dict, norm_pert_factors):
 
     # A simple dimension checking
     if len(params_dict) != len(norm_pert_factors):
-        raise  ValueError("The # of sampled values and # of parameters unequal")
+        raise ValueError("The # of sampled values and # of parameters unequal!")
 
     perturb_dict = dict()
 
