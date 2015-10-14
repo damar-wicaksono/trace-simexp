@@ -64,8 +64,8 @@ def get_nominal_values(tracin_file, params_dict):
     Depending on the ["var_type"] there can be a single value of nominal value
     (i.e., for scalar) or multiple values of it (i.e., table or array).
 
-    :parameter tracin_file: (str) the fullname of the base tracin
-    :parameter params_dict: (list of dict) list of parameters in dictionaries
+    :param tracin_file: (str) the fullname of the base tracin
+    :param params_dict: (list of dict) list of parameters in dictionaries
     """
     from .template_parser import tracin_spacer
     from .template_parser import tracin_senscoef
