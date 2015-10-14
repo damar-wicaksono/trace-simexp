@@ -46,6 +46,9 @@ def create(params_dict, str_template, dm, case_name, dm_name, samples,
                     tracin_file.write(str_tracin)
             else:
                 print("{} exist - no overwrite option" .format(tracin_fullname))
+        else:
+            with open(tracin_fullname, "wt") as tracin_file:
+                    tracin_file.write(str_tracin)
 
 def check(case_name, param_list_name, dm_name, samples):
     """
