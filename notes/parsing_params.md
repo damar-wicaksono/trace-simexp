@@ -65,6 +65,23 @@ All the parameters characterizing the spacer grid are accessible from
 the list of parameters file. However, each of these parameters is perturbed
 **independently**.
 
+### Parsing `tracin`
+
+Parsing `tracin` for spacer grid parameters is relatively simple.
+All the parameters except `spmatid` (`int`) are of type `float`.
+The numbers of parameters and their locations are also not variable on some condition:
+There is always 4 parameters (words) in the second card and 3 parameters in the third card.
+
+The parsing algorithm for spacer grid parameter works the following:
+
+ 1. Loop over input file
+  - if **gridid** string is found in a line stay in this line
+  - go one line below and check the number (`gridid`).
+  - if it is the same as the one specified in the dictionary, proceed
+  - get the nominal value based on the specified card and specified word
+  - if it's the second card offset the line by 3 and if it's the third card offset by 5
+  - take the parameter value from the splitted line according to the specified word.
+    Always offset by 1 as python is zero-indexed
 
 ## 2. Material Properties
 
@@ -89,6 +106,57 @@ properties are:
   8. `var_dist`: distribution of the random variable
   9. `var_par1`: the minimum or 1st parameter of the distribution
  10. `var_par2`: the maximum or 2nd parameter of the distribution
+
+### Parsing `tracin`
+
+All material properties in a `tracin` has to be put under
+**User Defined Materials**.
+
+Parsing `tracin` for material properties can be complicated as two different
+types of material property parameters are available: `table` and `fit`
+
+`table` corresponds to the temperature-dependent data, while `fit` corresponds
+to functional-fit data.
+
+An example of `table` specification is shown below,
+
+    *  User Defined Material : 50
+    *
+    *n: MgO
+    *
+    *d: Magnesium Oxide material properties for FEBA SET Facility
+    *d: as specified by GRS for PREMIUM benchmark
+    *  prptb         temp         rho          cp        cond        emis
+    *  prptb*      273.15      2500.0       946.0         5.0         1.0s
+    *  prptb*      293.15      2500.0       963.0        4.95         1.0s
+    *  prptb*      373.15      2500.0      1013.0        4.75         1.0s
+    *  prptb*      473.15      2500.0      1075.5         4.5         1.0s
+    *  prptb*      573.15      2500.0      1163.0        4.25         1.0s
+    *  prptb*      673.15      2500.0      1174.0         4.1         1.0s
+    *  prptb*      773.15      2500.0      1185.0        3.95         1.0s
+    *  prptb*      873.15      2500.0      1206.0         3.6         1.0s
+    *  prptb*     1073.15      2500.0      1248.0         3.1         1.0s
+    *  prptb*     1273.15      2500.0      1290.0         2.8         1.0s
+    *  prptb*     1473.15      2500.0      1311.6         2.4         1.0s
+    *  prptb*     1773.15      2500.0      1344.0         1.8         1.0e
+    *
+
+So the keyword that defines the location of a specified material is
+**User Defined Material** and check the number besides it whether it matches the
+one in the list.
+
+the material property specification in the list of parameters file has the
+following entries:
+
+    5   matprop    51     cond  table   3        4       17     unif 0.95  1.05
+
+ 1. `enum`: the parameter number
+ 2. `data_type`
+ 3. `var_num`: the number of user-defined material
+ 4. `var_name`: the parameter name (`rho | cp | cond | emis`)
+ 5. `var_type`: the type of parameter (`table | fit`)
+ 6. `var_card`: the column of the parameter
+ 7. `var_word`: the number of entries in the temperature dependent table (if `table`)
 
 ## 3. Sensitivity Coefficient
 
@@ -125,11 +193,13 @@ be specified: `id`, `mode`, and `value`.
 `mode` is the mode of perturbation of a sensitivity coefficient. There are three
 modes of perturbation:
 
- 1. additive (mode == 1)
- 2. substitutive (mode == 2)
+ 1. substitutive (mode == 1)
+ 2. additive (mode == 2)
  3. multiplicative (mode == 3)
 
 Finally, `value` is the value of actual perturbation factor.
+
+### Specifying list of params file
 
 An example of how a sensitivity coefficient can be modelled as random and given
 a distribution in the list of parameters file used for simulation experiment is
@@ -152,6 +222,19 @@ specified sensitivity coefficients:
  9. `var_par1`: the minimum or 1st parameter of the distribution
  10. `var_par2`: the maximum or 2nd parameter of the distribution
 
+### Parsing tracin
+
+Parsing a sensitivity coefficient in tracin is the easiest one to do.
+a unique coefficient ID (starting above 1000) is put in the beginning of line.
+When parsing, the **ID** can be directly used as the location identifier of sensitivity coefficient definition.
+
+Furthermore, because all sensitivity coefficients are defined in one line using three words (elements),
+there is no need for offsetting and conditioning between different coefficient.
+
+**Possible Complication:** junction of hydraulic component is also specified in the beginning of line,
+if the model has junction with large numbers, conflict might arise.
+Possible solution is to make sensitivity coefficient block more specific.
+
 ## 4. Components parameter
 
 Parameters which are associated with a TRACE component are classified into
@@ -163,4 +246,5 @@ three different categories:
  3. `array`: a set of values of the same type, usually written in multiple
     lines with continuation
 
- ## Specifying Distribution
+
+ ## Specifying Distributionlele
