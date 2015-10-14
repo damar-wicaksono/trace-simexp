@@ -40,6 +40,7 @@ def rescale_perturb(param_dict, norm_value):
 
     return value
 
+
 def perturb_param(param_dict, scaled_val):
     r"""Perturb the model parameter according to the mode of perturbation
 
@@ -52,9 +53,38 @@ def perturb_param(param_dict, scaled_val):
 
     :param param_dict: (dict) the parameter dictionary
     :param scaled_val: (float or int) the scaled perturbation factor
-    :returns: the perturbed parameter value
+    :returns: (list of str) the perturbed parameter value written in string
     """
-    pass
+    import numpy as np
+
+    # If the type is scalar, force it to be a 1D array
+    if param_dict["var_type"] == "table":
+        nom_val = np.array(param_dict["nom_val"])
+    else:
+        nom_val = np.array([param_dict["nom_val"]])
+
+    # Perturb the nominal value according to the mode of perturbation
+    var_mode = param_dict["var_mode"]
+    if var_mode == 1:
+        # Mode 1 - Additive
+        pert_val = nom_val + scaled_val
+
+    elif param_dict["var_mode"] == 2:
+         # Mode 2 - Substitutive
+         pert_val = np.repeat(scaled_val, len(nom_val))
+
+    elif param_dict["var_mode"] == 3:
+         # Mode 3 - Multiplicative
+         pert_val = nom_val * scaled_val
+
+    str_output = []
+    # Write down the perturbed value
+    for i in range(len(pert_val)):
+        str_val = "%{}" .format(param_dict["str_fmt"])
+        str_val = str_val % pert_val[i]
+        str_output.append(str_val)
+
+    return str_output
 
 
 def create_dict(param_dict, perturbed_param):
