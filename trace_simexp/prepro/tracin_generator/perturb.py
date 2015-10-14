@@ -70,12 +70,12 @@ def perturb_param(param_dict, scaled_val):
         pert_val = nom_val + scaled_val
 
     elif param_dict["var_mode"] == 2:
-         # Mode 2 - Substitutive
-         pert_val = np.repeat(scaled_val, len(nom_val))
+        # Mode 2 - Substitutive
+        pert_val = np.repeat(scaled_val, len(nom_val))
 
     elif param_dict["var_mode"] == 3:
-         # Mode 3 - Multiplicative
-         pert_val = nom_val * scaled_val
+        # Mode 3 - Multiplicative
+        pert_val = nom_val * scaled_val
 
     str_output = []
     # Write down the perturbed value
@@ -91,10 +91,32 @@ def create_dict(param_dict, perturbed_param):
     r"""Create a key-value pair between template key and the perturbed parameter
 
     This key-value pair will be collected and use for substitution in the
-    tracin template. The function will generate the key.
+    tracin template. The function will generate this key and value pair for
+    a given parameter dictionary.
 
     :param param_dict: (dict) the parameter dictionary
     :param perturbed_param: (variant) the perturbed parameter value
     :returns: (dict) the key-value pair
     """
-    pass
+
+    perturb_dict = dict()
+
+    # Create key and return the key-value dictionary
+    if param_dict["var_type"] == "scalar":
+         key = "{}_{}" .format(param_dict["data_type"], param_dict["enum"])
+         perturb_dict.update({key: perturbed_param[0]})
+
+    elif param_dict["var_type"] == "table":
+         for i in range(len(perturbed_param)):
+             key = "{}_{}_{}" .format(param_dict["var_name"],
+                                      param_dict["enum"],
+                                      i)
+             perturb_dict.update({key: perturbed_param[i]})
+
+    elif param_dict["var_type"] == "array":
+         pass
+
+    elif param_dict["var_type"] == "fit":
+         pass
+
+    return perturb_dict
