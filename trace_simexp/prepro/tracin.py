@@ -15,6 +15,10 @@ def create(template_lines, params_dict, norm_pert_factors):
     """
     from .tracin_generator import perturb
 
+    # A simple dimension checking
+    if len(params_dict) != len(norm_pert_factors):
+        raise  ValueError("The # of sampled values and # of parameters unequal")
+
     perturb_dict = dict()
 
     # Loop over all parameters in the list of dictionaries
