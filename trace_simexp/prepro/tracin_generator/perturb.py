@@ -103,20 +103,20 @@ def create_dict(param_dict, perturbed_param):
 
     # Create key and return the key-value dictionary
     if param_dict["var_type"] == "scalar":
-         key = "{}_{}" .format(param_dict["data_type"], param_dict["enum"])
-         perturb_dict.update({key: perturbed_param[0]})
+        key = "{}_{}" .format(param_dict["data_type"], param_dict["enum"])
+        perturb_dict.update({key: perturbed_param[0]})
 
     elif param_dict["var_type"] == "table":
-         for i in range(len(perturbed_param)):
-             key = "{}_{}_{}" .format(param_dict["var_name"],
-                                      param_dict["enum"],
-                                      i)
-             perturb_dict.update({key: perturbed_param[i]})
+        for i in range(len(perturbed_param)):
+            key = "{}_{}_{}" .format(param_dict["var_name"],
+                                     param_dict["enum"],
+                                     i)
+            perturb_dict.update({key: perturbed_param[i]})
 
     elif param_dict["var_type"] == "array":
-         pass
+        pass
 
     elif param_dict["var_type"] == "fit":
-         pass
+        pass
 
     return perturb_dict
