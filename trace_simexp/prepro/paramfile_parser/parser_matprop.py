@@ -62,8 +62,8 @@ def print_msg(matprop_dict):
 
 def var_type_str(var_type):
     if var_type == 1:
-        return "substitutive"
-    elif var_type == 2:
         return "additive"
+    elif var_type == 2:
+        return "substitutive"
     elif var_type == 3:
         return "multiplicative"

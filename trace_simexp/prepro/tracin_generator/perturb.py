@@ -47,8 +47,8 @@ def perturb_param(param_dict, scaled_val):
     The function will perturb the nominal value of model parameter with the
     scaled value of perturbation factor according to the specified mode of
     variation. There are 3 available modes of perturbation:
-        1. `1`: Additive perturbation
-        2. `2`: Substitutive perturbation
+        1. `1`: Substitutive perturbation
+        2. `2`: Additive perturbation
         3. `3`: Multiplicative perturbation
 
     :param param_dict: (dict) the parameter dictionary
@@ -66,12 +66,12 @@ def perturb_param(param_dict, scaled_val):
     # Perturb the nominal value according to the mode of perturbation
     var_mode = param_dict["var_mode"]
     if var_mode == 1:
-        # Mode 1 - Additive
-        pert_val = nom_val + scaled_val
+        # Mode 1 - Substitutive
+        pert_val = np.repeat(scaled_val, len(nom_val))
 
     elif param_dict["var_mode"] == 2:
-        # Mode 2 - Substitutive
-        pert_val = np.repeat(scaled_val, len(nom_val))
+        # Mode 2 - Additive
+        pert_val = nom_val + scaled_val
 
     elif param_dict["var_mode"] == 3:
         # Mode 3 - Multiplicative
