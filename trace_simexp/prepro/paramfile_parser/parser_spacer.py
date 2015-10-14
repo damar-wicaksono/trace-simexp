@@ -31,9 +31,9 @@ def parse(line, params_dict, verbose=True):
         "var_dist": spacer_data[8].lower(),
     }
     if spacer_dict["var_name"] == "spmatid":
-        spacer_dict["var_par1"] = spacer_data[9].split(",")
+        spacer_dict["var_par1"] = [int(_) for _ in spacer_data[9].split(",")]
         spacer_dict["var_par2"] = None
-        spacer_dict["str_fmt"] = "%14d"
+        spacer_dict["str_fmt"] = "14d"
     else:
         spacer_dict["var_par1"] = float(spacer_data[9])
         spacer_dict["var_par2"] = float(spacer_data[10])
