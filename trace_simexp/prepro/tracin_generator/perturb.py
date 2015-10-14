@@ -15,8 +15,30 @@ def rescale_perturb(param_dict, norm_value):
     :param norm_value: (float) the normalized [0,1] perturbation factor
     :returns: the rescaled value of the perturbation factor
     """
-    pass
+    from . import rescale
 
+    # Create rescale values according to the specified distribution
+    if param_dict["var_dist"] == "unif":
+        value = rescale.uniform(norm_value,
+                                param_dict["var_par1"],
+                                param_dict["var_par2"])
+    elif param_dict["var_dist"] == "logunif":
+        value = rescale.loguniform(norm_value,
+                                   param_dict["var_par1"],
+                                   param_dict["var_par2"])
+
+    elif param_dict["var_dist"] == "normal":
+        value = rescale.normal(norm_value,
+                               param_dict["var_par1"],
+                               param_dict["var_par2"])
+
+    elif param_dict["var_dist"] == "discunif":
+        value = rescale.discunif(norm_value, param_dict["var_par1"])
+
+    else:
+        raise TypeError("Distribution is not supported!")
+
+    return value
 
 def perturb_param(param_dict, scaled_val):
     r"""Perturb the model parameter according to the mode of perturbation
