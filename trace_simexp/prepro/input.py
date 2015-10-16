@@ -105,18 +105,20 @@ def check_inputs(inputs):
     import os
     import numpy as np
 
+    # Check if the base tracin exists
     if not os.path.exists(inputs["tracin_base_file"]):
         raise ValueError("The base tracin file does not exist!")
-    elif not os.path.exists(inputs["params_list_file"]):
-        raise ValueError("The list of parameters file does not exist!")
     else:
         pass
 
+    # Check if design matrix file exist
     if os.path.exists(inputs["dm_file"]):
         num_params_dm = np.loadtxt(inputs["dm_file"]).shape[1]
+        num_samples = np.loadtxt(inputs["dm_file"]).shape[0]
     else:
         raise ValueError("The design matrix file does not exists!")
 
+    # Check if list of parameters file exist
     if os.path.exists(inputs["params_list_file"]):
         with open(inputs["params_list_file"], "rt") as params_list_file:
             params_list_line = params_list_file.readlines()
@@ -127,12 +129,23 @@ def check_inputs(inputs):
     else:
         raise ValueError("The list of parameters file does not exist!")
 
+    # Check the number of parameters in design matrix and list of parameters
     if num_params_list_file != num_params_dm:
         raise ValueError("The number of parameters is inconsistent\n"
                          "{:10d} in {} and {:10d} in {}"
                          .format(num_params_list_file,
                                  inputs["params_list_name"],
                                  num_params_dm,
+                                 inputs["dm_name"]))
+    else:
+        pass
+
+    # Check if the sample number asked is available
+    if max(inputs["samples"]) > num_samples:
+        raise ValueError("The sample asked is beyond the available samples\n"
+                         "{:10d} asked and {:10d} in {}"
+                         .format(max(inputs["samples"]),
+                                 num_samples,
                                  inputs["dm_name"]))
     else:
         pass
