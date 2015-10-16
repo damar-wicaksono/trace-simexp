@@ -30,13 +30,13 @@ def create(params_dict, str_template, dm, case_name, params_list_name,
 
     # Loop over required samples
     for i in samples:
-        num_runs = i + 1        # offset 1 for zero index list
+        num_runs = i
         run_dir_name = "{}/{}-run_{}" .format(dm_name_dir, case_name, num_runs)
 
         if not os.path.exists(run_dir_name):
             os.makedirs(run_dir_name)
 
-        str_tracin = tracin.create(str_template, params_dict, dm[i, :])
+        str_tracin = tracin.create(str_template, params_dict, dm[i-1, :])
         tracin_filename = "{}-run_{}.inp" .format(case_name, num_runs)
         tracin_fullname = "{}/{}" .format(run_dir_name, tracin_filename)
 
@@ -81,7 +81,7 @@ def check(case_name, param_list_name, dm_name, samples):
     print("Checking input files...")
 
     for i in samples:
-        num_runs = i+1
+        num_runs = i
         run_dir_name = "{}/{}_run_{}" .format(dm_name_dir, case_name, num_runs)
 
         if os.path.exists(run_dir_name):
