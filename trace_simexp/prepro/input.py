@@ -10,24 +10,24 @@ def get():
 
     inputs = dict()
 
-    samples, base_dirname, base_tracin_fullname, \
-    design_matrix_fullname, param_list_fullname = command_line_args.get()
+    samples, base_dirname, tracin_base_fullname, \
+    design_matrix_fullname, params_list_fullname = command_line_args.get()
 
     base_name = base_dirname.split("/")[-1]
-    case_name = base_tracin_fullname.split("/")[-1].split(".")[0]
+    case_name = tracin_base_fullname.split("/")[-1].split(".")[0]
     dm_name = design_matrix_fullname.split("/")[-1].split(".")[0]
-    param_list_name = param_list_fullname.split("/")[-1].split(".")[0]
+    params_list_name = params_list_fullname.split("/")[-1].split(".")[0]
 
     inputs = {
         "samples": samples,
         "base_dir": base_dirname,
         "base_name": base_name,
-        "base_tracin_file": base_tracin_fullname,
+        "tracin_base_file": tracin_base_fullname,
         "case_name": case_name,
         "design_matrix_file": design_matrix_fullname,
         "dm_name": dm_name,
-        "param_list_file": param_list_fullname,
-        "param_list_name": param_list_name
+        "params_list_file": params_list_fullname,
+        "params_list_name": params_list_name
     }
 
     return inputs
