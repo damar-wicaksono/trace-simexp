@@ -3,11 +3,9 @@
 
 __author__ = "Damar Wicaksono"
 
-HEADER_DIRNAME = "simulation"
-
 
 def create(params_dict, str_template, dm, case_name, params_list_name,
-           dm_name, samples,
+           dm_name, base_name, samples,
            overwrite=False):
     r"""Create a directory structure for the simulation campaign
 
@@ -24,7 +22,7 @@ def create(params_dict, str_template, dm, case_name, params_list_name,
     from . import tracin
 
     # Create directory path name
-    case_name_dir = "./{}/{}" .format(HEADER_DIRNAME, case_name)
+    case_name_dir = "./{}/{}" .format(base_name, case_name)
     dm_name_dir = "{}/{}-{}" .format(case_name_dir, params_list_name, dm_name)
 
     if not os.path.exists(dm_name_dir):
