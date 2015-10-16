@@ -66,6 +66,15 @@ def get():
         required=True
     )
 
+    # The overwrite flag
+    parser.add_argument(
+        "-ow", "--overwrite",
+        action="store_true",
+        help="Ovewrite existing directory structures",
+        default=False,
+        required=False
+    )
+
     # Get the command line arguments
     args = parser.parse_args()
 
@@ -77,8 +86,8 @@ def get():
 
     if args.num_samples is not None:
         return args.num_samples, args.base_name, args.base_tracin,\
-               args.design_matrix, args.params_list
+               args.design_matrix, args.params_list, args.overwrite
     elif args.num_range is not None:
         samples = list(range(args.num_range[0], args.num_range[1]+1))
         return samples, args.base_name, args.base_tracin,\
-               args.design_matrix, args.params_list
+               args.design_matrix, args.params_list, args.overwrite
