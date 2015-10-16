@@ -103,12 +103,36 @@ def check_inputs(inputs):
     :return:
     """
     import os
+    import numpy as np
 
     if not os.path.exists(inputs["tracin_base_file"]):
         raise ValueError("The base tracin file does not exist!")
     elif not os.path.exists(inputs["params_list_file"]):
         raise ValueError("The list of parameters file does not exist!")
-    elif not os.path.exists(inputs["dm_file"]):
+    else:
+        pass
+
+    if os.path.exists(inputs["dm_file"]):
+        num_params_dm = np.loadtxt(inputs["dm_file"]).shape[1]
+    else:
         raise ValueError("The design matrix file does not exists!")
+
+    if os.path.exists(inputs["params_list_file"]):
+        with open(inputs["params_list_file"], "rt") as params_list_file:
+            params_list_line = params_list_file.readlines()
+        num_params_list_file = 0
+        for i in params_list_line:
+            if not i.startswith("#"):
+                num_params_list_file += 1
+    else:
+        raise ValueError("The list of parameters file does not exist!")
+
+    if num_params_list_file != num_params_dm:
+        raise ValueError("The number of parameters is inconsistent\n"
+                         "{:10d} in {} and {:10d} in {}"
+                         .format(num_params_list_file,
+                                 inputs["params_list_name"],
+                                 num_params_dm,
+                                 inputs["dm_name"]))
     else:
         pass
