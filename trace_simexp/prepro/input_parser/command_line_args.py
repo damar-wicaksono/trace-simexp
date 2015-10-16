@@ -75,6 +75,14 @@ def get():
         required=False
     )
 
+    # The tag message
+    parser.add_argument(
+        "-info", "--info",
+        type=str,
+        help="The tag message",
+        required=False
+    )
+
     # Get the command line arguments
     args = parser.parse_args()
 
@@ -86,8 +94,8 @@ def get():
 
     if args.num_samples is not None:
         return args.num_samples, args.base_name, args.base_tracin,\
-               args.design_matrix, args.params_list, args.overwrite
+               args.design_matrix, args.params_list, args.overwrite, args.info
     elif args.num_range is not None:
         samples = list(range(args.num_range[0], args.num_range[1]+1))
         return samples, args.base_name, args.base_tracin,\
-               args.design_matrix, args.params_list, args.overwrite
+               args.design_matrix, args.params_list, args.overwrite, args.info
