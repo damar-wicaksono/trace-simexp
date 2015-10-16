@@ -79,6 +79,6 @@ def get():
         return args.num_samples, args.base_name, args.base_tracin,\
                args.design_matrix, args.params_list
     elif args.num_range is not None:
-        return args.num_range, args.base_name, args.base_tracin,\
+        samples = list(range(args.num_range[0], args.num_range[1]+1))
+        return samples, args.base_name, args.base_tracin,\
                args.design_matrix, args.params_list
-
