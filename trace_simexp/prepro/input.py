@@ -11,7 +11,7 @@ def get():
     inputs = dict()
 
     samples, base_dirname, tracin_base_fullname, \
-    dm_fullname, params_list_fullname, overwrite = command_line_args.get()
+    dm_fullname, params_list_fullname, overwrite, info = command_line_args.get()
 
     base_name = base_dirname.split("/")[-1]
     case_name = tracin_base_fullname.split("/")[-1].split(".")[0]
@@ -28,14 +28,17 @@ def get():
         "dm_name": dm_name,
         "params_list_file": params_list_fullname,
         "params_list_name": params_list_name,
-        "overwrite": overwrite
+        "overwrite": overwrite,
+        "info": info
     }
 
-    print_info(inputs, "test.info")
+    check_inputs(inputs)
+
+    print_inputs(inputs, "test.info")
     return inputs
 
 
-def print_info(inputs, info_file):
+def print_inputs(inputs, info_file):
     """
 
     :return:
@@ -56,6 +59,7 @@ def print_info(inputs, info_file):
     with open(info_file, "wt") as file:
         file.writelines("TRACE Simulation Experiment - Date: {}\n"
                         .format(str(datetime.now())))
+        file.writelines("{}\n" .format(inputs["info"]))
         file.writelines("***Preprocessing Phase Info***\n")
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[0], "->", inputs["base_name"]))
@@ -77,6 +81,7 @@ def print_info(inputs, info_file):
                         .format(header[9], "->", inputs["overwrite"]))
         file.writelines("{:<30s}{:3s}\n" .format(header[8], "->"))
 
+        # Write the requested sampled runs
         for i in range(int(len(inputs["samples"])/10)):
             offset1 = i*10
             offset2 = (i+1)*10
@@ -89,3 +94,21 @@ def print_info(inputs, info_file):
         for i in range(offset1, offset2 - 1):
             file.writelines(" {:5d} " .format(inputs["samples"][i]))
         file.writelines(" {:5d}\n" .format(inputs["samples"][offset2-1]))
+
+
+def check_inputs(inputs):
+    """
+
+    :param inputs:
+    :return:
+    """
+    import os
+
+    if not os.path.exists(inputs["tracin_base_file"]):
+        raise ValueError("The base tracin file does not exist!")
+    elif not os.path.exists(inputs["params_list_file"]):
+        raise ValueError("The list of parameters file does not exist!")
+    elif not os.path.exists(inputs["dm_file"]):
+        raise ValueError("The design matrix file does not exists!")
+    else:
+        pass
