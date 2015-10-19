@@ -1,13 +1,14 @@
 __author__ = "Damar Wicaksono"
 
 
-def get():
-    """
+def get(info_filename=None):
+    r"""Get the command line arguments and construct a dictionary from it
 
-    :return:
+    :return: (dict) the command line arguments collected
     """
     import numpy as np
     from .input_parser import command_line_args
+    from .input_parser import info_file
 
     inputs = dict()
 
@@ -42,7 +43,11 @@ def get():
         inputs["samples"] = list(range(1, num_samples+1))
 
     # Write to a file the summary of report
-    print_inputs(inputs, "test.info")
+    if info_filename is not None:
+        print_inputs(inputs, info_filename)
+    else:
+        print_inputs(inputs, info_file.make_filename(inputs))
+
     return inputs
 
 
@@ -99,9 +104,9 @@ def print_inputs(inputs, info_file):
 
         offset1 = int(len(inputs["samples"])/10) * 10
         offset2 = len(inputs["samples"])
-        for i in range(offset1, offset2 - 1):
-            file.writelines(" {:5d} " .format(inputs["samples"][i]))
-        file.writelines(" {:5d}\n" .format(inputs["samples"][offset2-1]))
+        if offset2 > offset1:
+            for i in range(offset1, offset2):
+                file.writelines(" {:5d} " .format(inputs["samples"][i]))
 
 
 def check_inputs(inputs):
