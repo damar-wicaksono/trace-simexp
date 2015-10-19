@@ -4,6 +4,8 @@ __author__ = "Damar Wicaksono"
 def get(info_filename=None):
     r"""Get the command line arguments and construct a dictionary from it
 
+    :param info_filename: (str, optional) the filename for the info_file, it
+        will be constructed based on input arguments if nothing is specified
     :return: (dict) the command line arguments collected
     """
     import numpy as np
