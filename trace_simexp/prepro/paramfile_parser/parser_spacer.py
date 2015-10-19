@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def parse(line, params_dict, verbose=True):
+def parse(line, params_dict, info_filename=None):
     r"""Parse spacer grid specification from a list of parameters file
 
     note that the input argument `params_dict` is mutable and will be modified
@@ -42,34 +42,37 @@ def parse(line, params_dict, verbose=True):
     # Append the new dictionary to the current list
     params_dict.append(spacer_dict)
 
-    if verbose:
-        print_msg(spacer_dict)
+    if info_filename is not None:
+        print_msg(spacer_dict, info_filename)
 
 
-def print_msg(spacer_dict):
+def print_msg(spacer_dict, info_filename):
     r"""Create a string to print on screen
 
+    :param info_filename: (str)
     :param spacer_dict: (dict) the parsed parameter specifications
     """
-    print("***{:2d}***" .format(spacer_dict["enum"]))
-    print("Spacer grid with Grid ID *{}*, parameter *{}* is specified"
-          .format(spacer_dict["var_num"], spacer_dict["var_name"]))
-    print("Parameter type: {}"
-          .format((spacer_dict["var_type"])))
-    print("Parameter perturbation mode: {} ({})"
-          .format(spacer_dict["var_mode"],
-                  var_type_str(spacer_dict["var_mode"])))
-    print("Parameter distribution: *{}*"
-              .format(spacer_dict["var_dist"]))
+    with open(info_filename, "a") as info_file:
+        info_file.writelines("***{:2d}***\n" .format(spacer_dict["enum"]))
+        info_file.writelines("Spacer grid with Grid ID *{}*, parameter *{}* is "
+                             "specified\n"
+              .format(spacer_dict["var_num"], spacer_dict["var_name"]))
+        info_file.writelines("Parameter type: {}\n"
+                             .format((spacer_dict["var_type"])))
+        info_file.writelines("Parameter perturbation mode: {} ({})\n"
+                             .format(spacer_dict["var_mode"],
+                                     var_type_str(spacer_dict["var_mode"])))
+        info_file.writelines("Parameter distribution: *{}*\n"
+                             .format(spacer_dict["var_dist"]))
     if spacer_dict["var_name"] == "spmatid":
-        print("1st distribution parameter: {}"
+        info_file.writelines("1st distribution parameter: {}\n"
               .format(spacer_dict["var_par1"]))
-        print("2nd distribution parameter: {}"
+        info_file.writelines("2nd distribution parameter: {}\n"
               .format(spacer_dict["var_par2"]))
     else:
-        print("1st distribution parameter: {:.3f}"
+        info_file.writelines("1st distribution parameter: {:.3f}\n"
               .format(spacer_dict["var_par1"]))
-        print("2nd distribution parameter: {:.3f}"
+        info_file.writelines("2nd distribution parameter: {:.3f}\n"
               .format(spacer_dict["var_par2"]))
 
 

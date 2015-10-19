@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def parse(line, params_dict, verbose=True):
+def parse(line, params_dict, info_filename=None):
     r"""Parse sensitivity coefficient specification from list of parameters file
 
     note that the input argument `params_dict` is mutable and will be modified
@@ -38,8 +38,8 @@ def parse(line, params_dict, verbose=True):
     params_dict.append(senscoef_dict)
 
     # Print terminal message if asked
-    if verbose:
-        print_msg(senscoef_dict)
+    if info_filename is not None:
+        print_msg(senscoef_dict, info_filename)
 
 
 def check_senscoef(senscoef_dict):
@@ -52,21 +52,28 @@ def check_senscoef(senscoef_dict):
         raise TypeError("Only scalar type is supported for senscoef!")
 
 
-def print_msg(param_dict):
+def print_msg(param_dict, info_filename):
     r"""Write terminal message the results of parsing if verbosity asked
 
+    :param info_filename: (str)
     :param param_dict: (dict) the parsed sensitivity coefficient parameters
     """
-    print("***{:2d}***" .format(param_dict["enum"]))
-    print("Sensitivity Coefficient with ID *{}* is specified"
-          .format(param_dict["var_num"]))
-    print("Parameter type: {}" .format(param_dict["var_type"]))
-    print("Parameter perturbation mode: {} ({})"
-          .format(param_dict["var_mode"],
-                  var_type_str(param_dict["var_mode"])))
-    print("Parameter distribution: {}" .format(param_dict["var_dist"]))
-    print("1st distribution parameter: {:.3f}" .format(param_dict["var_par1"]))
-    print("2nd distribution parameter: {:.3f}" .format(param_dict["var_par2"]))
+    with open(info_filename, "a") as info_file:
+        info_file.writelines("***{:2d}***\n" .format(param_dict["enum"]))
+        info_file.writelines("Sensitivity Coefficient with ID *{}* is "
+                             "specified\n"
+                             .format(param_dict["var_num"]))
+        info_file.writelines("Parameter type: {}\n"
+                             .format(param_dict["var_type"]))
+        info_file.writelines("Parameter perturbation mode: {} ({})\n"
+                             .format(param_dict["var_mode"],
+                                     var_type_str(param_dict["var_mode"])))
+        info_file.writelines("Parameter distribution: {}\n"
+                             .format(param_dict["var_dist"]))
+        info_file.writelines("1st distribution parameter: {:.3f}\n"
+                             .format(param_dict["var_par1"]))
+        info_file.writelines("2nd distribution parameter: {:.3f}\n"
+                             .format(param_dict["var_par2"]))
 
 
 def var_type_str(var_type):
