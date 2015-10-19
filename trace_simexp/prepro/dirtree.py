@@ -50,7 +50,7 @@ def create(params_dict, str_template, dm, case_name, params_list_name,
             with open(tracin_fullname, "wt") as tracin_file:
                     tracin_file.write(str_tracin)
 
-def check(case_name, param_list_name, dm_name, samples):
+def check(case_name, param_list_name, dm_name, base_name, samples):
     """
 
     :param case_name:
@@ -61,7 +61,7 @@ def check(case_name, param_list_name, dm_name, samples):
     import os
 
     # Create directory path name
-    case_name_dir = "./{}/{}" .format(HEADER_DIRNAME, case_name)
+    case_name_dir = "./{}/{}" .format(base_name, case_name)
     dm_name_dir = "{}/{}" .format(case_name_dir, dm_name)
 
     print("********************************")
