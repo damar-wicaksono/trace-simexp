@@ -122,8 +122,8 @@ def get():
     # Use range of samples
     elif args.num_range is not None:
         # Sample range number has to be positive
-        if (args.num_range[0] <= 0 or args.num_range[1] <= 0) and
-            (args.num_range[0] > args.num_range[1]):
+        if (args.num_range[0] <= 0 or args.num_range[1] <= 0) and \
+                (args.num_range[0] > args.num_range[1]):
             parser.error("Sample range with -nr has to be strictly positive!"
                          "and the first is smaller than the second")
         else:
