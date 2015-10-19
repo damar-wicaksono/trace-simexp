@@ -6,6 +6,7 @@ def get():
 
     :return:
     """
+    import numpy as np
     from .input_parser import command_line_args
 
     inputs = dict()
@@ -32,8 +33,15 @@ def get():
         "info": info
     }
 
+    # Check the validity of the inputs
     check_inputs(inputs)
 
+    # Update samples if all samples are asked
+    if isinstance(inputs["samples"], bool) and inputs["samples"]:
+        num_samples = np.loadtxt(inputs["dm_file"]).shape[0]
+        inputs["samples"] = list(range(1, num_samples+1))
+
+    # Write to a file the summary of report
     print_inputs(inputs, "test.info")
     return inputs
 
@@ -141,9 +149,10 @@ def check_inputs(inputs):
         pass
 
     # Check if the sample number asked is available
-    if max(inputs["samples"]) > num_samples:
-        raise ValueError("The sample asked is beyond the available samples\n"
-                         "{:10d} asked and {:10d} in {}"
+    if not isinstance(inputs["samples"], bool):
+        if max(inputs["samples"]) > num_samples:
+            raise ValueError("The sample asked is beyond the available "
+                             "samples\n {:10d} asked and {:10d} in {}"
                          .format(max(inputs["samples"]),
                                  num_samples,
                                  inputs["dm_name"]))
