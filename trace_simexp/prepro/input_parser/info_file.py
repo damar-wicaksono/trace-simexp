@@ -5,9 +5,11 @@ __author__ = "Damar Wicaksono"
 
 
 def write(inputs, info_filename):
-    """
+    r"""Write the command line arguments into a file
 
-    :return:
+    :param inputs: (dict) the command line arguments as dictionary
+    :param info_filename: (str) the filename of the info_file
+    :return: the info_file with the specified filename
     """
     from datetime import datetime
 
@@ -64,10 +66,12 @@ def write(inputs, info_filename):
 
 
 def make_filename(inputs_dict):
-    r"""
+    r"""Create a string of filename for the file_info based on the inputs
 
-    :param inputs_dict:
-    :return:
+    The function is called by default, if no custom filename is specified
+
+    :param inputs_dict: (dict) the command line arguments as dictionary
+    :return: (str) the info_filename as string
     """
 
     if len(inputs_dict["samples"]) > 1:
