@@ -88,14 +88,23 @@ def get():
 
     # Check if any sample is specified
     if args.num_samples is None and args.num_range is None:
-        parser.error("either -ns or -nr has to be present!")
+        parser.error("Either -ns or -nr has to be present!")
     elif args.num_samples is not None and args.num_range is not None:
         parser.error("-ns or -nr cannot both be present!")
+    else:
+        pass
 
+    # Sample has to be specified
     if args.num_samples is not None:
-        return args.num_samples, args.base_name, args.base_tracin,\
-               args.design_matrix, args.params_list, args.overwrite, args.info
+        if True in [_ < 0 for _ in args.num_samples]:
+            parser.error("Number of samples with -ns has to be strictly positive!")
+        else:
+            return args.num_samples, args.base_name, args.base_tracin,\
+                   args.design_matrix, args.params_list, args.overwrite, args.info
     elif args.num_range is not None:
         samples = list(range(args.num_range[0], args.num_range[1]+1))
-        return samples, args.base_name, args.base_tracin,\
-               args.design_matrix, args.params_list, args.overwrite, args.info
+        if args.num_range[0] <= 0 or args.num_range[1] <= 0:
+            parser.error("Sample range with -nr has to be strictly positive!")
+        else:
+            return samples, args.base_name, args.base_tracin,\
+                   args.design_matrix, args.params_list, args.overwrite, args.info
