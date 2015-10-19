@@ -129,7 +129,7 @@ def check_inputs(inputs):
     else:
         raise ValueError("The list of parameters file does not exist!")
 
-    # Check the number of parameters in design matrix and list of parameters
+    # Check the number of parameters in the design matrix and list of parameters
     if num_params_list_file != num_params_dm:
         raise ValueError("The number of parameters is inconsistent\n"
                          "{:10d} in {} and {:10d} in {}"
