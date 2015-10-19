@@ -5,9 +5,15 @@ __author__ = "Damar Wicaksono"
 
 
 def get():
-    r"""Parse input arguments required for preprocessing phase
+    r"""Parse input arguments required for pre-processing phase
 
-    :return:
+    :return: (int or string) the specified samples, individual, range, or all
+        (str) the base directory name of the simulation campaign
+        (str) the base tracin fullname
+        (str) the design matrix fullname
+        (str) the list of parameters fullname
+        (bool) the flag whether to overwrite directory structure
+        (str) the oneline info of the simulation experiment campaign
     """
     import argparse
 
@@ -139,10 +145,10 @@ def get():
 
 
 def check(inputs):
-    """
+    r"""Check the validity of the command line arguments
 
-    :param inputs:
-    :return:
+    :param inputs: (dict) the command line arguments as dictionary
+    :return: ValueError if exception raised
     """
     import os
     import numpy as np
