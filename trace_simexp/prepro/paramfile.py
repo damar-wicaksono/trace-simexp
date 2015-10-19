@@ -4,7 +4,6 @@ from .paramfile_parser import parser_senscoef
 from .paramfile_parser import parser_matprop
 from .paramfile_parser import parser_spacer
 from .paramfile_parser import parser_comp
-from .input_parser import info_file
 
 __author__ = "Damar Wicaksono"
 
