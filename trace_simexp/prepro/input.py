@@ -107,6 +107,7 @@ def print_inputs(inputs, info_file):
         if offset2 > offset1:
             for i in range(offset1, offset2):
                 file.writelines(" {:5d} " .format(inputs["samples"][i]))
+            file.writelines("\n")
 
 
 def check_inputs(inputs):
