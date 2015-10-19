@@ -55,7 +55,7 @@ def check_senscoef(senscoef_dict):
 def print_msg(param_dict, info_filename):
     r"""Write terminal message the results of parsing if verbosity asked
 
-    :param info_filename: (str)
+    :param info_filename: (str) the filename of the info_file
     :param param_dict: (dict) the parsed sensitivity coefficient parameters
     """
     with open(info_filename, "a") as info_file:

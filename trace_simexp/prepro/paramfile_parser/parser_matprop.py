@@ -41,7 +41,7 @@ def parse(line, params_dict, info_filename=None):
 def print_msg(matprop_dict, info_filename):
     r"""Create a string to print on screen
 
-    :param info_filename: (str)
+    :param info_filename: (str) the filename of the info_file
     :param matprop_dict: (dict) the parsed component parameter
     """
     with open(info_filename, "a") as info_file:

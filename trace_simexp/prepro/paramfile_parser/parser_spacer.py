@@ -49,14 +49,14 @@ def parse(line, params_dict, info_filename=None):
 def print_msg(spacer_dict, info_filename):
     r"""Create a string to print on screen
 
-    :param info_filename: (str)
+    :param info_filename: (str) the filename of the info_file
     :param spacer_dict: (dict) the parsed parameter specifications
     """
     with open(info_filename, "a") as info_file:
         info_file.writelines("***{:2d}***\n" .format(spacer_dict["enum"]))
         info_file.writelines("Spacer grid with Grid ID *{}*, parameter *{}* is "
-                             "specified\n"
-              .format(spacer_dict["var_num"], spacer_dict["var_name"]))
+                             "specified\n" .format(spacer_dict["var_num"],
+                                                   spacer_dict["var_name"]))
         info_file.writelines("Parameter type: {}\n"
                              .format((spacer_dict["var_type"])))
         info_file.writelines("Parameter perturbation mode: {} ({})\n"
