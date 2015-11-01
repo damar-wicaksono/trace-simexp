@@ -26,7 +26,6 @@ def get():
         info_file.prepro_read(info_fullname)
 
     # Check if samples is within the available samples
-    print(samples)
     if isinstance(samples, bool) and samples:
         samples = avail_samples
     elif set(samples) < set(avail_samples):
