@@ -18,6 +18,9 @@ def get():
     samples, info_fullname, num_procs, scratch_dir, trace_exec, xtv2dmx_exec = \
         command_line_args.get()
 
+    # Get the info filename, exclude the path
+    info_name = info_fullname.split("/")[-1]
+
     # Read the pre-processing phase info file
     base_dir, case_name, params_list_name, dm_name, avail_samples = \
         info_file.prepro_read(info_fullname)
@@ -33,6 +36,7 @@ def get():
 
     # Construct the dictionary
     inputs = {
+        "info_name": info_file,
         "info_file": info_fullname,
         "num_procs": num_procs,
         "scratch_dir": scratch_dir,
