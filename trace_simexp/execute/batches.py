@@ -87,7 +87,7 @@ def make_dirnames(batch_iterator: itertools.islice,
         base_dir = exec_inputs["base_dir"]
 
     for i in batch_iterator:
-        run_dirname = "{}/{}/{}-{}/{}-{}" .format(
+        run_dirname = "{}/{}/{}-{}/{}-run_{}" .format(
             base_dir,
             exec_inputs["case_name"],
             exec_inputs["params_list_name"],
