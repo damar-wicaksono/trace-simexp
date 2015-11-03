@@ -56,8 +56,8 @@ def run(run_dirnames: list, trace_commands: list, log_files: list):
             time.sleep(0.05)
 
 
-def link_xtv(run_dirnames: list,
-             scratch_dirnames: list,
+def link_xtv(scratch_dirnames: list,
+             run_xtvs: list,
              scratch_xtvs: list):
     """
 
@@ -73,5 +73,10 @@ def link_xtv(run_dirnames: list,
         if not os.path.exists(scratch_dirname):
             os.makedirs(scratch_dirname)
 
-    for scratch_xtv, run_dirname in zip(scratch_xtvs, run_dirnames):
-        subprocess.call(["ln", "-s", scratch_xtv, run_dirname])
+    for scratch_xtv, run_xtv in zip(scratch_xtvs, run_xtvs):
+        if os.path.isfile(scratch_xtv):
+            subprocess.call(["rm", "-f", scratch_xtv])
+        if os.path.isfile(run_xtv):
+            subprocess.call(["rm", "-f", run_xtv])
+            
+        subprocess.call(["ln", "-s", scratch_xtv, run_xtv])
