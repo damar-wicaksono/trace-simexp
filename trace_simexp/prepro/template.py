@@ -9,13 +9,13 @@ __author__ = "Damar Wicaksono"
 COMPONENTS = ["pipe", "vessel", "power", "fill", "break"]
 
 
-def create(params_dict, tracin_file):
+def create(params_dict: list, tracin_file: str):
     r"""Procedure to create tracin template string
 
     The string contains `keys` to be substituted with values based on the
     design matrix.
 
-    :param params_dict: (str) the fullname of list of parameters file
+    :param params_dict: (list) the list of parameters in the dictionary
     :param tracin_file: (str) the fullname of base case tracin file
         produced
     :returns: (str template) the template of tracin in string format
@@ -57,7 +57,7 @@ def create(params_dict, tracin_file):
     return string.Template(tracin_tmp_lines)
 
 
-def get_nominal_values(tracin_file, params_dict):
+def get_nominal_values(tracin_file: str, params_dict: list):
     r"""Procedure to read base tracin and get nominal parameter values
 
     The procedure will update the param_dict with new key: ["nom_vals"].
