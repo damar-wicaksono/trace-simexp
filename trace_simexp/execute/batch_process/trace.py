@@ -30,7 +30,7 @@ def run(run_dirnames: list, scratch_dirnames: list,
     while True:
         while trace_commands:
             task = trace_commands.pop(0)
-            log_file = log_files.pop(0)
+            log_file = open(log_files.pop(0), "wt")
             run_dirname = run_dirnames.pop(0)
             processes.append(
                 subprocess.Popen(task, stdout=log_file, cwd=run_dirname))
