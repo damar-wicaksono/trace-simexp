@@ -15,6 +15,7 @@ def run(run_dirnames: list, scratch_dirnames: list,
     :return:
     """
     import subprocess
+    import time
 
     if not trace_commands:
         return
@@ -37,6 +38,7 @@ def run(run_dirnames: list, scratch_dirnames: list,
 
         for i, process in enumerate(processes):
             try:
+                print("running!")
                 process.wait(timeout=8000)
             except subprocess.TimeoutExpired:
                 process.kill()
@@ -44,7 +46,13 @@ def run(run_dirnames: list, scratch_dirnames: list,
                 if success(process):
                     log_file.close()
                     processes.remove(process)
+                    print("{} finish!" .format(i ))
                 else:
                     log_file.write("TRACE execution is killed - TimeOutError")
                     log_file.close()
                     processes.remove(process)
+
+        if not processes and trace_commands:
+            break
+        else:
+            time.sleep(0.05)
