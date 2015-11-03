@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def parse(line, params_dict, verbose=True):
+def parse(line, params_dict, info_filename=None):
     r"""Parse material property specification from a list of parameters file
 
     note that the input argument `params_dict` is mutable and will be modified
@@ -34,30 +34,33 @@ def parse(line, params_dict, verbose=True):
     # Append the new dictionary to the current list
     params_dict.append(matprop_dict)
 
-    if verbose:
-        print_msg(matprop_dict)
+    if info_filename is not None:
+        print_msg(matprop_dict, info_filename)
 
 
-def print_msg(matprop_dict):
+def print_msg(matprop_dict, info_filename):
     r"""Create a string to print on screen
 
+    :param info_filename: (str) the filename of the info_file
     :param matprop_dict: (dict) the parsed component parameter
     """
-    print("***{:2d}***" .format(matprop_dict["enum"]))
-    print("Material ID *{}* property *{}* (Card *{}*)"
-          .format(matprop_dict["var_num"],
-                  matprop_dict["var_name"],
-                  matprop_dict["var_card"]))
-    print("Parameter type: {}" .format(matprop_dict["var_type"]))
-    print("Parameter perturbation mode: {} ({})"
-          .format(matprop_dict["var_mode"],
-                  var_type_str(matprop_dict["var_mode"])))
-    print("Parameter distribution: *{}*"
-          .format(matprop_dict["var_dist"]))
-    print("1st distribution parameter: {:.3e}"
-          .format(matprop_dict["var_par1"]))
-    print("2nd distribution parameter: {:.3e}"
-          .format(matprop_dict["var_par2"]))
+    with open(info_filename, "a") as info_file:
+        info_file.writelines("***{:2d}***\n" .format(matprop_dict["enum"]))
+        info_file.writelines("Material ID *{}* property *{}* (Card *{}*)\n"
+                             .format(matprop_dict["var_num"],
+                                     matprop_dict["var_name"],
+                                     matprop_dict["var_card"]))
+        info_file.writelines("Parameter type: {}\n"
+                             .format(matprop_dict["var_type"]))
+        info_file.writelines("Parameter perturbation mode: {} ({})\n"
+                             .format(matprop_dict["var_mode"],
+                                     var_type_str(matprop_dict["var_mode"])))
+        info_file.writelines("Parameter distribution: *{}*\n"
+                             .format(matprop_dict["var_dist"]))
+        info_file.writelines("1st distribution parameter: {:.3e}\n"
+                             .format(matprop_dict["var_par1"]))
+        info_file.writelines("2nd distribution parameter: {:.3e}\n"
+                             .format(matprop_dict["var_par2"]))
 
 
 def var_type_str(var_type):

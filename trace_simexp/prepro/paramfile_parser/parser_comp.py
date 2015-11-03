@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def parse(line, params_dict, verbose=True):
+def parse(line, params_dict, info_filename=None):
     r"""Parse component parameter specification from a list of parameters file
 
     note that the input argument `params_dict` is mutable and will be modified
@@ -37,30 +37,33 @@ def parse(line, params_dict, verbose=True):
     # Append the new dictionary to the current list
     params_dict.append(comp_dict)
 
-    if verbose:
-        print_msg(comp_dict)
+    if info_filename is not None:
+        print_msg(comp_dict, info_filename)
 
 
-def print_msg(comp_dict):
+def print_msg(comp_dict, info_filename):
     r"""Create a string to print on screen
 
+    :param info_filename: (str) the filename of the info_file
     :param comp_dict: (dict) the parsed component parameter
     """
-    print("***{:2d}***" .format(comp_dict["enum"]))
-    print("Component *{}* ID *{}*, parameter *{}* is specified"
-          .format(comp_dict["data_type"],
-                  comp_dict["var_num"],
-                  comp_dict["var_name"]))
-    print("Parameter type: {}" .format(comp_dict["var_type"]))
-    print("Parameter perturbation mode: {} ({})"
-          .format(comp_dict["var_mode"],
-                  var_type_str(comp_dict["var_mode"])))
-    print("Parameter distribution: *{}*"
-          .format(comp_dict["var_dist"]))
-    print("1st distribution parameter: {:.3e}"
-          .format(comp_dict["var_par1"]))
-    print("2nd distribution parameter: {:.3e}"
-          .format(comp_dict["var_par2"]))
+    with open(info_filename, "a") as info_file:
+        info_file.writelines("***{:2d}***\n" .format(comp_dict["enum"]))
+        info_file.writelines("Component *{}* ID *{}*, parameter *{}* is "
+                             "specified\n" .format(comp_dict["data_type"],
+                                                   comp_dict["var_num"],
+                                                   comp_dict["var_name"]))
+        info_file.writelines("Parameter type: {}\n"
+                             .format(comp_dict["var_type"]))
+        info_file.writelines("Parameter perturbation mode: {} ({})\n"
+                             .format(comp_dict["var_mode"],
+                                     var_type_str(comp_dict["var_mode"])))
+        info_file.writelines("Parameter distribution: *{}*\n"
+                             .format(comp_dict["var_dist"]))
+        info_file.writelines("1st distribution parameter: {:.3e}\n"
+                             .format(comp_dict["var_par1"]))
+        info_file.writelines("2nd distribution parameter: {:.3e}\n"
+                             .format(comp_dict["var_par2"]))
 
 
 def check_comp(comp_data):

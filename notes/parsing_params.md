@@ -1,4 +1,4 @@
-# Parsing Input Parameters for Simulation Experiment (trace_simexp package)
+# `trace_simexp` - Parsing Input Specifications for Simulation Experiment 
 
 ## General formats
 
@@ -6,22 +6,23 @@ The *list of parameters file* contains the specification of perturbed parameters
 of a TRACE model specified by the user.
 In general, for each line, it contains the following information:
 
-  1. `enum`: the enumeration of the specified parameter in the list. The list
-      will be read as a list of python dictionary
-  2. `data_type`: is the type of parameters available to the user
-  3. `var_num`: the number of the parameters (typically a unique TRACE ID)
-  4. `var_name`: the name of the parameter
-  5. `var_type`: the type of the parameter, depends on the data type. e.g.,
-     `scalar`, `array`, `table`
-  6. `var_mode`: the mode of perturbation (i.e., substitutive, additive,
-     multiplicative)
-  7. `var_card`: the card of which the specific parameter to be perturbed is
-     located
-  8. `var_word`: the word in a card of which the specific parameter to be
-     perturbed is located
-  9. `var_dist`: the distribution of the perturb parameter
- 10. `var_par1`: the 1st parameter of the distribution
- 11. `var_par2`: then 2nd parameter of the distribution
+ 1. `enum`: the enumeration of the specified parameter in the list. The list
+   will be read as a list of python dictionary
+ 2. `data_type`: is the type of parameters available to the user
+ 3. `var_num`: the number of the parameters (typically a unique TRACE ID)
+ 4. `var_name`: the name of the parameter
+ 5. `var_type`: the type of the parameter, depends on the data type. e.g.,
+   `scalar`, `array`, `table`
+ 6. `var_mode`: the mode of perturbation (i.e., substitutive, additive,
+   multiplicative)
+ 7. `var_card`: the card of which the specific parameter to be perturbed is
+   located
+ 8. `var_word`: the word in a card of which the specific parameter to be
+   perturbed is located
+ 9. `var_dist`: the distribution of the perturb parameter
+10. `var_par1`: the 1st parameter of the distribution
+11. `var_par2`: then 2nd parameter of the distribution
+12. `str_fmt`: string formatting (e.g., `14.4f`, `14d`, `14.4e`)
 
 Several parameters in a TRACE model can be substituted with a random values
 for simulation experiment purpose.
@@ -35,6 +36,32 @@ The currently supported *data types* are:
 
 The parameters that can be accessed for each of these different data types are
 of course differ. This difference will be explained in the following section:
+
+## !!! Difference with the Old Format !!!
+
+Several simulation experiments (NUTHOS-10, NURETH-16, etc.) were done previously 
+using the old list of parameters file format. 
+The format has the following specification:
+
+Major changes compared to the previous format is:
+
+ 1. The number of columns are now 12, 3 more compared to the previous version.
+   All have to be specified. If a column is undefined for certain `data_type`
+   arbitrary string (recommended `-`) is required.
+ 2. `enum`, the enumeration of perturbed parameter specification has to be 
+   specified and sequential. This can force the analyst to check the list of
+   parameters file
+ 3. `var_mode` is new and has to be specified for all `data_type`
+   this an important change as now the mode of perturbation is directly specified
+   as opposed to inferring from the `data_type` 
+ 4. `str_fmt` is new and has to be speficied for all `data_type`
+   this addition will accomodate different string printing format for various
+   parameters (some are integer, some are float in exponential format, etc)
+ 5. `var_type` is now mandatory for all `data_type` including `senscoef` where 
+ 	the only acceptable `var_type` is *scalar*
+ 6. for `matprop` data type with `table` type, the `var_card` now starts with 
+   1 for **rho** up to 4 for **emis**, temperature card is excluded from 
+   perturbation
 
 ## 1. Spacer Grid Parameter
 

@@ -66,6 +66,7 @@ def read_table(tracin_lines, param_dict):
                             # last column has a continuation symbol, skip it
                             nom_val.append(float(val[:-1]))
                     offset += 1
+                break
     return nom_val
 
 
