@@ -56,8 +56,8 @@ def run(run_dirnames: list, trace_commands: list, log_files: list):
             time.sleep(0.05)
 
 
-def link_xtv(scratch_dirnames: list,
-             run_xtvs: list,
+def link_xtv(run_xtvs: list,
+             scratch_dirnames: list,
              scratch_xtvs: list):
     """
 

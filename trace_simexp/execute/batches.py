@@ -36,12 +36,14 @@ def run(exec_inputs: dict):
 
         # Create bunch of xtv files
         xtv_filenames = make_auxfilenames(batch_iter_rep[4], exec_inputs, "xtv")
+        xtv_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames, 
+                                                               xtv_filenames)]
         scratch_xtv_fullnames = [
             "{}/{}" .format(a, b) for a, b in zip(scratch_dirnames,
                                                   xtv_filenames)]
 
         # Link the xtv in the scratch
-        trace.link_xtv(run_dirnames, scratch_dirnames, scratch_xtv_fullnames)
+        trace.link_xtv(xtv_fullnames, scratch_dirnames, scratch_xtv_fullnames)
 
         # Execute TRACE commands
         trace.run(run_dirnames, trace_commands, log_fullnames)
