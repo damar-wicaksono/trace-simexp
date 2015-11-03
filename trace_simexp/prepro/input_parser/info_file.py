@@ -1,11 +1,15 @@
-"""Module to write info file from parsing the command line
+"""Module to write summary of pre-processing phase
 """
 
 __author__ = "Damar Wicaksono"
 
 
-def write(inputs, info_filename):
-    r"""Write the command line arguments into a file
+def write(inputs: dict, info_filename: str):
+    r"""Write a summary of the pre-processing phase
+
+    The summary serves a log file for the command line arguments used in the
+    pre-processing phase as well as a link to next phase (execution) to avoid
+    redundancy.
 
     :param inputs: (dict) the command line arguments as dictionary
     :param info_filename: (str) the filename of the info_file
@@ -75,14 +79,14 @@ def make_filename(inputs_dict):
     """
 
     if len(inputs_dict["samples"]) > 1:
-        info_file = "info-{}-{}-{}-{}-{}.txt" \
+        info_file = "prepro-{}-{}-{}-{}-{}.txt" \
             .format(inputs_dict["case_name"],
                     inputs_dict["params_list_name"],
                     inputs_dict["dm_name"],
                     inputs_dict["samples"][0],
                     inputs_dict["samples"][-1])
     else:
-        info_file = "info-{}-{}-{}-{}" \
+        info_file = "prepro-{}-{}-{}-{}" \
             .format(inputs_dict["case_name"],
                     inputs_dict["params_list_name"],
                     inputs_dict["dm_name"],
