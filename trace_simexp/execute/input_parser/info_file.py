@@ -20,19 +20,19 @@ def prepro_read(info_filename):
 
         # Base Directory
         if "Base Directory Name" in line:
-            base_dir = line.split("-> ")[-1]
+            base_dir = line.split("-> ")[-1].strip()
 
         # Base Case Name
         if "Base Case Name" in line:
-            case_name = line.split("-> ")[-1]
+            case_name = line.split("-> ")[-1].strip()
 
         # List of parameters name
         if "List of Parameters Name" in line:
-            params_list_name = line.split("-> ")[-1]
+            params_list_name = line.split("-> ")[-1].strip()
 
         # Design Matrix filename
         if "Design Matrix Name" in line:
-            dm_name = line.split("-> ")[-1]
+            dm_name = line.split("-> ")[-1].strip()
 
         # Samples to run
         if "Samples to Run" in line:
