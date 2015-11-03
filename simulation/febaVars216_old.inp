@@ -1,0 +1,61 @@
+############################################################################
+#  Common:                                                                 #
+#  data_type  num          var_type                      dist  min   max   #
+#  Spacer:                                                                 #
+#  data_type   num var_name var_type var_card var_word    dist  min   max  #
+#############################################################################
+##  Component - Scalar                                                      #
+##  data_type   num var_name var_type var_card var_word    dist  min   max  #
+#############################################################################
+##  Matprop - Table                                                         #
+##  data_type   num var_name var_type  var_col  var_num    dist  min   max  #
+#############################################################################
+##  Matprop - Functional Fit                                                # 
+##  data_type   num var_name var_type not_used not_used    dist  min   max  #
+#############################################################################
+##  Sensitivity Coefficients                                                #
+##  data_type   num not_used var_type  not_used not_used   dist  min   max  #
+#############################################################################
+#0         1     2        3        4        5        6       7    8     9  # 
+# Boundary Conditions
+ 1     break    40      ptb    table        2       18    unif  0.9   1.1
+ 2      fill    10     tltb    table        2       16    unif -5.0   5.0
+ 3      fill    10    vmtbm    table        2       16    unif  0.9   1.1
+ 4     power    99   rpwtbr    table        2       15    unif 0.95  1.05
+# Material Property - Heater Rods - Nichrome
+ 5   matprop    51     cond    table        4       17    unif 0.95  1.05
+ 6   matprop    51       cp    table        3       17    unif 0.95  1.05
+ 7   matprop    51     emis    table        5       17    unif 0.90  1.00
+# Material Property - Heater Rods - Magnesium Oxides
+ 8   matprop    50     cond    table        4       12    unif  0.8   1.2
+ 9   matprop    50       cp    table        3       12    unif  0.8   1.2
+# Miscelaneous
+10    vessel     1     epsw   scalar        6        2    unif 6.1E-7 2.44E-6
+# Material Property - Stainless
+11   matprop    52     cond    table        4        8    unif 0.95   1.05
+12   matprop    52       cp    table        3        8    unif 0.95   1.05
+13   matprop    52     emis    table        5        8    unif 0.5625 0.9375
+# Spacer Grid Model - Multipliers
+14  senscoef  1033        -        3        -        -    unif   0.25  1.75
+15  senscoef  1034        -        3        -        - logunif   0.5   2.0
+# Wall Heat Transfer - IAFB
+16  senscoef  1035        -        3        -        - logunif   0.5   2.0
+# Wall Heat Transfer - DFFB       
+17  senscoef  1011        -        3        -        - logunif   0.5   2.0
+# Interfacial Heat Transfer - IAFB
+18  senscoef  1037        -        3        -        - logunif   0.25  4.0
+19  senscoef  1036        -        3        -        - logunif   0.25  4.0
+# Interfacial Heat Transfer - DFFB
+20  senscoef  1038        -        3        -        - logunif   0.25  4.0
+21  senscoef  1039        -        3        -        - logunif   0.25  4.0
+# Interfacial Drag - IAFB
+22  senscoef  1040        -        3        -        - logunif   0.25  4.0
+# Interfacial Drag - DFFB
+23  senscoef  1041        -        3        -        - logunif   0.25  4.0
+# Wall Drag - IAFB
+24  senscoef  1042        -        3        -        - logunif   0.5   2.0
+# Wall Drag - DFFB
+25  senscoef  1043        -        3        -        - logunif   0.5   2.0
+# Minimum Temperature for Film Boiling
+26  senscoef  1044        -        2        -        -    unif -50.0  50.0
+###############################################################################
