@@ -4,8 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def run(run_dirnames: list, scratch_dirnames: list,
-        trace_commands: list, log_files: list):
+def run(run_dirnames: list, trace_commands: list, log_files: list):
     r"""
 
     :param run_dirnames:
@@ -55,3 +54,24 @@ def run(run_dirnames: list, scratch_dirnames: list,
             break
         else:
             time.sleep(0.05)
+
+
+def link_xtv(run_dirnames: list,
+             scratch_dirnames: list,
+             scratch_xtvs: list):
+    """
+
+    :param run_dirnames:
+    :param scratch_dirnames:
+    :return:
+    """
+    import subprocess
+    import os
+
+    for scratch_dirname in scratch_dirnames:
+
+        if not os.path.exists(scratch_dirname):
+            os.makedirs(scratch_dirname)
+
+    for scratch_xtv, run_dirname in zip(scratch_xtvs, run_dirnames):
+        subprocess.call(["ln", "-s", scratch_xtv, run_dirname])
