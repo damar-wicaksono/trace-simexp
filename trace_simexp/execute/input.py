@@ -1,4 +1,4 @@
-"""Module to get command line input parameters for execute phase
+"""Module to get command line input parameters for the execute phase
 """
 
 __author__ = "Damar Wicaksono"
