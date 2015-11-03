@@ -21,7 +21,7 @@ def run(run_dirnames: list, scratch_dirnames: list,
         return
 
     def done(p):
-        return p.poll() is not None
+        return p.poll() == 0
 
     def success(p):
         return p.returncode == 0
@@ -36,23 +36,22 @@ def run(run_dirnames: list, scratch_dirnames: list,
             processes.append(
                 subprocess.Popen(task, stdout=log_file, cwd=run_dirname))
 
-        for i, process in enumerate(processes):
+        for process in processes:
             try:
-                print("running!")
                 process.wait(timeout=8000)
             except subprocess.TimeoutExpired:
                 process.kill()
+
             if done(process):
                 if success(process):
                     log_file.close()
                     processes.remove(process)
-                    print("{} finish!" .format(i ))
                 else:
                     log_file.write("TRACE execution is killed - TimeOutError")
                     log_file.close()
                     processes.remove(process)
 
-        if not processes and trace_commands:
+        if not processes:
             break
         else:
             time.sleep(0.05)
