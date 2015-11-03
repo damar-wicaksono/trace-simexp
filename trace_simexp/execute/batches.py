@@ -18,7 +18,7 @@ def run(exec_inputs: dict):
     for batch_iter in create_iter(num_samples, exec_inputs["num_procs"]):
 
         # Repeat the iterator multiple times according to the number of calls
-        batch_iter_rep = itertools.tee(batch_iter, 9)
+        batch_iter_rep = itertools.tee(batch_iter, 10)
 
         # Create bunch of run directory names
         run_dirnames = make_dirnames(batch_iter_rep[0], exec_inputs, False)
@@ -52,27 +52,27 @@ def run(exec_inputs: dict):
 
         # Start to clean up things
         # Create bunch of .dif files
-        dif_filenames = make_auxfilenames(batch_iter_rep[4], exec_inputs, "dif")
+        dif_filenames = make_auxfilenames(batch_iter_rep[5], exec_inputs, "dif")
         dif_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                dif_filenames)]
 
         # Create bunch of .tpr files
-        tpr_filenames = make_auxfilenames(batch_iter_rep[5], exec_inputs, "tpr")
+        tpr_filenames = make_auxfilenames(batch_iter_rep[6], exec_inputs, "tpr")
         tpr_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                tpr_filenames)]
 
         # Create bunch of .out files
-        out_filenames = make_auxfilenames(batch_iter_rep[6], exec_inputs, "out")
+        out_filenames = make_auxfilenames(batch_iter_rep[7], exec_inputs, "out")
         out_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                out_filenames)]
 
         # Create bunch of .ech files
-        ech_filenames = make_auxfilenames(batch_iter_rep[7], exec_inputs, "ech")
+        ech_filenames = make_auxfilenames(batch_iter_rep[8], exec_inputs, "ech")
         ech_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                ech_filenames)]
 
         # Create bunch of .msg files
-        msg_filenames = make_auxfilenames(batch_iter_rep[8], exec_inputs, "msg")
+        msg_filenames = make_auxfilenames(batch_iter_rep[9], exec_inputs, "msg")
         msg_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                msg_filenames)]
 
