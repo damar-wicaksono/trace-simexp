@@ -1,5 +1,5 @@
 """Module to execute TRACE tasks simultaneously for task within a batch 
-and sequentially accross batch.
+and sequentially across batch.
 """
 
 __author__ = "Damar Wicaksono"
@@ -78,7 +78,23 @@ def link_xtv(run_xtvs: list,
     for scratch_xtv, run_xtv in zip(scratch_xtvs, run_xtvs):
         if os.path.isfile(scratch_xtv):
             subprocess.call(["rm", "-f", scratch_xtv])
-        if os.path.isfile(run_xtv):
+        if os.path.islink(run_xtv):
             subprocess.call(["rm", "-f", run_xtv])
             
         subprocess.call(["ln", "-s", scratch_xtv, run_xtv])
+
+
+def make_commands(exec_inputs: dict, inp_filenames) -> list:
+    """
+
+    :param batch_iterator:
+    :param exec_inputs:
+    :return:
+    """
+    trace_commands = []
+
+    for inp_filename in inp_filenames:
+        trace_command = [exec_inputs["trace_exec"], "-p", inp_filename]
+        trace_commands.append(trace_command)
+
+    return trace_commands
