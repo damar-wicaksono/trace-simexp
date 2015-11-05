@@ -1,4 +1,5 @@
-"""Module to execute trace jobs sequentially
+"""Module to execute TRACE tasks simultaneously for task within a batch 
+and sequentially accross batch.
 """
 
 __author__ = "Damar Wicaksono"
@@ -16,6 +17,10 @@ def run(run_dirnames: list, trace_commands: list, log_files: list):
     import subprocess
     import time
 
+    # Preserve some list for use again later
+    run_dirnames_cp = run_dirnames.copy()
+    log_files_cp = log_files.copy()
+    
     if not trace_commands:
         return
 
@@ -30,8 +35,8 @@ def run(run_dirnames: list, trace_commands: list, log_files: list):
     while True:
         while trace_commands:
             task = trace_commands.pop(0)
-            log_file = open(log_files.pop(0), "wt")
-            run_dirname = run_dirnames.pop(0)
+            log_file = open(log_files_cp.pop(0), "wt")
+            run_dirname = run_dirnames_cp.pop(0)
             processes.append(
                 subprocess.Popen(task, stdout=log_file, cwd=run_dirname))
 
@@ -42,13 +47,10 @@ def run(run_dirnames: list, trace_commands: list, log_files: list):
                 process.kill()
 
             if done(process):
-                if success(process):
-                    log_file.close()
-                    processes.remove(process)
-                else:
+                if not success(process):
                     log_file.write("TRACE execution is killed - TimeOutError")
-                    log_file.close()
-                    processes.remove(process)
+                log_file.close()
+                processes.remove(process)
 
         if not processes:
             break
