@@ -67,6 +67,29 @@ def run(xtv2dmx_commands: list, log_files: list, run_dirnames: list):
         else:
             time.sleep(0.05)
     
+
+def make_commands(exec_inputs: dict, 
+                  xtv_filenames: list, 
+                  dmx_filenames: list) -> list:
+    """Create list of shell command to convert xtv files into dmx files
+    
+    The conversion includes compression to reduce space requirements
+
+    :param exec_inputs: the dictionary with parameters for execute phase
+    :param xtv_fullnames: the list of xtv filenames to be converted
+    :param xtv2dmx_cmds: the list of dmx filenames as target output
+    :return: a list of xtv2dmx shell command to be executed
+    """
+    xtv2dmx_commands = []
+    
+    for xtv_filename, dmx_filename in zip(xtv_filenames, dmx_filenames):
+        xtv2dmx_command = [exec_inputs["xtv2dmx_exec"], 
+                           "-r", xtv_filename, 
+                           "-d", dmx_filename]
+        xtv2dmx_commands.append(xtv2dmx_command)
+    
+    return xtv2dmx_commands
+    
     
 def link_dmx(run_dmxs: list, scratch_dmxs: list):
     """Create a soft link between rundir dmx and scratchdir dmx
