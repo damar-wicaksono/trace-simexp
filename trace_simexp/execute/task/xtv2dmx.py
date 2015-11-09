@@ -17,6 +17,10 @@ def run(xtv2dmx_commands: list, log_files: list, run_dirnames: list):
     import subprocess
     import time
     
+    # Preserve some lists for re-use
+    run_dirnames_cp = run_dirnames.copy()
+    log_files_cp = log_files.copy()
+    
     if not xtv2dmx_commands:
         return
     
@@ -34,8 +38,8 @@ def run(xtv2dmx_commands: list, log_files: list, run_dirnames: list):
             
             # Loop over all the passed arguments
             task = xtv2dmx_commands.pop(0)
-            log_file = open(log_files.pop(0), "at")
-            run_dirname = run_dirnames.pop(0)
+            log_file = open(log_files_cp.pop(0), "at")
+            run_dirname = run_dirnames_cp.pop(0)
             
             # Create a process and collect them in a list
             process = subprocess.Popen(task, 
