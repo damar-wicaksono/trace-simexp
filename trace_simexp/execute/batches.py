@@ -12,80 +12,111 @@ def run(exec_inputs: dict):
     :param exec_inputs:
     :return:
     """
-    from .batch_process import trace
+    from .task import trace
+    from .task import xtv2dmx
+    from .task import clean
 
     num_samples = len(exec_inputs["samples"])
     for batch_iter in create_iter(num_samples, exec_inputs["num_procs"]):
 
-        # Repeat the iterator multiple times according to the number of calls
-        batch_iter_rep = itertools.tee(batch_iter, 10)
+        # Put the iterator from create_iter into a list for reusage
+        list_iter = list(batch_iter)
 
         # Create bunch of run directory names
-        run_dirnames = make_dirnames(batch_iter_rep[0], exec_inputs, False)
-
+        run_dirnames = make_dirnames(list_iter, exec_inputs, False)
+ 
         # Create bunch of log files
-        log_filenames = make_auxfilenames(batch_iter_rep[1], exec_inputs, "log")
+        log_filenames = make_auxfilenames(list_iter, exec_inputs, "log")
         log_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                log_filenames)]
-
+        
         # Create bunch of scratch directory names
-        scratch_dirnames = make_dirnames(batch_iter_rep[2], exec_inputs, True)
-
-        # Create bunch of trace commands
-        trace_commands = make_trccommands(batch_iter_rep[3], exec_inputs)
+        scratch_dirnames = make_dirnames(list_iter, exec_inputs, True)
 
         # Create bunch of xtv files
-        xtv_filenames = make_auxfilenames(batch_iter_rep[4], exec_inputs, "xtv")
+        xtv_filenames = make_auxfilenames(list_iter, exec_inputs, "xtv")
         xtv_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames, 
                                                                xtv_filenames)]
         scratch_xtv_fullnames = [
             "{}/{}" .format(a, b) for a, b in zip(scratch_dirnames,
                                                   xtv_filenames)]
+        
+        # Create bunch of trace commands
+        inp_filenames = make_auxfilenames(list_iter, exec_inputs, "")
+        trace_commands = trace.make_commands(exec_inputs, inp_filenames)
 
         # Link the xtv in the scratch
-        trace.link_xtv(xtv_fullnames, scratch_dirnames, scratch_xtv_fullnames)
+        trace.link_xtv(scratch_dirnames, xtv_fullnames, scratch_xtv_fullnames)
 
         # Execute TRACE commands
-        trace.run(run_dirnames, trace_commands, log_fullnames)
+        trace.run(trace_commands, log_fullnames, run_dirnames)
+        
+        # Create bunch of dmx files
+        dmx_filenames = make_auxfilenames(list_iter, exec_inputs, "dmx")
+        dmx_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames, 
+                                                               dmx_filenames)]
+        scratch_dmx_fullnames = [
+            "{}/{}" .format(a, b) for a, b in zip(scratch_dirnames,
+                                                  dmx_filenames)]
+
+        # Link the dmx in the scratch to the one in run directory
+        xtv2dmx.link_dmx(dmx_fullnames, scratch_dmx_fullnames)
 
         # Create bunch of xtv2dmx commands
+        xtv2dmx_commands = xtv2dmx.make_commands(exec_inputs, 
+                                                 xtv_filenames, 
+                                                 dmx_filenames)
 
         # Execute xtv2dmx commands
+        xtv2dmx.run(xtv2dmx_commands, log_fullnames, run_dirnames)
 
         # Start to clean up things
+        aux_files_list = []
+        
         # Create bunch of .dif files
-        dif_filenames = make_auxfilenames(batch_iter_rep[5], exec_inputs, "dif")
+        dif_filenames = make_auxfilenames(list_iter, exec_inputs, "dif")
         dif_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                dif_filenames)]
-
+        aux_files_list.append(dif_fullnames)                                                     
+                                                                   
         # Create bunch of .tpr files
-        tpr_filenames = make_auxfilenames(batch_iter_rep[6], exec_inputs, "tpr")
+        tpr_filenames = make_auxfilenames(list_iter, exec_inputs, "tpr")
         tpr_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                tpr_filenames)]
+        aux_files_list.append(tpr_fullnames)
 
         # Create bunch of .out files
-        out_filenames = make_auxfilenames(batch_iter_rep[7], exec_inputs, "out")
+        out_filenames = make_auxfilenames(list_iter, exec_inputs, "out")
         out_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                out_filenames)]
+        aux_files_list.append(out_fullnames)
 
-        # Create bunch of .ech files
-        ech_filenames = make_auxfilenames(batch_iter_rep[8], exec_inputs, "ech")
+        # Create bunch of .echo files
+        ech_filenames = make_auxfilenames(list_iter, exec_inputs, "echo")
         ech_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                ech_filenames)]
+        aux_files_list.append(ech_fullnames)
 
         # Create bunch of .msg files
-        msg_filenames = make_auxfilenames(batch_iter_rep[9], exec_inputs, "msg")
+        msg_filenames = make_auxfilenames(list_iter, exec_inputs, "msg")
         msg_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                msg_filenames)]
-
+        aux_files_list.append(msg_fullnames)
+        
+        # Collect the xtv files
+        aux_files_list.append(xtv_fullnames)
+        aux_files_list.append(scratch_xtv_fullnames)
+        
         # Clean up TRACE directories
+        for aux_files in aux_files_list:
+            clean.run(aux_files)
 
-
-def make_dirnames(batch_iterator: itertools.islice,
+def make_dirnames(list_iter: list,
                   exec_inputs: dict,
                   scratch_flag: bool=False) -> list:
     """
 
+    :param list_iter:
     :param batch_iterator:
     :param exec_inputs:
     :return:
@@ -97,7 +128,7 @@ def make_dirnames(batch_iterator: itertools.islice,
     else:
         base_dir = exec_inputs["base_dir"]
 
-    for i in batch_iterator:
+    for i in list_iter:
         run_dirname = "{}/{}/{}-{}/{}-run_{}" .format(
             base_dir,
             exec_inputs["case_name"],
@@ -111,7 +142,7 @@ def make_dirnames(batch_iterator: itertools.islice,
     return run_dirnames
 
 
-def make_auxfilenames(batch_iterator: itertools.islice,
+def make_auxfilenames(list_iter: list,
                       exec_inputs: dict,
                       aux_ext: str) -> list:
     """
@@ -123,53 +154,17 @@ def make_auxfilenames(batch_iterator: itertools.islice,
     """
     aux_filenames = []
 
-    for i in batch_iterator:
-        aux_filename = "{}-run_{}.{}" .format(exec_inputs["case_name"],
-                                              i+1,
-                                              aux_ext)
+    for i in list_iter:
+        if aux_ext != "":
+            aux_filename = "{}-run_{}.{}" .format(exec_inputs["case_name"],
+                                                  i+1,
+                                                  aux_ext)
+        else:
+            aux_filename = "{}-run_{}" .format(exec_inputs["case_name"],
+                                               i+1)
         aux_filenames.append(aux_filename)
 
-
     return aux_filenames
-
-
-def make_trccommands(batch_iterator: itertools.islice,
-                     exec_inputs: dict) -> list:
-    """
-
-    :param batch_iterator:
-    :param exec_inputs:
-    :return:
-    """
-    trace_commands = []
-
-    for i in batch_iterator:
-        inp_filename = "{}-run_{}" .format(exec_inputs["case_name"], i+1)
-        trace_command = [exec_inputs["trace_exec"], "-p", inp_filename]
-        trace_commands.append(trace_command)
-
-    return trace_commands
-
-
-def exec_xtv2dmx(scratch_dirnames: list, xtv2dmx_cmds: list):
-    r"""Convert xtv files to dmx file to save some space
-
-    :param scratch_dirnames:
-    :param xtv2dmx_cmds:
-    :return:
-    """
-    return None
-
-
-def clean_trace(scratch_xtvs: list, link_xtvs: list,
-                tpr_files: list, dif_files: list,
-                ech_files: list, msg_file: list,
-                out_files: list):
-    """Clean TRACE Directories
-
-    :return:
-    """
-    import subprocess
 
 
 def create_iter(num_samples: int, num_processors: int) -> itertools.islice:
