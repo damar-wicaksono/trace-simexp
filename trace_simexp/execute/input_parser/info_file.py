@@ -1,18 +1,18 @@
-"""Module to read info file - Execute phase
+"""Module to read pre-processing info file - Execute phase
 """
 
 __author__ = "Damar Wicaksono"
 
 
-def prepro_read(info_filename):
+def prepro_read(info_fullname: str):
     r"""Read the info file produced in the pre-processing phase
 
-    :param info_filename: (str) the filename for the info_file
+    :param info_fullname: (str) the fullname of the pre-pro info file
     :return:
     """
 
     # Read file
-    with open(info_filename, "rt") as info_file:
+    with open(info_fullname, "rt") as info_file:
         info_lines = info_file.read().splitlines()
 
     # Loop over lines to obtain the parameter
