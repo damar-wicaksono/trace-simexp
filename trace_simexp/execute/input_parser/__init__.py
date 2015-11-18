@@ -1,4 +1,4 @@
-__author__ = 'wicaksono_d'
+__author__ = "Damar Wicaksono"
 
 from . import command_line_args
 from . import info_file
