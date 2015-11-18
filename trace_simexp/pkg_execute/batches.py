@@ -31,7 +31,8 @@ def run(exec_inputs: dict):
     for batch_iter in create_iter(num_samples, exec_inputs["num_procs"]):
 
         # Put the iterator from create_iter into a list for re-usage
-        list_iter = list(batch_iter)
+        # Use the samples instead of the bare iterator
+        list_iter = [exec_inputs["samples"][i] for i in list(batch_iter)]
 
         # Create bunch of run directory names
         run_dirnames = make_dirnames(list_iter, exec_inputs, False)
@@ -149,7 +150,7 @@ def make_dirnames(list_iter: list,
             exec_inputs["params_list_name"],
             exec_inputs["dm_name"],
             exec_inputs["case_name"],
-            i+1
+            i
         )
         run_dirnames.append(run_dirname)
 
@@ -167,7 +168,7 @@ def make_auxfilenames(list_iter: list, case_name: str, aux_ext: str) -> list:
     aux_filenames = []
 
     for i in list_iter:
-        aux_filename = "{}-run_{}{}" .format(case_name, i+1, aux_ext)
+        aux_filename = "{}-run_{}{}" .format(case_name, i, aux_ext)
         aux_filenames.append(aux_filename)
 
     return aux_filenames
