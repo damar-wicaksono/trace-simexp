@@ -7,12 +7,22 @@ __author__ = "Damar Wicaksono"
 def get():
     r"""Get the command line arguments of the execute phase
 
-    :return:
+args.all_samples, args.info_file, args.num_processors, \
+               args.scratch_directory, args.trace_executable, \
+               args.xtv2dmx_executable
+    :return: the samples to be run can be chosen individually, a range, or all
+        available samples. If all the function will return a boolean, otherwise
+        its a list of integer.
+        (str) the pre-processing phase info file, fullname
+        (int) the number of processors used
+        (str) the scratch directory
+        (str) the trace executable fullname, if not in the path
+        (str) the xtv2dmx executable fullname, if not in the path
     """
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="trace_simexp Execute - Run all preprocessed trace inputs"
+        description="trace_simexp Execute - Run the preprocessed trace inputs"
     )
 
     # The fullname of info_file from the pre-processing phase
