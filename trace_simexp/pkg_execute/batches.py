@@ -31,7 +31,8 @@ def run(exec_inputs: dict):
     for batch_iter in create_iter(num_samples, exec_inputs["num_procs"]):
 
         # Put the iterator from create_iter into a list for re-usage
-        list_iter = list(batch_iter)
+        # Use the samples instead of the bare iterator
+        list_iter = [exec_inputs["samples"][i] for i in list(batch_iter)]
 
         # Create bunch of run directory names
         run_dirnames = make_dirnames(list_iter, exec_inputs, False)
