@@ -1,6 +1,6 @@
 import numpy as np
 
-from trace_simexp import execute
+from trace_simexp import pkg_execute
 
 __author__ = "Damar Wicaksono"
 
@@ -8,9 +8,9 @@ __author__ = "Damar Wicaksono"
 def main():
 
     # Prototypical user inputs for preprocessing phase
-    exec_inputs = execute.input.get()
+    exec_inputs = pkg_execute.input.get()
 
-    execute.batches.run(exec_inputs)
+    pkg_execute.batches.run(exec_inputs)
 
 
 if __name__ == "__main__":
