@@ -167,8 +167,7 @@ def make_auxfilenames(list_iter: list, case_name: str, aux_ext: str) -> list:
     aux_filenames = []
 
     for i in list_iter:
-        if aux_ext != "":
-            aux_filename = "{}-run_{}.{}" .format(case_name, i+1, aux_ext)
+        aux_filename = "{}-run_{}{}" .format(case_name, i+1, aux_ext)
         aux_filenames.append(aux_filename)
 
     return aux_filenames
