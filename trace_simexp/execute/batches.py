@@ -7,26 +7,37 @@ __author__ = "Damar Wicaksono"
 
 
 def run(exec_inputs: dict):
-    """
+    """Driver function to prepare run directory and execute trace in batches
 
-    :param exec_inputs:
-    :return:
+    1. The directories are prepared by making a link between dummy xtv in the
+       run directory and its corresponding scratch directory.
+    2. All the trace jobs are executed in parallel depending on the available
+       number of CPUs
+    3. After execution, a link is made between a dummy dmx file in the run
+       directory and its corresponding scratch directory.
+    4. Convert the xtv into dmx
+    5. Do directory clean up after TRACE execution and XTV conversion, all
+       unnecessary auxiliary files are removed to save disk space. The original
+       xtv file and its link are also removed.
+
+    :param exec_inputs: (dict) the inputs for execution phase
     """
     from .task import trace
     from .task import xtv2dmx
     from .task import clean
 
     num_samples = len(exec_inputs["samples"])
+    case_name = exec_inputs["case_name"]
     for batch_iter in create_iter(num_samples, exec_inputs["num_procs"]):
 
-        # Put the iterator from create_iter into a list for reusage
+        # Put the iterator from create_iter into a list for re-usage
         list_iter = list(batch_iter)
 
         # Create bunch of run directory names
         run_dirnames = make_dirnames(list_iter, exec_inputs, False)
  
         # Create bunch of log files
-        log_filenames = make_auxfilenames(list_iter, exec_inputs, "log")
+        log_filenames = make_auxfilenames(list_iter, case_name, ".log")
         log_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                log_filenames)]
         
@@ -34,7 +45,7 @@ def run(exec_inputs: dict):
         scratch_dirnames = make_dirnames(list_iter, exec_inputs, True)
 
         # Create bunch of xtv files
-        xtv_filenames = make_auxfilenames(list_iter, exec_inputs, "xtv")
+        xtv_filenames = make_auxfilenames(list_iter, case_name, ".xtv")
         xtv_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames, 
                                                                xtv_filenames)]
         scratch_xtv_fullnames = [
@@ -42,7 +53,7 @@ def run(exec_inputs: dict):
                                                   xtv_filenames)]
         
         # Create bunch of trace commands
-        inp_filenames = make_auxfilenames(list_iter, exec_inputs, "")
+        inp_filenames = make_auxfilenames(list_iter, case_name, "")
         trace_commands = trace.make_commands(exec_inputs, inp_filenames)
 
         # Link the xtv in the scratch
@@ -52,7 +63,7 @@ def run(exec_inputs: dict):
         trace.run(trace_commands, log_fullnames, run_dirnames)
         
         # Create bunch of dmx files
-        dmx_filenames = make_auxfilenames(list_iter, exec_inputs, "dmx")
+        dmx_filenames = make_auxfilenames(list_iter, case_name, ".dmx")
         dmx_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames, 
                                                                dmx_filenames)]
         scratch_dmx_fullnames = [
@@ -74,31 +85,31 @@ def run(exec_inputs: dict):
         aux_files_list = []
         
         # Create bunch of .dif files
-        dif_filenames = make_auxfilenames(list_iter, exec_inputs, "dif")
+        dif_filenames = make_auxfilenames(list_iter, case_name, ".dif")
         dif_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                dif_filenames)]
         aux_files_list.append(dif_fullnames)                                                     
                                                                    
         # Create bunch of .tpr files
-        tpr_filenames = make_auxfilenames(list_iter, exec_inputs, "tpr")
+        tpr_filenames = make_auxfilenames(list_iter, case_name, ".tpr")
         tpr_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                tpr_filenames)]
         aux_files_list.append(tpr_fullnames)
 
         # Create bunch of .out files
-        out_filenames = make_auxfilenames(list_iter, exec_inputs, "out")
+        out_filenames = make_auxfilenames(list_iter, case_name, ".out")
         out_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                out_filenames)]
         aux_files_list.append(out_fullnames)
 
         # Create bunch of .echo files
-        ech_filenames = make_auxfilenames(list_iter, exec_inputs, "echo")
+        ech_filenames = make_auxfilenames(list_iter, case_name, ".echo")
         ech_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                ech_filenames)]
         aux_files_list.append(ech_fullnames)
 
         # Create bunch of .msg files
-        msg_filenames = make_auxfilenames(list_iter, exec_inputs, "msg")
+        msg_filenames = make_auxfilenames(list_iter, case_name, ".msg")
         msg_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                msg_filenames)]
         aux_files_list.append(msg_fullnames)
@@ -111,15 +122,18 @@ def run(exec_inputs: dict):
         for aux_files in aux_files_list:
             clean.run(aux_files)
 
+
 def make_dirnames(list_iter: list,
                   exec_inputs: dict,
                   scratch_flag: bool=False) -> list:
-    """
+    """Make a complete run directory fullname
 
-    :param list_iter:
-    :param batch_iterator:
-    :param exec_inputs:
-    :return:
+    :param list_iter: (list) the iterator converted to a list of integer
+    :param exec_inputs: (dict) the execution phase inputs in dictionary
+    :param scratch_flag: (bool) boolean flag to indicate whether the base dir is
+        in the run directory or scratch directory. The downstream naming will be
+        identical.
+    :return: list of string with complete directory fullname
     """
     run_dirnames = []
 
@@ -142,26 +156,19 @@ def make_dirnames(list_iter: list,
     return run_dirnames
 
 
-def make_auxfilenames(list_iter: list,
-                      exec_inputs: dict,
-                      aux_ext: str) -> list:
-    """
+def make_auxfilenames(list_iter: list, case_name: str, aux_ext: str) -> list:
+    """Create a TRACE files with customized extension (used as auxiliary files)
 
-    :param batch_iterator:
-    :param exec_inputs:
-    :param aux_ext: the extension of auxiliary file
-    :return:
+    :param list_iter: (list) the iterator converted to a list of integer
+    :param case_name: (str) the case name
+    :param aux_ext: (str) the extension of auxiliary file
+    :return: list of string with auxiliary filenames according to the iterator
     """
     aux_filenames = []
 
     for i in list_iter:
         if aux_ext != "":
-            aux_filename = "{}-run_{}.{}" .format(exec_inputs["case_name"],
-                                                  i+1,
-                                                  aux_ext)
-        else:
-            aux_filename = "{}-run_{}" .format(exec_inputs["case_name"],
-                                               i+1)
+            aux_filename = "{}-run_{}.{}" .format(case_name, i+1, aux_ext)
         aux_filenames.append(aux_filename)
 
     return aux_filenames
