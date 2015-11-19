@@ -6,7 +6,6 @@ __author__ = "Damar Wicaksono"
 def dmx2csv(postpro_inputs: dict, trace_vars: str):
     """Driver function to convert the dmx or xtv file into a csv file
     """
-    from .pkg_postpro import dmx2csv
     from .util import create_iter
 
     num_samples = len(postpro_inputs["samples"])
@@ -24,7 +23,6 @@ def get_input(info_filename: str):
 
     :return:
     """
-    from .pkg_postpro import info_file
 
     from . import cmdln_args
     from . import info_file
