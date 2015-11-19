@@ -139,6 +139,19 @@ def get():
                args.xtv2dmx_executable
 
 
+def get_hostname() -> str:
+    """Get the hostname from the command line utility `hostname`
+
+    :return: (str) of the hostname
+    """
+    import subprocess
+
+    p = subprocess.Popen(["hostname"], stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+
+    return p.communicate()[0].rstrip().decode("utf-8")
+
+
 def check(inputs):
     r"""Check the validity of the inputs
 

@@ -47,7 +47,7 @@ def prepro_read(info_fullname: str):
     return base_dir, case_name, params_list_name, dm_name, samples
 
 
-def execute_write(inputs: dict, info_filename: str):
+def write(inputs: dict, info_filename: str):
     """Write a summary of the execution phase (a.k.a exec.info)
 
     The exec.info serves as a log file for the command line arguments, the
@@ -87,12 +87,13 @@ def execute_write(inputs: dict, info_filename: str):
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
                              .format(header[3], "->", inputs["scratch_dir"]))
 
-        # Number of Processors
-        info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[4], "->", inputs["num_procs"]))
+        # Number of Processors and hostname
+        info_file.writelines("{:<30s}{:3s}{:<3d}({})\n"
+                             .format(header[4], "->", inputs["num_procs"],
+                                     inputs["hostname"]))
 
         # Samples to Run
-        info_file.writelines("{:<30s}{:3s}\n" .format(header[8], "->"))
+        info_file.writelines("{:<30s}{:3s}\n" .format(header[5], "->"))
 
         for i in range(int(len(inputs["samples"])/10)):
             offset1 = i*10
