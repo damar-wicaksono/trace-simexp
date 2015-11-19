@@ -5,5 +5,8 @@ from . import pkg_execute
 from . import pkg_postpro
 
 from . import postpro
+from . import cmdln_args
+from . import info_file
+from . import aptscript
 
 __author__ = "Damar Wicaksono"

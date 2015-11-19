@@ -24,12 +24,11 @@ def get_input(info_filename: str):
 
     :return:
     """
-    from .pkg_postpro import input
     from .pkg_postpro import info_file
-    from .pkg_execute import input_parser
 
     from . import cmdln_args
     from . import info_file
+    from . import aptscript
 
     postpro_inputs = dict()
 
@@ -42,10 +41,10 @@ def get_input(info_filename: str):
 
     # Read prepro.info file
     base_dir, case_name, params_list_name, dm_name, avail_samples = \
-        input_parser.info_file.prepro_read(prepo_infofile)
+        info_file.prepro.read(prepo_infofile)
 
     # Read the list of TRACE variables name
-    trace_vars = input.read_tracevars(trace_vars_file)
+    trace_vars = aptscript.read(trace_vars_file)
 
     # Combine all parameters in a python dictionary
     postpro_inputs = {"exec_info": exec_infofile,
