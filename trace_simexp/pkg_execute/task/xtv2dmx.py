@@ -5,7 +5,8 @@ and sequentially between batches.
 __author__ = "Damar Wicaksono"
 
 
-def run(xtv2dmx_commands: list, log_files: list, run_dirnames: list):
+def run(xtv2dmx_commands: list, log_files: list, 
+        run_dirnames: list, info_filename: str):
     """Submit multiple xtv to dmx conversion jobs and wait until finish
     
     :param xtv2dmx_commands: list of xtv2dmx shell commands
@@ -31,6 +32,9 @@ def run(xtv2dmx_commands: list, log_files: list, run_dirnames: list):
         return p.returncode == 0
         
     processes = []
+
+    # Open the exec.info file to be appended
+    info_file = open(info_filename, "a")
     
     while True:
         # Submit all the jobs
@@ -63,6 +67,12 @@ def run(xtv2dmx_commands: list, log_files: list, run_dirnames: list):
             if done(process):
                 if not success(process):
                     log_file.write("XTV2DMX Conversion failed")
+                    info_file.writelines("Execution Failed: {}\n"
+                        .format(subprocess.list2cmdline(process.args)))
+                else:
+                    info_file.writelines("Execution Successfull: {}\n"
+                        .format(subprocess.list2cmdline(process.args)))
+
                 log_file.close()
                 processes.remove(process)
     
@@ -70,6 +80,9 @@ def run(xtv2dmx_commands: list, log_files: list, run_dirnames: list):
             break
         else:
             time.sleep(0.05)
+
+    # Close the appended exec.info file
+    info_file.close()
     
 
 def make_commands(exec_inputs: dict, 

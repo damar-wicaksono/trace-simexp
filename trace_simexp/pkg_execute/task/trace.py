@@ -5,7 +5,8 @@ and sequentially between batches.
 __author__ = "Damar Wicaksono"
 
 
-def run(trace_commands: list, log_files: list, run_dirnames: list):
+def run(trace_commands: list, log_files: list, 
+        run_dirnames: list, info_filename: str):
     """Submit multiple trace jobs and wait until finish
 
     :param trace_commands: the list of trace shell commands
@@ -31,6 +32,9 @@ def run(trace_commands: list, log_files: list, run_dirnames: list):
         return p.returncode == 0
 
     processes = []
+
+    # Open the info filename to be appended
+    info_file = open(info_filename, "a")
 
     while True:
         while trace_commands:
@@ -59,6 +63,11 @@ def run(trace_commands: list, log_files: list, run_dirnames: list):
             if done(process):
                 if not success(process):
                     log_file.write("TRACE execution is killed - TimeOutError")
+                    info_file.writelines("Execution Failed: {}\n"
+                              .format(subprocess.list2cmdline(process.args)))
+                else:
+                    info_file.writelines("Execution Successfull: {}\n"
+                              .format(subprocess.list2cmdline(process.args)))
                 log_file.close()
                 processes.remove(process)
 
@@ -66,6 +75,10 @@ def run(trace_commands: list, log_files: list, run_dirnames: list):
             break
         else:
             time.sleep(0.05)
+
+    # Close the info file 
+    info_file.close()
+
 
 def make_commands(exec_inputs: dict, tracin_filenames: list) -> list:
     """Create a list of shell command to run trace on the supplied set of tracin
