@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def get():
+def get(info_filename=None):
     """Get the command line arguments, read the info file, and construct dict()
 
     :return: (dict) the inputs collected as dictionary
@@ -48,6 +48,15 @@ def get():
         "samples": samples
     }
 
-    # Check the validity of the inputs
+    # todo: Check the validity of the inputs
+
+    # Write to a file the summary of execution phase parameters
+    if info_filename is not None:
+        info_file.write(inputs, info_filename)
+        inputs["info_file"] = info_filename
+    else:
+        info_filename = info_file.make_filename(inputs)
+        info_file.write(inputs, info_filename)
+        inputs["info_file"] = info_filename
 
     return inputs
