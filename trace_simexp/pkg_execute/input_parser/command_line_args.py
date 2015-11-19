@@ -5,11 +5,8 @@ __author__ = "Damar Wicaksono"
 
 
 def get():
-    r"""Get the command line arguments of the execute phase
+    """Get the command line arguments of the execute phase
 
-args.all_samples, args.info_file, args.num_processors, \
-               args.scratch_directory, args.trace_executable, \
-               args.xtv2dmx_executable
     :return: the samples to be run can be chosen individually, a range, or all
         available samples. If all the function will return a boolean, otherwise
         its a list of integer.
