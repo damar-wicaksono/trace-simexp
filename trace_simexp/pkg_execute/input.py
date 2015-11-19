@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def get():
+def get(info_filename=None):
     """Get the command line arguments, read the info file, and construct dict()
 
     :return: (dict) the inputs collected as dictionary
@@ -33,6 +33,9 @@ def get():
     else:
         raise ValueError("Requested samples is not part of the available ones")
 
+    # Get the name of the machine (hostname)
+    hostname = command_line_args.get_hostname()
+
     # Construct the dictionary
     inputs = {
         "info_name": info_file,
@@ -45,9 +48,19 @@ def get():
         "case_name": case_name,
         "params_list_name": params_list_name,
         "dm_name": dm_name,
-        "samples": samples
+        "samples": samples,
+        "hostname": hostname
     }
 
-    # Check the validity of the inputs
+    # todo: Check the validity of the inputs
+
+    # Write to a file the summary of execution phase parameters
+    if info_filename is not None:
+        info_file.write(inputs, info_filename)
+        inputs["exec_info"] = info_filename
+    else:
+        info_filename = info_file.make_filename(inputs)
+        info_file.write(inputs, info_filename)
+        inputs["exec_info"] = info_filename
 
     return inputs

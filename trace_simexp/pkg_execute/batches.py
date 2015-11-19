@@ -28,7 +28,15 @@ def run(exec_inputs: dict):
 
     num_samples = len(exec_inputs["samples"])
     case_name = exec_inputs["case_name"]
+    batch_int = 1
     for batch_iter in create_iter(num_samples, exec_inputs["num_procs"]):
+
+        # Append the exec.info
+        info_file = open(exec_inputs["exec_info"], "a")
+        info_file.writelines("*** Batch Execution - {:5d} ***\n"
+                             .format(batch_int))
+        info_file.close()
+        batch_int += 1
 
         # Put the iterator from create_iter into a list for re-usage
         # Use the samples instead of the bare iterator
@@ -61,7 +69,8 @@ def run(exec_inputs: dict):
         trace.link_xtv(scratch_dirnames, xtv_fullnames, scratch_xtv_fullnames)
 
         # Execute TRACE commands
-        trace.run(trace_commands, log_fullnames, run_dirnames)
+        trace.run(trace_commands, log_fullnames, 
+                  run_dirnames, exec_inputs["exec_info"])
         
         # Create bunch of dmx files
         dmx_filenames = make_auxfilenames(list_iter, case_name, ".dmx")
@@ -80,7 +89,8 @@ def run(exec_inputs: dict):
                                                  dmx_filenames)
 
         # Execute xtv2dmx commands
-        xtv2dmx.run(xtv2dmx_commands, log_fullnames, run_dirnames)
+        xtv2dmx.run(xtv2dmx_commands, log_fullnames, 
+                    run_dirnames, exec_inputs["exec_info"])
 
         # Start to clean up things
         aux_files_list = []
