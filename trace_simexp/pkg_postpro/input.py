@@ -55,7 +55,17 @@ def get_args():
         required=True
     )
 
+    # The number of processors
+    parser.add_argument(
+        "-nprocs", "--num_processors",
+        type=int,
+        help="The number of available processors",
+        default=1,
+        required=False
+    )
+
     # Get the command line arguments
     args = parser.parse_args()
 
-    return args.exec_info, args.trace_variables, args.aptplot_executable
+    return args.exec_info, args.trace_variables, args.aptplot_executable, \
+        args.num_processors
