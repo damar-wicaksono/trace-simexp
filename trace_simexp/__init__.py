@@ -8,5 +8,6 @@ from . import postpro
 from . import cmdln_args
 from . import info_file
 from . import aptscript
+from . import util
 
 __author__ = "Damar Wicaksono"
