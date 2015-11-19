@@ -26,23 +26,35 @@ def get_input():
     """
     from .pkg_postpro import input
     from .pkg_postpro import info_file
+    from .pkg_execute import input_parser
 
     postpro_inputs = dict()
 
-    #vars = input.read_tracevars("./simulation/xtvVars.inp")
-
     # Get command line arguments
-    exec_infofile, trace_vars, aptplot_exec = input.get_args()
+    exec_infofile, trace_vars_file, aptplot_exec, num_procs = input.get_args()
 
     # Read exec.info file
+    prepo_infofile, samples = info_file.exec_read(exec_infofile)
 
     # Read prepro.info file
+    base_dir, case_name, params_list_name, dm_name, avail_samples = \
+        input_parser.info_file.prepro_read(prepo_infofile)
 
     # Read the list of TRACE variables name
+    trace_vars = input.read_tracevars(trace_vars_file)
 
     # Combine all parameters in a python dictionary
     postpro_inputs = {"exec_info": exec_infofile,
                       "trace_vars_file": trace_vars,
-                      "aptplot_exec": aptplot_exec}
+                      "aptplot_exec": aptplot_exec,
+                      "num_procs": num_procs,
+                      "samples": samples,
+                      "trace_vars": trace_vars,
+                      "prepro_info": prepo_infofile,
+                      "base_dir": base_dir,
+                      "case_name": case_name,
+                      "params_list_name": params_list_name,
+                      "dm_name": dm_name,
+                      }
 
     return postpro_inputs
