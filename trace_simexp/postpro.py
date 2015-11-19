@@ -19,7 +19,7 @@ def dmx2csv(postpro_inputs: dict, trace_vars: str):
         return None
 
 
-def get_input():
+def get_input(info_filename: str):
     """Get the inputs
 
     :return:
@@ -28,13 +28,17 @@ def get_input():
     from .pkg_postpro import info_file
     from .pkg_execute import input_parser
 
+    from . import cmdln_args
+    from . import info_file
+
     postpro_inputs = dict()
 
     # Get command line arguments
-    exec_infofile, trace_vars_file, aptplot_exec, num_procs = input.get_args()
+    exec_infofile, trace_vars_file, aptplot_exec, num_procs = \
+        cmdln_args.postpro.get()
 
     # Read exec.info file
-    prepo_infofile, samples = info_file.exec_read(exec_infofile)
+    prepo_infofile, samples = info_file.execute.read(exec_infofile)
 
     # Read prepro.info file
     base_dir, case_name, params_list_name, dm_name, avail_samples = \
@@ -56,5 +60,7 @@ def get_input():
                       "params_list_name": params_list_name,
                       "dm_name": dm_name,
                       }
+
+    # TODO: Write the relevant postpro parameters into postpro.info file
 
     return postpro_inputs
