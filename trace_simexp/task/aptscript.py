@@ -31,12 +31,12 @@ def make_apt(run_filename: str, trace_vars: list, xtv_ext="dmx") -> list:
     """
     apt_script = list()
 
-    apt_script.append("TRAC 0 XTV {}.{}" .format(run_filename, xtv_ext))
+    apt_script.append("TRAC 0 XTV \"{}.{}\"" .format(run_filename, xtv_ext))
 
     for trace_var in trace_vars:
         apt_script.append("TREAD 0 \"{}\" SIU" .format(trace_var))
 
-    apt_script.append("TRAC 0 EXPORT CSV \"{}.dmx\"" .format(run_filename))
+    apt_script.append("TRAC 0 EXPORT CSV \"{}.csv\"" .format(run_filename))
     apt_script.append("TRAC 0 CLOSE")
     apt_script.append("EXIT")
 
