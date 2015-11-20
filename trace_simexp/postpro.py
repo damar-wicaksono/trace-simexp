@@ -1,24 +1,47 @@
 """Main module for post-processing activities - Post-processing Phase
 """
+
 __author__ = "Damar Wicaksono"
 
 
-def dmx2csv(postpro_inputs: dict, trace_vars: list):
+def dmx2csv(postpro_inputs: dict):
     """Driver function to convert the dmx or xtv file into a csv file
 
     :param postpro_inputs: (dict) the input parameters for post-processing phase
     :param trace_vars: (list) the list of TRACE graphic variables in string
     """
     from .util import create_iter
+    from .util import make_dirnames
+    from .util import make_auxfilenames
+    from .task import dmx2csv
 
     num_samples = len(postpro_inputs["samples"])
     case_name = postpro_inputs["case_name"]
+    batch_int = 1
 
     for batch_iter in create_iter(num_samples, postpro_inputs["num_procs"]):
 
+        # Append the exec.info
+        info_file = open(postpro_inputs["postpro_info"], "a")
+        info_file.writelines("*** Batch Execution - {:5d} ***\n"
+                             .format(batch_int))
+        info_file.close()
+        batch_int += 1
+
         # Put the iterator from create_iter into a list for re-usage
         # Use the samples instead of bare iterator
-        return None
+        list_iter = [postpro_inputs["samples"][i] for i in list(batch_iter)]
+
+        # Create bunch of run directory names
+        run_dirnames = make_dirnames(list_iter, postpro_inputs, False)
+
+        # Create bunch of run names
+        run_names = make_auxfilenames(list_iter, postpro_inputs, "")
+
+        # Execute the dmx commands
+        dmx2csv.run(postpro_inputs["aptplot_executable"],
+                    postpro_inputs["trace_vars"],
+                    run_names, run_dirnames, postpro_inputs["postpro_info"])
 
 
 def get_input(info_filename: str=None):
