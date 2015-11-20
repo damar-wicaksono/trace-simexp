@@ -22,9 +22,12 @@ def dmx2csv(postpro_inputs: dict, trace_vars: list):
 
 
 def get_input(info_filename: str=None):
-    """Get the inputs
+    """Get all the inputs for post-processing phase of the simulation experiment
 
-    :return:
+    The source of inputs are: command line arguments, exec.info file,
+    prepro.info file, and list of trace variables
+
+    :return: (dict) all the inputs for post-processing phase in a dictionary
     """
 
     from . import cmdln_args
