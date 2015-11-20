@@ -86,7 +86,7 @@ def run(xtv2dmx_commands: list, log_files: list,
     
 
 def make_commands(exec_inputs: dict, 
-                  xtv_filenames: list, 
+                  xtv_filenames: list,
                   dmx_filenames: list) -> list:
     """Create list of shell command to convert xtv files into dmx files
     
@@ -127,5 +127,3 @@ def link_dmx(run_dmxs: list, scratch_dmxs: list):
             subprocess.call(["rm", "-f", scratch_dmx])
         
         subprocess.call(["ln", "-s", scratch_dmx, run_dmx])
-        
-    
