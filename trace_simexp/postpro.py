@@ -3,8 +3,11 @@
 __author__ = "Damar Wicaksono"
 
 
-def dmx2csv(postpro_inputs: dict, trace_vars: str):
+def dmx2csv(postpro_inputs: dict, trace_vars: list):
     """Driver function to convert the dmx or xtv file into a csv file
+
+    :param postpro_inputs: (dict) the input parameters for post-processing phase
+    :param trace_vars: (list) the list of TRACE graphic variables in string
     """
     from .util import create_iter
 
@@ -18,7 +21,7 @@ def dmx2csv(postpro_inputs: dict, trace_vars: str):
         return None
 
 
-def get_input(info_filename: str):
+def get_input(info_filename: str=None):
     """Get the inputs
 
     :return:
@@ -27,8 +30,7 @@ def get_input(info_filename: str):
     from . import cmdln_args
     from . import info_file
     from . import aptscript
-
-    postpro_inputs = dict()
+    from . import util
 
     # Get command line arguments
     exec_infofile, trace_vars_file, aptplot_exec, num_procs = \
@@ -44,9 +46,13 @@ def get_input(info_filename: str):
     # Read the list of TRACE variables name
     trace_vars = aptscript.read(trace_vars_file)
 
+    # Get the host name
+    hostname = util.get_hostname()
+
     # Combine all parameters in a python dictionary
     postpro_inputs = {"exec_info": exec_infofile,
-                      "trace_vars_file": trace_vars,
+                      "trace_vars_file": trace_vars_file,
+                      "trace_vars": trace_vars,
                       "aptplot_exec": aptplot_exec,
                       "num_procs": num_procs,
                       "samples": samples,
@@ -56,8 +62,17 @@ def get_input(info_filename: str):
                       "case_name": case_name,
                       "params_list_name": params_list_name,
                       "dm_name": dm_name,
+                      "hostname": hostname
                       }
 
-    # TODO: Write the relevant postpro parameters into postpro.info file
+    # Write to a file the summary of execution phase parameters
+    if info_filename is not None:
+        info_file.postpro.write(postpro_inputs, info_filename)
+        postpro_inputs["postpro_info"] = info_filename
+    else:
+        info_filename = info_file.common.make_filename(postpro_inputs,
+                                                       "postpro")
+        info_file.postpro.write(postpro_inputs, info_filename)
+        postpro_inputs["postpro_info"] = info_filename
 
     return postpro_inputs
