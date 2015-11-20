@@ -29,10 +29,9 @@ def get_input(info_filename: str=None):
 
     :return: (dict) all the inputs for post-processing phase in a dictionary
     """
-
+    from .task import aptscript
     from . import cmdln_args
     from . import info_file
-    from . import aptscript
     from . import util
 
     # Get command line arguments
