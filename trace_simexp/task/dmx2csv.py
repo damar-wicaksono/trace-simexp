@@ -11,6 +11,8 @@ def run(aptplot_executable: str, trace_vars: list,
     import subprocess
     import time
 
+    from . import aptscript
+
     def done(p):
         return p.poll() == 0
 
@@ -26,45 +28,45 @@ def run(aptplot_executable: str, trace_vars: list,
     for run_name, run_dirname in zip(run_names, run_dirnames):
 
         # Create a string of apt command
-        apt_script = make_apt(run_name, trace_vars)
+        apt_script = aptscript.make_apt(run_name, trace_vars)
 
         # Write the aptscript into a temporary files
-        apt_script_filename = "{}/tmp.apt" .format(run_dirname)
-        with open(apt_script_filename, "w") as apt_script_file:
+        apt_script_filename = "{}.apt" .format(run_name)
+        apt_script_fullname = "{}/{}" .format(run_dirname, apt_script_filename)
+        with open(apt_script_fullname, "w") as apt_script_file:
             for line in apt_script:
                 apt_script_file.writelines("{}\n" .format(line))
 
         # Create a process and collect them in a list
         process = subprocess.Popen(
-            [aptplot_executable, "-batch", "tmp.apt", "-nowin"], cwd=run_dirname
+            [aptplot_executable, "-batch", apt_script_filename, "-nowin"], 
+            cwd=run_dirname
         )
         processes.append(process)
 
     # Loop over processes and wait for them to finish
-    for process in processes:
-        try:
-            process.wait(timeout=8000)
-        except subprocess.TimeoutExpired:
-            process.kill()
+    while True:
+        for i, process in enumerate(processes):
+            try:
+                process.wait(timeout=8000)
+            except subprocess.TimeoutExpired:
+                process.kill()
 
-        if done(process):
-            if not success(process):
-                info_file.writelines("Execution Failed: {}\n"
-                    .format(subprocess.list2cmdline(process.args)))
-            else:
-                info_file.writelines("Execution Successful: {}\n"
-                    .format(subprocess.list2cmdline(process.args)))
+            if done(process):
+                if not success(process):
+                    info_file.writelines("Execution Failed: {}\n"
+                        .format(subprocess.list2cmdline(process.args)))
+                else:
+                    info_file.writelines("Execution Successful: {}\n"
+                        .format(subprocess.list2cmdline(process.args)))
 
-            processes.remove(process)
+                processes.remove(process)
 
-    if not processes:
-        break
-    else:
-        time.sleep(0.05)
+        if not processes:
+           break
+        else:
+           time.sleep(0.05)
 
     # Close the appended exec.info file
     info_file.close()
-
-
-
-
+   
