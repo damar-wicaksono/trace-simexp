@@ -36,10 +36,10 @@ def dmx2csv(postpro_inputs: dict):
         run_dirnames = make_dirnames(list_iter, postpro_inputs, False)
 
         # Create bunch of run names
-        run_names = make_auxfilenames(list_iter, postpro_inputs, "")
+        run_names = make_auxfilenames(list_iter, case_name, "")
 
         # Execute the dmx commands
-        dmx2csv.run(postpro_inputs["aptplot_executable"],
+        dmx2csv.run(postpro_inputs["aptplot_exec"],
                     postpro_inputs["trace_vars"],
                     run_names, run_dirnames, postpro_inputs["postpro_info"])
 
