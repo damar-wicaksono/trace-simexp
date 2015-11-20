@@ -79,3 +79,16 @@ def make_auxfilenames(list_iter: list, case_name: str, aux_ext: str) -> list:
         aux_filenames.append(aux_filename)
 
     return aux_filenames
+
+
+def get_hostname() -> str:
+    """Get the hostname from the command line utility `hostname`
+
+    :return: (str) of the hostname
+    """
+    import subprocess
+
+    p = subprocess.Popen(["hostname"], stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+
+    return p.communicate()[0].rstrip().decode("utf-8")
