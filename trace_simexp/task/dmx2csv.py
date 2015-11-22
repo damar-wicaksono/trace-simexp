@@ -4,13 +4,15 @@
 __author__ = "Damar Wicaksono"
 
 
-def run(aptplot_executable: str, trace_vars: list,
-        run_names: list, run_dirnames: list, info_filename: str):
+def run(aptplot_executable: str, 
+        xtv_vars: list, xtv_vars_name:str,
+        run_names: list, run_dirnames: list, 
+        info_filename: str):
     """Function to execute the aptplot in batch mode to extract trace variables
 
     :param aptplot_executable: the fullname of aptplot executable
     :param trace_vars: the list of TRACE graphic variables to be extracted
-    :param run_names: The run names = case name + run_num
+    :param run_names: The run names = case_name + sample_num
     :param run_dirnames: the run directory names, relative to driver script
     :param info_filename: the postpro.info file to be appended
     """
@@ -36,7 +38,7 @@ def run(aptplot_executable: str, trace_vars: list,
     for run_name, run_dirname in zip(run_names, run_dirnames):
 
         # Create a string of apt command
-        apt_script = aptscript.make_apt(run_name, trace_vars)
+        apt_script = aptscript.make_apt(run_name, xtv_vars_name, xtv_vars)
 
         # Write the aptscript into a temporary files
         apt_script_filename = "{}.apt" .format(run_name)
@@ -58,6 +60,7 @@ def run(aptplot_executable: str, trace_vars: list,
     # Loop over processes and wait for them to finish
     while True:
         for i, process in enumerate(processes):
+            cmd_str = subprocess.list2cmdline(process.args) # the command in str
             try:
                 process.wait(timeout=8000)
             except subprocess.TimeoutExpired:
@@ -66,14 +69,13 @@ def run(aptplot_executable: str, trace_vars: list,
             if done(process):
                 if not success(process):
                     info_file.writelines("Execution Failed: {}\n"
-                        .format(subprocess.list2cmdline(process.args)))
+                                        .format(cmd_str))
                 else:
                     info_file.writelines("Execution Successful: {}\n"
-                                         .format(subprocess.list2cmdline(process.args)))
+                                         .format(cmd_str))
 
                 # remove the process
                 processes.remove(process)
-
 
         if not processes:
             break
