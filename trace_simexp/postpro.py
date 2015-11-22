@@ -38,10 +38,16 @@ def dmx2csv(postpro_inputs: dict):
         # Create bunch of run names
         run_names = make_auxfilenames(list_iter, case_name, "")
 
+        # Extract the name of the list of xtv variables file
+        xtv_vars_name = postpro_inputs["trace_vars_file"].split("/")[-1]
+        xtv_vars_name = xtv_vars_name.split(".")[0]
+
         # Execute the dmx commands
         dmx2csv.run(postpro_inputs["aptplot_exec"],
                     postpro_inputs["trace_vars"],
-                    run_names, run_dirnames, postpro_inputs["postpro_info"])
+                    xtv_vars_name,
+                    run_names, run_dirnames, 
+                    postpro_inputs["postpro_info"])
 
 
 def get_input(info_filename: str=None):
