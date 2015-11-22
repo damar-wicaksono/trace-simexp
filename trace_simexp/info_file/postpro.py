@@ -46,26 +46,26 @@ def write(inputs: dict, info_filename: str):
         # List of Graphic Variables Files
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
                              .format(header[4], "->",
-                                     inputs["trace_vars_file"]))
+                                     inputs["xtv_vars_file"]))
 
         # List of Graphic Variables
         info_file.writelines("{:<30s}{:3s}\n" .format(header[5], "->"))
 
-        for i in range(int(len(inputs["trace_vars"])/3)):
+        for i in range(int(len(inputs["xtv_vars"])/3)):
             offset1 = i*3
             offset2 = (i+1)*3
             for j in range(offset1, offset2 - 1):
                 info_file.writelines(" {:>20s} "
-                                     .format(inputs["trace_vars"][j]))
+                                     .format(inputs["xtv_vars"][j]))
             info_file.writelines(" {:>20s}\n"
-                                 .format(inputs["trace_vars"][offset2-1]))
+                                 .format(inputs["xtv_vars"][offset2-1]))
 
-        offset1 = int(len(inputs["trace_vars"])/3) * 3
-        offset2 = len(inputs["trace_vars"])
+        offset1 = int(len(inputs["xtv_vars"])/3) * 3
+        offset2 = len(inputs["xtv_vars"])
         if offset2 > offset1:
             for i in range(offset1, offset2):
                 info_file.writelines(" {:>20s} "
-                                     .format(inputs["trace_vars"][i]))
+                                     .format(inputs["xtv_vars"][i]))
             info_file.writelines("\n")
 
         # Samples to Run

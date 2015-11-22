@@ -24,20 +24,38 @@ def read(vars_filename: str) -> list:
     return vars_list
 
 
-def make_apt(run_filename: str, trace_vars: list, xtv_ext="dmx") -> list:
+def make_apt(run_filename: str, xtv_vars_name: str,
+             xtv_vars: list, xtv_ext="dmx") -> list:
     """Function to create an aptplot input file according to the requested vars
 
+    The aptscript will extract listed TRACE graphic variables and write them to
+    a csv file named:
+        "{}-{}.csv" .format(run_filename, xtv_vars_filename)
+    examples:
+        run_filename = "febaTrans216-run_1"
+        xtv_vars_filename = "xtvVars"
+        csv_filename = "febaTrans216-run_1-xtvVars.csv"
+
+    :param run_filename: the run name, case_name + sample_num
+    :param xtv_vars_name: the name of the xtv variables list file
+    :param xtv_vars: the list of TRACE graphic variables
+    :param xtv_ext: the extension of the TRACE output, dmx or xtv
     :return: a list of string of aptplot command in batch mode
     """
     apt_script = list()
 
-    apt_script.append("TRAC 0 XTV {}.{}" .format(run_filename, xtv_ext))
+    apt_script.append("TRAC 0 XTV \"{}.{}\"" .format(run_filename, xtv_ext))
 
-    for trace_var in trace_vars:
-        apt_script.append("TREAD 0 \"{}\" SIU" .format(trace_var))
+    # Write all the requested TRACE graphic variables
+    for xtv_var in xtv_vars:
+        apt_script.append("TREAD 0 \"{}\" SIU" .format(xtv_var))
 
-    apt_script.append("TRAC 0 EXPORT CSV \"{}.dmx\"" .format(run_filename))
+    # Make the filename
+    csv_filename = "{}-{}.csv" .format(run_filename, xtv_vars_name)
+
+    apt_script.append("TRAC 0 EXPORT CSV \"{}\"" .format(csv_filename))
     apt_script.append("TRAC 0 CLOSE")
     apt_script.append("EXIT")
 
     return apt_script
+
