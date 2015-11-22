@@ -87,6 +87,5 @@ def run(aptplot_executable: str,
     for apt_script_file in apt_script_files:
         os.remove(apt_script_file)
 
-
     # Close the appended exec.info file
     info_file.close()
