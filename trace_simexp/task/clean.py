@@ -17,3 +17,16 @@ def rm_files(files: list):
             subprocess.call(["rm", file])
         elif os.path.islink(file):
             subprocess.call(["rm", file])
+
+
+def rm_except(directories: list, files: list):
+    """Remove the all the directory contents except the files
+
+    :param directories:
+    :param files:
+    """
+    import subprocess
+
+    for directory, file in zip(directories, files):
+        subprocess.call(["find", directory, "! -name", file,
+                         "-type f", "-delete"])
