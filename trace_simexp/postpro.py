@@ -129,7 +129,7 @@ def reset(postpro_inputs: dict):
         csv_filename = "{}-run_{}-{}.csv" .format(postpro_inputs["case_name"],
                                                   postpro_inputs["samples"][i],
                                                   postpro_inputs["xtv_vars_name"])
-        csv_fullname = "{}/{}" .format(run_dirname,csv_filename)
+        csv_fullname = "{}/{}" .format(run_dirname, csv_filename)
         csv_fullnames.append(csv_fullname)
 
     # Do the cleanup
