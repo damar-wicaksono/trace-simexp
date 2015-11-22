@@ -37,14 +37,10 @@ def dmx2csv(postpro_inputs: dict):
         # Create bunch of run names
         run_names = make_auxfilenames(list_iter, case_name, "")
 
-        # Extract the name of the list of xtv variables file
-        xtv_vars_name = postpro_inputs["xtv_vars_file"].split("/")[-1]
-        xtv_vars_name = xtv_vars_name.split(".")[0]
-
         # Execute the dmx commands
         dmx2csv.run(postpro_inputs["aptplot_exec"],
                     postpro_inputs["xtv_vars"],
-                    xtv_vars_name,
+                    postpro_inputs["xtv_vars_name"],
                     run_names, run_dirnames, 
                     postpro_inputs["postpro_info"])
 
@@ -76,6 +72,9 @@ def get_input(info_filename: str=None):
     # Read the list of TRACE variables name
     xtv_vars = aptscript.read(xtv_vars_file)
 
+    # Extract the name of the list of xtv variables file
+    xtv_vars_name = xtv_vars_file.split("/")[-1].split(".")[0]
+
     # Get the host name
     hostname = util.get_hostname()
 
@@ -83,6 +82,7 @@ def get_input(info_filename: str=None):
     postpro_inputs = {"exec_info": exec_infofile,
                       "xtv_vars_file": xtv_vars_file,
                       "xtv_vars": xtv_vars,
+                      "xtv_vars_name": xtv_vars_name,
                       "aptplot_exec": aptplot_exec,
                       "num_procs": num_procs,
                       "samples": samples,
@@ -105,3 +105,30 @@ def get_input(info_filename: str=None):
         postpro_inputs["postpro_info"] = info_filename
 
     return postpro_inputs
+
+
+def reset(postpro_inputs: dict):
+    """Reset the directory structures to the execute phase state
+
+    :param postpro_inputs: (dict) the input parameters for post-processing phase
+    """
+    from .util import make_dirnames
+    from .task import clean
+
+    # Empty list
+    csv_fullnames = list()
+
+    # Create a list of csv files
+    run_dirnames = make_dirnames(postpro_inputs["samples"],
+                                 postpro_inputs,
+                                 False)
+
+    for i, run_dirname in enumerate(run_dirnames):
+        csv_filename = "{}-run_{}-{}.csv" .format(postpro_inputs["case_name"],
+                                                  postpro_inputs["samples"][i],
+                                                  postpro_inputs["xtv_vars_name"])
+        csv_fullname = "{}/{}" .format(run_dirname,csv_filename)
+        csv_fullnames.append(csv_fullname)
+
+    for csv_fullname in csv_fullnames:
+        print(csv_fullname)
