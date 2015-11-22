@@ -112,7 +112,9 @@ def reset(postpro_inputs: dict):
 
     :param postpro_inputs: (dict) the input parameters for post-processing phase
     """
+    import os
     from .util import make_dirnames
+    from .util import query_yes_no
     from .task import clean
 
     # Empty list
@@ -130,5 +132,19 @@ def reset(postpro_inputs: dict):
         csv_fullname = "{}/{}" .format(run_dirname,csv_filename)
         csv_fullnames.append(csv_fullname)
 
-    for csv_fullname in csv_fullnames:
-        print(csv_fullname)
+    # Do the cleanup
+    if query_yes_no("Delete all CSV files?", default="no"):
+
+        # Append the info file
+        with open(postpro_inputs["postpro_info"], "a") as info_file:
+            info_file.writelines("***Removing csv files***\n")
+            for csv_file in csv_fullnames:
+                if os.path.isfile(csv_file):
+                    info_file.writelines("Removing: {}\n" .format(csv_file))
+                else:
+                    info_file.writelines("File not found: {}\n" 
+                                         .format(csv_file))
+
+        # Delete
+        clean.rm_files(csv_fullnames)
+
