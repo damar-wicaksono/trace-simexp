@@ -41,7 +41,7 @@ def run(aptplot_executable: str,
         apt_script = aptscript.make_apt(run_name, xtv_vars_name, xtv_vars)
 
         # Write the aptscript into a temporary files
-        apt_script_filename = "{}.apt" .format(run_name)
+        apt_script_filename = "{}-{}.apt" .format(run_name, xtv_vars_name)
         apt_script_fullname = "{}/{}" .format(run_dirname, apt_script_filename)
         with open(apt_script_fullname, "w") as apt_script_file:
             for line in apt_script:
