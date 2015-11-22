@@ -8,7 +8,6 @@ def dmx2csv(postpro_inputs: dict):
     """Driver function to convert the dmx or xtv file into a csv file
 
     :param postpro_inputs: (dict) the input parameters for post-processing phase
-    :param trace_vars: (list) the list of TRACE graphic variables in string
     """
     from .util import create_iter
     from .util import make_dirnames
@@ -39,12 +38,12 @@ def dmx2csv(postpro_inputs: dict):
         run_names = make_auxfilenames(list_iter, case_name, "")
 
         # Extract the name of the list of xtv variables file
-        xtv_vars_name = postpro_inputs["trace_vars_file"].split("/")[-1]
+        xtv_vars_name = postpro_inputs["xtv_vars_file"].split("/")[-1]
         xtv_vars_name = xtv_vars_name.split(".")[0]
 
         # Execute the dmx commands
         dmx2csv.run(postpro_inputs["aptplot_exec"],
-                    postpro_inputs["trace_vars"],
+                    postpro_inputs["xtv_vars"],
                     xtv_vars_name,
                     run_names, run_dirnames, 
                     postpro_inputs["postpro_info"])
@@ -64,7 +63,7 @@ def get_input(info_filename: str=None):
     from . import util
 
     # Get command line arguments
-    exec_infofile, trace_vars_file, aptplot_exec, num_procs = \
+    exec_infofile, xtv_vars_file, aptplot_exec, num_procs = \
         cmdln_args.postpro.get()
 
     # Read exec.info file
@@ -75,19 +74,18 @@ def get_input(info_filename: str=None):
         info_file.prepro.read(prepo_infofile)
 
     # Read the list of TRACE variables name
-    trace_vars = aptscript.read(trace_vars_file)
+    xtv_vars = aptscript.read(xtv_vars_file)
 
     # Get the host name
     hostname = util.get_hostname()
 
     # Combine all parameters in a python dictionary
     postpro_inputs = {"exec_info": exec_infofile,
-                      "trace_vars_file": trace_vars_file,
-                      "trace_vars": trace_vars,
+                      "xtv_vars_file": xtv_vars_file,
+                      "xtv_vars": xtv_vars,
                       "aptplot_exec": aptplot_exec,
                       "num_procs": num_procs,
                       "samples": samples,
-                      "trace_vars": trace_vars,
                       "prepro_info": prepo_infofile,
                       "base_dir": base_dir,
                       "case_name": case_name,
