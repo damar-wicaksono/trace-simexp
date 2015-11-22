@@ -11,7 +11,8 @@ def run(aptplot_executable: str,
     """Function to execute the aptplot in batch mode to extract trace variables
 
     :param aptplot_executable: the fullname of aptplot executable
-    :param trace_vars: the list of TRACE graphic variables to be extracted
+    :param xtv_vars: the list of TRACE graphic variables to be extracted
+    :param xtv_vars_name: the name of the list of graphic variables file
     :param run_names: The run names = case_name + sample_num
     :param run_dirnames: the run directory names, relative to driver script
     :param info_filename: the postpro.info file to be appended
@@ -60,7 +61,7 @@ def run(aptplot_executable: str,
     # Loop over processes and wait for them to finish
     while True:
         for i, process in enumerate(processes):
-            cmd_str = subprocess.list2cmdline(process.args) # the command in str
+            cmd_str = subprocess.list2cmdline(process.args)  # the string cmd
             try:
                 process.wait(timeout=8000)
             except subprocess.TimeoutExpired:
@@ -69,7 +70,7 @@ def run(aptplot_executable: str,
             if done(process):
                 if not success(process):
                     info_file.writelines("Execution Failed: {}\n"
-                                        .format(cmd_str))
+                                         .format(cmd_str))
                 else:
                     info_file.writelines("Execution Successful: {}\n"
                                          .format(cmd_str))
