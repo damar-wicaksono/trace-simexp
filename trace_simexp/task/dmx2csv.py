@@ -27,6 +27,7 @@ def run(aptplot_executable: str, trace_vars: list,
         return p.returncode == 0
 
     processes = list()
+    apt_script_files = list()
 
     # Open the exec.info file to be appended
     info_file = open(info_filename, "a")
@@ -51,6 +52,9 @@ def run(aptplot_executable: str, trace_vars: list,
         )
         processes.append(process)
 
+        # Create list of files to be cleanup later
+        apt_script_files.append(apt_script_fullname)
+
     # Loop over processes and wait for them to finish
     while True:
         for i, process in enumerate(processes):
@@ -67,15 +71,19 @@ def run(aptplot_executable: str, trace_vars: list,
                     info_file.writelines("Execution Successful: {}\n"
                                          .format(subprocess.list2cmdline(process.args)))
 
+                # remove the process
                 processes.remove(process)
 
-                # Clean up temporary aptscript file
-                os.remove(apt_script_fullname)
 
         if not processes:
             break
         else:
             time.sleep(0.05)
+
+    # Clean up temporary aptscript file
+    for apt_script_file in apt_script_files:
+        os.remove(apt_script_file)
+
 
     # Close the appended exec.info file
     info_file.close()
