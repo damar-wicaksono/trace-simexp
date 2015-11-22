@@ -194,3 +194,51 @@ def run_batches(exec_inputs: dict):
         # Clean up TRACE directories
         for aux_files in aux_files_list:
             clean.rm_files(aux_files)
+
+
+def reset(exec_inputs: dict):
+    """Reset the directory structures to the pre-pro phase state
+
+    :param exec_inputs: (dict) the input parameters for execute phase
+    """
+    import os
+    import subprocess
+    from .util import query_yes_no
+    from .util import make_dirnames
+    from .util import make_auxfilenames
+    from .task import clean
+
+    # Create dmx link
+    run_dirnames = make_dirnames(exec_inputs["samples"], exec_inputs, False)
+    dmx_filenames = make_auxfilenames(exec_inputs["samples"],
+                                      exec_inputs["case_name"],
+                                      ".dmx")
+
+    dmx_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
+                                                           dmx_filenames)]
+
+    # Create list of TRACE input files not to be removed
+    inp_filenames = make_auxfilenames(exec_inputs["samples"],
+                                      exec_inputs["case_name"],
+                                      ".inp")
+
+    if query_yes_no("Revert back to pre-pro state?", default="no"):
+
+        # Append the info file
+        with open(exec_inputs["exec_info"], "a") as info_file:
+            info_file.writelines("***Reverting back to Pre-pro***\n")
+            for i, dmx_fullname in enumerate(dmx_fullnames):
+                if os.path.islink(dmx_fullname):
+                    info_file.writelines("Reverting: {}" .format(run_dirnames[i]))
+
+        # Clean dmx links
+        clean.rm_files(dmx_fullnames)
+
+        # Clean the rest
+        clean.rm_except(run_dirnames, inp_filenames)
+
+        # Remove the scratch directory
+        subprocess.call(["rm", "-rf", exec_inputs["scratch_dir"]])
+        
+    else:
+        pass
