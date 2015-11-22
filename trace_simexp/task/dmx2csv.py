@@ -5,9 +5,16 @@ __author__ = "Damar Wicaksono"
 
 
 def run(aptplot_executable: str, trace_vars: list,
-        run_names: list, run_dirnames: list, info_filename:str):
+        run_names: list, run_dirnames: list, info_filename: str):
     """Function to execute the aptplot in batch mode to extract trace variables
+
+    :param aptplot_executable: the fullname of aptplot executable
+    :param trace_vars: the list of TRACE graphic variables to be extracted
+    :param run_names: The run names = case name + run_num
+    :param run_dirnames: the run directory names, relative to driver script
+    :param info_filename: the postpro.info file to be appended
     """
+    import os
     import subprocess
     import time
 
@@ -58,15 +65,17 @@ def run(aptplot_executable: str, trace_vars: list,
                         .format(subprocess.list2cmdline(process.args)))
                 else:
                     info_file.writelines("Execution Successful: {}\n"
-                        .format(subprocess.list2cmdline(process.args)))
+                                         .format(subprocess.list2cmdline(process.args)))
 
                 processes.remove(process)
 
+                # Clean up temporary aptscript file
+                os.remove(apt_script_fullname)
+
         if not processes:
-           break
+            break
         else:
-           time.sleep(0.05)
+            time.sleep(0.05)
 
     # Close the appended exec.info file
     info_file.close()
-   
