@@ -1,16 +1,20 @@
 import numpy as np
 
-from trace_simexp import pkg_execute
+from trace_simexp import execute
 
 __author__ = "Damar Wicaksono"
 
 
 def main():
 
-    # Prototypical user inputs for preprocessing phase
-    exec_inputs = pkg_execute.input.get()
+    # Consolidate all the required inputs for post-processing phase
+    exec_inputs = execute.get_input()
 
-    pkg_execute.batches.run(exec_inputs)
+    # Commence the conversion
+    execute.run_batches(exec_inputs)
+
+    # Revert back to execute phase state
+    #postpro.reset(postpro_inputs)
 
 
 if __name__ == "__main__":
