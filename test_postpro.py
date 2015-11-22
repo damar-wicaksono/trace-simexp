@@ -8,7 +8,7 @@ from trace_simexp import postpro
 
 def main():
 
-    # Prototypical user inputs for preprocessing phase
+    # Consolidate all the required inputs for post-processing phase
     postpro_inputs = postpro.get_input()
 
     # Commence the conversion
