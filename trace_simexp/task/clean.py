@@ -1,4 +1,4 @@
-"""Module to reset to each of the phases
+"""Module to clean up files and directories contents
 """
 
 __author__ = "Damar Wicaksono"
@@ -34,4 +34,3 @@ def rm_except(directories: list, files: list):
                                                                    file)
         # Use the whole string with shell interpreter
         subprocess.call(tmp_script, shell=True)
-
