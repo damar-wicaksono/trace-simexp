@@ -15,8 +15,6 @@ def get_input(info_filename: str=None) -> dict:
     from . import info_file
     from . import util
 
-    inputs = dict()
-
     # Read the command line arguments
     samples, prepro_infofile, num_procs, scratch_dir, trace_exec, \
         xtv2dmx_exec = cmdln_args.execute.get()
