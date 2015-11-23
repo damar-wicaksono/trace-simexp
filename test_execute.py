@@ -14,7 +14,7 @@ def main():
     execute.run_batches(exec_inputs)
 
     # Revert back to execute phase state
-    #postpro.reset(postpro_inputs)
+    execute.reset(exec_inputs)
 
 
 if __name__ == "__main__":
