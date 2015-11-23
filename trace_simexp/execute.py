@@ -202,7 +202,6 @@ def reset(exec_inputs: dict):
     :param exec_inputs: (dict) the input parameters for execute phase
     """
     import os
-    import subprocess
     from .util import query_yes_no
     from .util import make_dirnames
     from .util import make_auxfilenames
@@ -217,6 +216,9 @@ def reset(exec_inputs: dict):
     dmx_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                            dmx_filenames)]
 
+    # Create list of scratch directories
+    scratch_dirnames = make_dirnames(exec_inputs["samples"], exec_inputs, True)
+
     # Create list of TRACE input files not to be removed
     inp_filenames = make_auxfilenames(exec_inputs["samples"],
                                       exec_inputs["case_name"],
@@ -229,7 +231,10 @@ def reset(exec_inputs: dict):
             info_file.writelines("***Reverting back to Pre-pro***\n")
             for i, dmx_fullname in enumerate(dmx_fullnames):
                 if os.path.islink(dmx_fullname):
-                    info_file.writelines("Reverting: {}" .format(run_dirnames[i]))
+                    info_file.writelines("Reverting: {}\n" .format(run_dirnames[i]))
+
+        # Clean scratch dirs
+        clean.rm_files(scratch_dirnames)
 
         # Clean dmx links
         clean.rm_files(dmx_fullnames)
@@ -237,8 +242,6 @@ def reset(exec_inputs: dict):
         # Clean the rest
         clean.rm_except(run_dirnames, inp_filenames)
 
-        # Remove the scratch directory
-        subprocess.call(["rm", "-rf", exec_inputs["scratch_dir"]])
-        
     else:
         pass
+
