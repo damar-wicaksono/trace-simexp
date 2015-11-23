@@ -13,7 +13,7 @@ def run(xtv2dmx_commands: list, log_files: list,
     :param log_files: list of log fullnames
     :param run_dirnames: list of run directory names, 
         used as the working directory for the shell command execution
-    :return: -
+    :param info_filename: (str) the exec.info file to be appended
     """
     import subprocess
     import time
