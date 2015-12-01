@@ -4,14 +4,13 @@
 __author__ = "Damar Wicaksono"
 
 
-def parse(line, params_dict, info_filename=None):
+def parse(line: str) -> dict:
     r"""Parse spacer grid specification from a list of parameters file
 
     note that the input argument `params_dict` is mutable and will be modified
 
     :param line: (list of str) a line read from list of parameters file
     :param params_dict: (list of dict) the list of parameters in a dictionary
-    :param verbose: (bool) terminal printing or not
     :returns: (list of dict) an updated params_dict with spacer specification
     """
     spacer_data = line.split()
@@ -39,11 +38,7 @@ def parse(line, params_dict, info_filename=None):
         spacer_dict["var_par2"] = float(spacer_data[10])
         spacer_dict["str_fmt"] = spacer_data[11]
 
-    # Append the new dictionary to the current list
-    params_dict.append(spacer_dict)
-
-    if info_filename is not None:
-        print_msg(spacer_dict, info_filename)
+    return spacer_dict
 
 
 def print_msg(spacer_dict, info_filename):
