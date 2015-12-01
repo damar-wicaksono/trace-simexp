@@ -1,39 +1,32 @@
 import numpy as np
 
 from trace_simexp import prepro
+from trace_simexp import tracin
 
 __author__ = "Damar Wicaksono"
 
 
 def main():
 
-    # Prototypical user inputs for preprocessing phase
-    inputs = prepro.input.get()
+    # Construct a dictionary of required inputs from command line arguments, etc
+    inputs = prepro.get_input()
 
-    # The preprocessing step
+    # Read list of parameters file and create a dictionary from it
+    params_dict = prepro.read_params(inputs["params_list_file"],
+                                     inputs["info_file"])
 
-    # 1.a. Read list of parameters file and create a dictionary from it
-    params_dict = prepro.paramfile.inp_to_dict(inputs["params_list_file"],
-                                               inputs["info_file"])
+    # Read the base tracin, obtain the nominal values, and update params_dict
+    tracin.get_nominal_values(inputs["tracin_base_file"], params_dict)
 
-    # 1.b. Read the base tracin file and obtain the nominal values
-    prepro.template.get_nominal_values(inputs["tracin_base_file"], params_dict)
+    # Create a string template
+    tracin_template = tracin.create_template(params_dict,
+                                             inputs["tracin_base_file"])
 
-    # 2. Create a string template
-    str_template = prepro.template.create(params_dict,
-                                          inputs["tracin_base_file"])
-
-    # 3. Read Design Matrix into a numpy array
+    # Read Design Matrix into a numpy array
     dm = np.loadtxt(inputs["dm_file"])
 
-    # 4. Create a directory structure based on
-    prepro.dirtree.create(params_dict, str_template, dm,
-                          inputs["case_name"],
-                          inputs["params_list_name"],
-                          inputs["dm_name"],
-                          inputs["base_name"],
-                          inputs["samples"],
-                          inputs["overwrite"])
+    # Create a directory structure based on
+    prepro.create_dirtree(inputs, params_dict, tracin_template, dm)
 
 
 if __name__ == "__main__":
