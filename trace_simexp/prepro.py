@@ -13,12 +13,6 @@ def get_input(info_filename: str=None) -> dict:
     :param info_filename: the string of prepro.info file
     :return: All the inputs required for pre-processing phase in a dictionary
     """
-    r"""Get the command line arguments and construct a dictionary from it
-
-    :param info_filename: (str, optional) the filename for the info_file, it
-        will be constructed based on input arguments if nothing is specified
-    :return: (dict) the command line arguments collected
-    """
     import numpy as np
     from . import cmdln_args
     from . import info_file
@@ -32,12 +26,6 @@ def get_input(info_filename: str=None) -> dict:
     case_name = tracin_base_fullname.split("/")[-1].split(".")[0]
     dm_name = dm_fullname.split("/")[-1].split(".")[0]
     params_list_name = params_list_fullname.split("/")[-1].split(".")[0]
-
-    # Read the list of parameters file
-
-    # Make a template string
-
-    # Read the design matrix
 
     # Construct the dictionary
     inputs = {
@@ -72,6 +60,59 @@ def get_input(info_filename: str=None) -> dict:
         inputs["info_file"] = info_filename
 
     return inputs
+
+
+def read_params(param_list_file: str,
+                info_filename: str,
+                comment_char: str="#") -> dict:
+    """Read list of parameters file and create a python dictionary out of it
+
+    :param param_list_file: (str) the fullname of list of parameters file
+    :param info_filename: (str) the filename string for info_file
+    :param comment_char: (str) the character signifying comment line in the file
+    :returns: (list of dict) the parameter perturbation specification in a list
+        of dictionary
+    """
+    from .paramfile import senscoef
+    from .paramfile import matprop
+    from .paramfile import spacer
+    from .paramfile import comp
+
+    # the list of supported component type
+    COMPONENTS = ["pipe", "vessel", "power", "fill", "break"]
+
+    # the list of dictionary of parameters list
+    params_dict = list()
+
+    # Open and read list of parameters file
+    with open(param_list_file, "rt") as params_file:
+        for line in params_file.readlines():
+            if not line.startswith(comment_char):
+                line = line.strip()
+                # the keyword for data type is the second entry in each line
+                keyword = line.split()[1].lower()
+
+                if keyword == "spacer":
+                    # spacer grid data is specified, update params_dict
+                    params_dict.append(spacer.parse(line))
+
+                elif keyword == "matprop":
+                    # material properties data is specified, update params_dict
+                    params_dict.append(matprop.parse(line))
+
+                elif keyword == "senscoef":
+                    # sensitivity coefficient is specified, update params_dict
+                    params_dict.append(matprop.parse(line))
+
+                elif keyword in COMPONENTS:
+                    # component parameter is specified, update params_dict
+                    params_dict.append(comp.parse(line))
+
+                else:
+                    raise NameError("*{}* data type is not supported!"
+                                    .format(keyword))
+
+    return params_dict
 
 
 def create_dirtree(prepro_inputs: dict):
