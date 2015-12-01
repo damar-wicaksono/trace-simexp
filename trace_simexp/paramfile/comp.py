@@ -5,13 +5,10 @@ __author__ = "Damar Wicaksono"
 
 
 def parse(line) -> dict:
-    r"""Parse component parameter specification from a list of parameters file
-
-    note that the input argument `params_dict` is mutable and will be modified
+    """Parse component parameter specification from a list of parameters file
 
     :param line: (list of str) a line read from list of parameters file
-    :param params_dict: (list of dict) the list of parameters in a dictionary
-    :returns: (dict) an updated params_dict with comp specification
+    :returns: (dict) the parsed input parameter with pre-specified key
     """
     comp_data = line.split()
 
