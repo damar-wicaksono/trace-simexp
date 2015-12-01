@@ -30,32 +30,39 @@ def parse(line) -> dict:
         "str_fmt": comp_data[11]
     }
 
+    # Add the message to be written in prepro.info
+    comp_dict["str_msg"] = create_msg(comp_dict)
+
     return comp_dict
 
 
-def print_msg(comp_dict, info_filename):
-    r"""Create a string to print on screen
+def create_msg(comp_dict: dict) -> str:
+    """Create a string of parsed parameters
 
-    :param info_filename: (str) the filename of the info_file
     :param comp_dict: (dict) the parsed component parameter
     """
-    with open(info_filename, "a") as info_file:
-        info_file.writelines("***{:2d}***\n" .format(comp_dict["enum"]))
-        info_file.writelines("Component *{}* ID *{}*, parameter *{}* is "
-                             "specified\n" .format(comp_dict["data_type"],
-                                                   comp_dict["var_num"],
-                                                   comp_dict["var_name"]))
-        info_file.writelines("Parameter type: {}\n"
-                             .format(comp_dict["var_type"]))
-        info_file.writelines("Parameter perturbation mode: {} ({})\n"
-                             .format(comp_dict["var_mode"],
-                                     var_type_str(comp_dict["var_mode"])))
-        info_file.writelines("Parameter distribution: *{}*\n"
-                             .format(comp_dict["var_dist"]))
-        info_file.writelines("1st distribution parameter: {:.3e}\n"
-                             .format(comp_dict["var_par1"]))
-        info_file.writelines("2nd distribution parameter: {:.3e}\n"
-                             .format(comp_dict["var_par2"]))
+    from .common import var_type_str
+
+    str_msg = list()
+
+    str_msg.append("***{:2d}***\n" .format(comp_dict["enum"]))
+    str_msg.append("Component *{}* ID *{}*, parameter *{}* is "
+                   "specified\n" .format(comp_dict["data_type"],
+                                         comp_dict["var_num"],
+                                         comp_dict["var_name"]))
+    str_msg.append("Parameter type: {}\n"
+                   .format(comp_dict["var_type"]))
+    str_msg.append("Parameter perturbation mode: {} ({})\n"
+                   .format(comp_dict["var_mode"],
+                           var_type_str(comp_dict["var_mode"])))
+    str_msg.append("Parameter distribution: *{}*\n"
+                   .format(comp_dict["var_dist"]))
+    str_msg.append("1st distribution parameter: {:.3e}\n"
+                   .format(comp_dict["var_par1"]))
+    str_msg.append("2nd distribution parameter: {:.3e}\n"
+                   .format(comp_dict["var_par2"]))
+
+    return str_msg
 
 
 def check_comp(comp_data):
@@ -69,12 +76,3 @@ def check_comp(comp_data):
     if not comp_data[1] in comps:
         raise TypeError("*{}* component is not currently supported"
                         .format(comp_data[1]))
-
-
-def var_type_str(var_type):
-    if var_type == 1:
-        return "additive"
-    elif var_type == 2:
-        return "substitutive"
-    elif var_type == 3:
-        return "multiplicative"
