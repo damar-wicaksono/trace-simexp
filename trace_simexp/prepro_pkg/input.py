@@ -44,7 +44,7 @@ def get(info_filename=None):
         num_samples = np.loadtxt(inputs["dm_file"]).shape[0]
         inputs["samples"] = list(range(1, num_samples+1))
 
-    # Write to a file the summary of preprocessing
+    # Write to a file the summary of pr-eprocessing
     if info_filename is not None:
         info_file.write(inputs, info_filename)
         inputs["info_file"] = info_filename
