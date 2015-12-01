@@ -1,5 +1,7 @@
 """Main module for pre-processing activities - Pre-processing Phase
 """
+import numpy as np
+
 
 __author__ = "Damar Wicaksono"
 
@@ -119,15 +121,71 @@ def read_params(param_list_file: str,
     return params_dict
 
 
-def create_dirtree(prepro_inputs: dict):
+def create_dirtree(prepro_inputs: dict,
+                   params_dict: dict,
+                   tracin_template: str,
+                   dm_array: np.ndarray):
     """Create a directory structure for the simulation campaign
 
-    :param prepro_inputs: All the inputs required for pre-pro in a dictionary
+    :param params_dict: (list of dict) the list of parameters
+    :param str_template: (str template) the template based on base tracin
+    :param dm: (ndArray) the numpy array
+    :param case_name: (str) the name of the case
+    :param params_list_name: (str) the name of the list of parameters file
+    :param dm_name: (str) the name of the design matrix
+    :param samples: (list) the list of samples to be created
+    :return:
     """
-    return None
+    import os
+    from . import tracin_util
+
+    # Put the dictionary into corresponding local variables
+    # The name of the case
+    case_name = prepro_inputs["case_name"]
+    # the name of the list of parameters file
+    params_list_name = prepro_inputs["params_list_name"]
+    # the name of the design matrix file
+    dm_name = prepro_inputs["dm_name"]
+    # the samples
+    samples = prepro_inputs["samples"]
+    # the base name
+    base_name = prepro_inputs["base_name"]
+    # the overwrite directive
+    overwrite = prepro_inputs["overwrite"]
+
+    # Create directory path name
+    case_name_dir = "./{}/{}" .format(base_name, case_name)
+    dm_name_dir = "{}/{}-{}" .format(case_name_dir, params_list_name, dm_name)
+
+    if not os.path.exists(dm_name_dir):
+        os.makedirs(dm_name_dir)
+
+    # Loop over required samples
+    for i in samples:
+        num_runs = i
+        run_dir_name = "{}/{}-run_{}" .format(dm_name_dir, case_name, num_runs)
+
+        if not os.path.exists(run_dir_name):
+            os.makedirs(run_dir_name)
+
+        str_tracin = tracin_util.create(tracin_template,
+                                   params_dict,
+                                   dm_array[i-1, :])
+        tracin_filename = "{}-run_{}.inp" .format(case_name, num_runs)
+        tracin_fullname = "{}/{}" .format(run_dir_name, tracin_filename)
+
+        if os.path.isfile(tracin_fullname):
+            if overwrite:
+                with open(tracin_fullname, "wt") as tracin_file:
+                    tracin_file.write(str_tracin)
+            else:
+                print("{} exist - no overwrite option" .format(tracin_fullname))
+        else:
+            with open(tracin_fullname, "wt") as tracin_file:
+                    tracin_file.write(str_tracin)
 
 
-def reset(postpro_inputs: dict):
+def reset(prepro_inputs: dict):
     """Delete the created directory structures according to the parameters
 
     :param prepro_inputs: (dict) the input parameters for pre-processing phase
