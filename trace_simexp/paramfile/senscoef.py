@@ -4,15 +4,11 @@
 __author__ = "Damar Wicaksono"
 
 
-def parse(line, params_dict, info_filename=None):
-    r"""Parse sensitivity coefficient specification from list of parameters file
-
-    note that the input argument `params_dict` is mutable and will be modified
+def parse(line) -> dict:
+    """Parse sensitivity coefficient specification from list of parameters file
 
     :param line: (list of str) a line read from list of parameters file
-    :param params_dict: (list of dict) the list of parameters in a dictionary
-    :param verbose: (bool) terminal printing or not
-    :returns: (list of dict) an updated params_dict with senscoef specification
+    :returns: (dict) the parsed input parameter with pre-specified key
     """
     senscoef_data = line.split()
 
@@ -34,12 +30,7 @@ def parse(line, params_dict, info_filename=None):
     # Check the validity
     check_senscoef(senscoef_dict)
 
-    # Append the new dictionary to the current list
-    params_dict.append(senscoef_dict)
-
-    # Print terminal message if asked
-    if info_filename is not None:
-        print_msg(senscoef_dict, info_filename)
+    return senscoef_dict
 
 
 def check_senscoef(senscoef_dict):
