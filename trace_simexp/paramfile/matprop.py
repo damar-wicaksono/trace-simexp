@@ -55,7 +55,7 @@ def create_msg(matprop_dict) -> list:
                    .format(matprop_dict["var_dist"]))
     str_msg.append("1st distribution parameter: {:.3e}"
                    .format(matprop_dict["var_par1"]))
-    str_msg.append("2nd distribution parameter: {:.3e}"
+    str_msg.append("2nd distribution parameter: {:.3e}\n"
                    .format(matprop_dict["var_par2"]))
 
     return "\n".join(str_msg)

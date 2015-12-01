@@ -66,7 +66,7 @@ def create_msg(senscoef_dict: dict) -> str:
                    .format(senscoef_dict["var_dist"]))
     str_msg.append("1st distribution parameter: {:.3f}"
                    .format(senscoef_dict["var_par1"]))
-    str_msg.append("2nd distribution parameter: {:.3f}"
+    str_msg.append("2nd distribution parameter: {:.3f}\n"
                    .format(senscoef_dict["var_par2"]))
 
     return "\n".join(str_msg)

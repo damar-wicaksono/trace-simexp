@@ -67,12 +67,12 @@ def create_msg(spacer_dict: dict) -> str:
     if spacer_dict["var_name"] == "spmatid":
         str_msg.append("1st distribution parameter: {}"
                        .format(spacer_dict["var_par1"]))
-        str_msg.append("2nd distribution parameter: {}"
+        str_msg.append("2nd distribution parameter: {}\n"
                        .format(spacer_dict["var_par2"]))
     else:
         str_msg.append("1st distribution parameter: {:.3f}"
                        .format(spacer_dict["var_par1"]))
-        str_msg.append("2nd distribution parameter: {:.3f}"
+        str_msg.append("2nd distribution parameter: {:.3f}\n"
                        .format(spacer_dict["var_par2"]))
 
     return "\n".join(str_msg)
