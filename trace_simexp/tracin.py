@@ -3,6 +3,8 @@
 
 __author__ = "Damar Wicaksono"
 
+COMPONENTS = ["pipe", "vessel", "power", "fill", "break"]
+
 
 def create(template_lines, params_dict, norm_pert_factors):
     r"""Function to create a trace input as string based on perturbed values
@@ -107,8 +109,6 @@ def create_template(params_dict: list, tracin_file: str):
     from .template import tracin_senscoef
     from .template import tracin_comp
     from .template import tracin_matprop
-
-    COMPONENTS = ["pipe", "vessel", "power", "fill", "break"]
 
     # Read tracin base case file
     with open(tracin_file, "rt") as tracin:
