@@ -45,24 +45,24 @@ def create_msg(comp_dict: dict) -> str:
 
     str_msg = list()
 
-    str_msg.append("***{:2d}***\n" .format(comp_dict["enum"]))
+    str_msg.append("***{:2d}***" .format(comp_dict["enum"]))
     str_msg.append("Component *{}* ID *{}*, parameter *{}* is "
-                   "specified\n" .format(comp_dict["data_type"],
-                                         comp_dict["var_num"],
-                                         comp_dict["var_name"]))
-    str_msg.append("Parameter type: {}\n"
+                   "specified" .format(comp_dict["data_type"],
+                                       comp_dict["var_num"],
+                                       comp_dict["var_name"]))
+    str_msg.append("Parameter type: {}"
                    .format(comp_dict["var_type"]))
-    str_msg.append("Parameter perturbation mode: {} ({})\n"
+    str_msg.append("Parameter perturbation mode: {} ({})"
                    .format(comp_dict["var_mode"],
                            var_type_str(comp_dict["var_mode"])))
-    str_msg.append("Parameter distribution: *{}*\n"
+    str_msg.append("Parameter distribution: *{}*"
                    .format(comp_dict["var_dist"]))
-    str_msg.append("1st distribution parameter: {:.3e}\n"
+    str_msg.append("1st distribution parameter: {:.3e}"
                    .format(comp_dict["var_par1"]))
-    str_msg.append("2nd distribution parameter: {:.3e}\n"
+    str_msg.append("2nd distribution parameter: {:.3e}"
                    .format(comp_dict["var_par2"]))
 
-    return str_msg
+    return "\n".join(str_msg)
 
 
 def check_comp(comp_data):

@@ -27,4 +27,35 @@ def parse(line) -> dict:
         "str_fmt": matprop_data[11]
     }
 
+    # Add the message to be written in prepro.info
+    matprop_dict["str_msg"] = create_msg(matprop_dict)
+
     return matprop_dict
+
+
+def create_msg(matprop_dict) -> list:
+    """Create a string of parsed parameters
+
+    :param matprop_dict: (dict) the parsed component parameter
+    """
+    from .common import var_type_str
+
+    str_msg = list()
+
+    str_msg.append("***{:2d}***" .format(matprop_dict["enum"]))
+    str_msg.append("Material ID *{}* property *{}* (Card *{}*)"
+                   .format(matprop_dict["var_num"],
+                           matprop_dict["var_name"],
+                           matprop_dict["var_card"]))
+    str_msg.append("Parameter type: {}" .format(matprop_dict["var_type"]))
+    str_msg.append("Parameter perturbation mode: {} ({})"
+                   .format(matprop_dict["var_mode"],
+                           var_type_str(matprop_dict["var_mode"])))
+    str_msg.append("Parameter distribution: *{}*"
+                   .format(matprop_dict["var_dist"]))
+    str_msg.append("1st distribution parameter: {:.3e}"
+                   .format(matprop_dict["var_par1"]))
+    str_msg.append("2nd distribution parameter: {:.3e}"
+                   .format(matprop_dict["var_par2"]))
+
+    return "\n".join(str_msg)

@@ -30,6 +30,9 @@ def parse(line) -> dict:
     # Check the validity
     check_senscoef(senscoef_dict)
 
+    # Add the message to be written in prepro.info
+    senscoef_dict["str_msg"] = create_msg(senscoef_dict)
+
     return senscoef_dict
 
 
@@ -43,34 +46,27 @@ def check_senscoef(senscoef_dict):
         raise TypeError("Only scalar type is supported for senscoef!")
 
 
-def print_msg(param_dict, info_filename):
-    r"""Write terminal message the results of parsing if verbosity asked
+def create_msg(senscoef_dict: dict) -> str:
+    """Create a string of parsed parameters
 
-    :param info_filename: (str) the filename of the info_file
-    :param param_dict: (dict) the parsed sensitivity coefficient parameters
+    :param senscoef_dict: (dict) the parsed sensitivity coefficient parameters
     """
-    with open(info_filename, "a") as info_file:
-        info_file.writelines("***{:2d}***\n" .format(param_dict["enum"]))
-        info_file.writelines("Sensitivity Coefficient with ID *{}* is "
-                             "specified\n"
-                             .format(param_dict["var_num"]))
-        info_file.writelines("Parameter type: {}\n"
-                             .format(param_dict["var_type"]))
-        info_file.writelines("Parameter perturbation mode: {} ({})\n"
-                             .format(param_dict["var_mode"],
-                                     var_type_str(param_dict["var_mode"])))
-        info_file.writelines("Parameter distribution: {}\n"
-                             .format(param_dict["var_dist"]))
-        info_file.writelines("1st distribution parameter: {:.3f}\n"
-                             .format(param_dict["var_par1"]))
-        info_file.writelines("2nd distribution parameter: {:.3f}\n"
-                             .format(param_dict["var_par2"]))
+    from .common import var_type_str
 
+    str_msg = list()
 
-def var_type_str(var_type):
-    if var_type == 1:
-        return "additive"
-    elif var_type == 2:
-        return "substitutive"
-    elif var_type == 3:
-        return "multiplicative"
+    str_msg.append("***{:2d}***" .format(senscoef_dict["enum"]))
+    str_msg.append("Sensitivity Coefficient with ID *{}* is specified"
+                   .format(senscoef_dict["var_num"]))
+    str_msg.append("Parameter type: {}" .format(senscoef_dict["var_type"]))
+    str_msg.append("Parameter perturbation mode: {} ({})"
+                   .format(senscoef_dict["var_mode"],
+                           var_type_str(senscoef_dict["var_mode"])))
+    str_msg.append("Parameter distribution: {}"
+                   .format(senscoef_dict["var_dist"]))
+    str_msg.append("1st distribution parameter: {:.3f}"
+                   .format(senscoef_dict["var_par1"]))
+    str_msg.append("2nd distribution parameter: {:.3f}"
+                   .format(senscoef_dict["var_par2"]))
+
+    return "\n".join(str_msg)

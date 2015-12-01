@@ -38,37 +38,44 @@ def parse(line: str) -> dict:
         spacer_dict["var_par2"] = float(spacer_data[10])
         spacer_dict["str_fmt"] = spacer_data[11]
 
+    # Add the message to be written in prepro.info
+    spacer_dict["str_msg"] = create_msg(spacer_dict)
+
     return spacer_dict
 
 
-def print_msg(spacer_dict, info_filename):
-    r"""Create a string to print on screen
+def create_msg(spacer_dict: dict) -> str:
+    """Create a string of parsed parameters
 
-    :param info_filename: (str) the filename of the info_file
     :param spacer_dict: (dict) the parsed parameter specifications
     """
-    with open(info_filename, "a") as info_file:
-        info_file.writelines("***{:2d}***\n" .format(spacer_dict["enum"]))
-        info_file.writelines("Spacer grid with Grid ID *{}*, parameter *{}* is "
-                             "specified\n" .format(spacer_dict["var_num"],
-                                                   spacer_dict["var_name"]))
-        info_file.writelines("Parameter type: {}\n"
-                             .format((spacer_dict["var_type"])))
-        info_file.writelines("Parameter perturbation mode: {} ({})\n"
-                             .format(spacer_dict["var_mode"],
-                                     var_type_str(spacer_dict["var_mode"])))
-        info_file.writelines("Parameter distribution: *{}*\n"
-                             .format(spacer_dict["var_dist"]))
+    from .common import var_type_str
+
+    str_msg = list()
+
+    str_msg.append("***{:2d}***" .format(spacer_dict["enum"]))
+    str_msg.append("Spacer grid with Grid ID *{}*, parameter *{}* is "
+                   "specified" .format(spacer_dict["var_num"],
+                                       spacer_dict["var_name"]))
+    str_msg.append("Parameter type: {}"
+                   .format((spacer_dict["var_type"])))
+    str_msg.append("Parameter perturbation mode: {} ({})"
+                   .format(spacer_dict["var_mode"],
+                           var_type_str(spacer_dict["var_mode"])))
+    str_msg.append("Parameter distribution: *{}*"
+                   .format(spacer_dict["var_dist"]))
     if spacer_dict["var_name"] == "spmatid":
-        info_file.writelines("1st distribution parameter: {}\n"
-              .format(spacer_dict["var_par1"]))
-        info_file.writelines("2nd distribution parameter: {}\n"
-              .format(spacer_dict["var_par2"]))
+        str_msg.append("1st distribution parameter: {}"
+                       .format(spacer_dict["var_par1"]))
+        str_msg.append("2nd distribution parameter: {}"
+                       .format(spacer_dict["var_par2"]))
     else:
-        info_file.writelines("1st distribution parameter: {:.3f}\n"
-              .format(spacer_dict["var_par1"]))
-        info_file.writelines("2nd distribution parameter: {:.3f}\n"
-              .format(spacer_dict["var_par2"]))
+        str_msg.append("1st distribution parameter: {:.3f}"
+                       .format(spacer_dict["var_par1"]))
+        str_msg.append("2nd distribution parameter: {:.3f}"
+                       .format(spacer_dict["var_par2"]))
+
+    return "\n".join(str_msg)
 
 
 def check_spacer(spacer_data):
@@ -153,12 +160,3 @@ def check_spacer(spacer_data):
     if not int(spacer_data[5]) in [1, 2, 3]:
         raise TypeError("The var_type *{}* is not supported"
                         .format(spacer_data[4]))
-
-
-def var_type_str(var_type):
-    if var_type == 1:
-        return "additive"
-    elif var_type == 2:
-        return "substitutive"
-    elif var_type == 3:
-        return "multiplicative"
