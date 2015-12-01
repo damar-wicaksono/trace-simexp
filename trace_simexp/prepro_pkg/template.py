@@ -1,7 +1,6 @@
 """Module to create a tracin template file based on base case tracin and list of
 parameters file
 """
-from .paramfile import inp_to_dict
 
 __author__ = "Damar Wicaksono"
 
@@ -22,10 +21,10 @@ def create(params_dict: list, tracin_file: str):
     """
     import string
 
-    from .template_parser import tracin_spacer
-    from .template_parser import tracin_senscoef
-    from .template_parser import tracin_comp
-    from .template_parser import tracin_matprop
+    from trace_simexp.template import tracin_spacer
+    from trace_simexp.template import tracin_senscoef
+    from trace_simexp.template import tracin_comp
+    from trace_simexp.template import tracin_matprop
 
     # Read tracin base case file
     with open(tracin_file, "rt") as tracin:
@@ -67,10 +66,10 @@ def get_nominal_values(tracin_file: str, params_dict: list):
     :param tracin_file: (str) the fullname of the base tracin
     :param params_dict: (list of dict) list of parameters in dictionaries
     """
-    from .template_parser import tracin_spacer
-    from .template_parser import tracin_senscoef
-    from .template_parser import tracin_matprop
-    from .template_parser import tracin_comp
+    from trace_simexp.template import tracin_spacer
+    from trace_simexp.template import tracin_senscoef
+    from trace_simexp.template import tracin_matprop
+    from trace_simexp.template import tracin_comp
 
     # Read file and put the lines into python list (and strip them directly)
     with open(tracin_file, "rt") as tracin:

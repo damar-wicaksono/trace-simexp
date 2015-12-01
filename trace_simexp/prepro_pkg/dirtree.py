@@ -19,7 +19,7 @@ def create(params_dict, str_template, dm, case_name, params_list_name,
     :return:
     """
     import os
-    from . import tracin
+    from trace_simexp import tracin_util
 
     # Create directory path name
     case_name_dir = "./{}/{}" .format(base_name, case_name)
@@ -36,7 +36,7 @@ def create(params_dict, str_template, dm, case_name, params_list_name,
         if not os.path.exists(run_dir_name):
             os.makedirs(run_dir_name)
 
-        str_tracin = tracin.create(str_template, params_dict, dm[i-1, :])
+        str_tracin = tracin_util.create(str_template, params_dict, dm[i-1, :])
         tracin_filename = "{}-run_{}.inp" .format(case_name, num_runs)
         tracin_fullname = "{}/{}" .format(run_dir_name, tracin_filename)
 
@@ -49,6 +49,7 @@ def create(params_dict, str_template, dm, case_name, params_list_name,
         else:
             with open(tracin_fullname, "wt") as tracin_file:
                     tracin_file.write(str_tracin)
+
 
 def check(case_name, param_list_name, dm_name, base_name, samples):
     """
