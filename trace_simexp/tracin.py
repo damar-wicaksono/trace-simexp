@@ -13,7 +13,7 @@ def create(template_lines, params_dict, norm_pert_factors):
     :return: (str) a tracin with template keys substituted with the actual
         perturbed model parameter values
     """
-    from .tracin_generator import perturb
+    from .tracin_util import perturb
 
     # A simple dimension checking
     if len(params_dict) != len(norm_pert_factors):
@@ -88,3 +88,53 @@ def get_nominal_values(tracin_file: str, params_dict: list):
 
         else:
             raise TypeError("Not a recognized data type")
+
+
+def create_template(params_dict: list, tracin_file: str):
+    r"""Procedure to create tracin template string
+
+    The string contains `keys` to be substituted with values based on the
+    design matrix.
+
+    :param params_dict: (list) the list of parameters in the dictionary
+    :param tracin_file: (str) the fullname of base case tracin file
+        produced
+    :returns: (str template) the template of tracin in string format
+    """
+    import string
+
+    from .template import tracin_spacer
+    from .template import tracin_senscoef
+    from .template import tracin_comp
+    from .template import tracin_matprop
+
+    COMPONENTS = ["pipe", "vessel", "power", "fill", "break"]
+
+    # Read tracin base case file
+    with open(tracin_file, "rt") as tracin:
+        tracin_lines = tracin.read().splitlines()
+
+    tracin_tmp_lines = tracin_lines
+    # Do something here to make the template
+    for num, param in enumerate(params_dict):
+
+        if param["data_type"] == "spacer":
+            # spacer specified, look for it in the tracin
+            tracin_tmp_lines = tracin_spacer.put_key(tracin_tmp_lines, param)
+
+        elif param["data_type"] == "matprop":
+            # material property specified, look for it in the tracin
+            tracin_tmp_lines = tracin_matprop.put_key(tracin_lines, param)
+
+        if param["data_type"] == "senscoef":
+            # spacer specified, look for it in the tracin
+            tracin_tmp_lines = tracin_senscoef.put_key(tracin_tmp_lines, param)
+
+        if param["data_type"] in COMPONENTS:
+            # spacer specified, look for it in the tracin
+            tracin_tmp_lines = tracin_comp.put_key(tracin_tmp_lines, param)
+
+    # Join the list of strings again with newline
+    tracin_tmp_lines = " \n".join(tracin_lines)
+
+    return string.Template(tracin_tmp_lines)
