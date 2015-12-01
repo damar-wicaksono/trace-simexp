@@ -102,7 +102,7 @@ def read_params(param_list_file: str,
 
                 elif keyword == "senscoef":
                     # sensitivity coefficient is specified, update params_dict
-                    params_dict.append(matprop.parse(line))
+                    params_dict.append(senscoef.parse(line))
 
                 elif keyword in COMPONENTS:
                     # component parameter is specified, update params_dict
