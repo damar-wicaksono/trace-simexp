@@ -73,6 +73,7 @@ def read_params(param_list_file: str,
     :returns: (list of dict) the parameter perturbation specification in a list
         of dictionary
     """
+    from .paramfile import common
     from .paramfile import senscoef
     from .paramfile import matprop
     from .paramfile import spacer
@@ -111,6 +112,9 @@ def read_params(param_list_file: str,
                 else:
                     raise NameError("*{}* data type is not supported!"
                                     .format(keyword))
+
+    # Append the prepro.info
+    common.append_info(params_dict, info_filename)
 
     return params_dict
 
