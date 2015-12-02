@@ -14,10 +14,8 @@ def main():
 
     # Read list of parameters file and create a dictionary from it
     params_dict = prepro.read_params(inputs["params_list_file"],
-                                     inputs["info_file"])
-
-    # Read the base tracin, obtain the nominal values, and update params_dict
-    tracin.get_nominal_values(inputs["tracin_base_file"], params_dict)
+                                     inputs["info_file"],
+                                     inputs["tracin_base_file"])
 
     # Create a string template
     tracin_template = tracin.create_template(params_dict,
