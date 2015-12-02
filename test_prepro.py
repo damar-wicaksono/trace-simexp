@@ -2,6 +2,7 @@ import numpy as np
 
 from trace_simexp import prepro
 from trace_simexp import tracin
+from trace_simexp import util
 
 __author__ = "Damar Wicaksono"
 
@@ -23,7 +24,7 @@ def main():
                                              inputs["tracin_base_file"])
 
     # Read Design Matrix into a numpy array
-    dm = np.loadtxt(inputs["dm_file"])
+    dm = util.parse_csv(inputs["dm_file"])
 
     # Create a directory structure based on
     prepro.create_dirtree(inputs, params_dict, tracin_template, dm)
