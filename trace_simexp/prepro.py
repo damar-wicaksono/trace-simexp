@@ -49,7 +49,7 @@ def get_input(info_filename: str=None) -> dict:
 
     # Update samples if all samples are asked
     if isinstance(inputs["samples"], bool) and inputs["samples"]:
-        num_samples = np.loadtxt(inputs["dm_file"]).shape[0]
+        num_samples = np.loadtxt(inputs["dm_file"], delimiter=",").shape[0]
         inputs["samples"] = list(range(1, num_samples+1))
 
     # Write to a file the summary of pre-processing
