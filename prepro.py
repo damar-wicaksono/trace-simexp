@@ -23,9 +23,9 @@ def main():
                                              inputs["tracin_base_file"])
 
     # Read Design Matrix into a numpy array
-    dm = np.loadtxt(inputs["dm_file"])
+    dm = np.loadtxt(inputs["dm_file"], delimiter=",")
 
-    # Create a directory structure based on
+    # Create a directory structure based on the specified input
     prepro.create_dirtree(inputs, params_dict, tracin_template, dm)
 
 
