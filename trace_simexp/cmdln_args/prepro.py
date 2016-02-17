@@ -1,5 +1,6 @@
 """Module to parse command line arguments in pre-processing phase
 """
+from .. import util
 
 __author__ = "Damar Wicaksono"
 
@@ -161,8 +162,8 @@ def check(inputs):
 
     # Check if design matrix file exist
     if os.path.exists(inputs["dm_file"]):
-        num_params_dm = np.loadtxt(inputs["dm_file"],delimiter=",").shape[1]
-        num_samples = np.loadtxt(inputs["dm_file"],delimiter=",").shape[0]
+        num_params_dm = util.parse_csv(inputs["dm_file"]).shape[1]
+        num_samples = util.parse_csv(inputs["dm_file"]).shape[0]
     else:
         raise ValueError("The design matrix file does not exists!")
 

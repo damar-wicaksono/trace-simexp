@@ -18,6 +18,7 @@ def get_input(info_filename: str=None) -> dict:
     import numpy as np
     from . import cmdln_args
     from . import info_file
+    from . import util
 
     # Read the command line arguments
     samples, base_dirname, \
@@ -49,7 +50,7 @@ def get_input(info_filename: str=None) -> dict:
 
     # Update samples if all samples are asked
     if isinstance(inputs["samples"], bool) and inputs["samples"]:
-        num_samples = np.loadtxt(inputs["dm_file"], delimiter=",").shape[0]
+        num_samples = util.parse_csv(inputs["dm_file"]).shape[0]
         inputs["samples"] = list(range(1, num_samples+1))
 
     # Write to a file the summary of pre-processing
@@ -66,11 +67,15 @@ def get_input(info_filename: str=None) -> dict:
 
 def read_params(param_list_file: str,
                 info_filename: str,
+                tracin_filename:str,
                 comment_char: str="#") -> dict:
     """Read list of parameters file and create a python dictionary out of it
 
+    The nominal parameter values are read from the base tracin file
+
     :param param_list_file: (str) the fullname of list of parameters file
     :param info_filename: (str) the filename string for info_file
+    :param tracin_filename: (str) the filename string for base tracin file
     :param comment_char: (str) the character signifying comment line in the file
     :returns: (list of dict) the parameter perturbation specification in a list
         of dictionary
@@ -80,6 +85,7 @@ def read_params(param_list_file: str,
     from .paramfile import matprop
     from .paramfile import spacer
     from .paramfile import comp
+    from . import tracin
 
     # the list of supported component type
     COMPONENTS = ["pipe", "vessel", "power", "fill", "break"]
@@ -117,6 +123,9 @@ def read_params(param_list_file: str,
 
     # Append the prepro.info
     common.append_info(params_dict, info_filename)
+
+    # Get the nominal values of parameter from tracin and update params_dict
+    tracin.get_nominal_values(tracin_filename, params_dict)
 
     return params_dict
 

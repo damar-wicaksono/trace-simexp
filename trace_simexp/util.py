@@ -2,7 +2,7 @@
 """
 
 import itertools
-
+import numpy as np
 
 __author__ = "Damar Wicaksono"
 
@@ -128,3 +128,28 @@ def query_yes_no(question, default="yes"):
             sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
 
+def parse_csv(csv_filename: str) -> np.ndarray:
+    """Parse a csv file, sniff the actual delimiter of the file
+
+    This is used to load a generic csv file without specifying the actual
+    delimiter
+
+    **References:**
+    stackoverflow.com/questions/16312104/python-import-csv-file-delimiter-or
+
+    :param csv_filename: the name of the csv file in string
+    :return: a numpy array
+    """
+    import csv
+
+    output = list()
+
+    with open(csv_filename, "r") as csv_file:
+        dialect = csv.Sniffer().sniff(csv_file.read(), delimiters=",\t ")
+        csv_file.seek(0)
+        reader = csv.reader(csv_file, dialect)
+
+        for line in reader:
+            output.append(line)
+
+    return np.array(output).astype(np.float)
