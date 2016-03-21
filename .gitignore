@@ -5,3 +5,4 @@ simulation/febaTrans214
 logfiles/
 *.info
 *.log
+*.__*
