@@ -34,11 +34,15 @@ def read(info_fullname: str):
     base_dir, case_name, params_list_name, dm_name, \
         samples = prepro.read(prepro_info)
     
-    # Construct the run directory name of a campaign
+    # Construct campaign name
+    campaign_name = "{}-{}-{}" .format(case_name, params_list_name,
+                                       dm_name)
+                                       
+    # Construct the run directory name of the campaign
     run_dirname = "{}/{}/{}-{}" .format(base_dir, case_name, 
                                         params_list_name, dm_name)
     
-    return run_dirname, apt_name
+    return campaign_name, run_dirname, apt_name
     
     
 def write(inputs: dict, info_filename: str):
