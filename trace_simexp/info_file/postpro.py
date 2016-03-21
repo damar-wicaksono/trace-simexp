@@ -4,6 +4,43 @@
 __author__ = "Damar Wicaksono"
 
 
+def read(info_fullname: str):
+    """Read the info file produced in the post-processing phase
+    
+    :param info_fullname: the fullname of the post-pro info file
+    :return: (str) the run directory name
+        (str) the name of the aptscript
+    """
+    from . import prepro
+    
+    # Read file
+    with open(info_fullname, "rt") as info_file:
+        info_lines = info_file.read().splitlines()
+        
+    # Loop over lines to obtain the parameters
+    for num_line, line in enumerate(info_lines):
+        
+        # Pre-pro Info File 
+        if "prepro.info Filename" in line:
+            prepro_info = line.split("-> ")[-1].strip()
+            
+        # The name of aptplot script
+        if "List of XTV Variables Files" in line:
+            apt_name = line.split("-> ")[-1].strip()
+            apt_name = apt_name.split("/")[-1]
+            apt_name = apt_name.split(".")[0]
+   
+    # Read the prepro info file
+    base_dir, case_name, params_list_name, dm_name, \
+        samples = prepro.read(prepro_info)
+    
+    # Construct the run directory name of a campaign
+    run_dirname = "{}/{}/{}-{}" .format(base_dir, case_name, 
+                                        params_list_name, dm_name)
+    
+    return run_dirname, apt_name
+    
+    
 def write(inputs: dict, info_filename: str):
     """Write a summary of the post-processing phase (a.k.a postpro.info)
 
