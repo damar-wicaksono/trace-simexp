@@ -44,17 +44,23 @@ as well as its usage.
 
 ## Introduction and Scope of the Utility
  
-In the context of 
-This version and the features were consolidated from the developments
-made for the PSI contributions to the PREMIUM Phase-IV benchmark, 
-the NUTHOS-11 conference, and the NURETH-16 conference.
+In the context of PSI contribution to the OECD/NEA PREMIUM Benchmark Phase IV, 
+there was a need to be able to execute numerous TRACE runs of a given model with 
+different values of the input parameters in a systematic manner. 
+By taking the developments from the design and analysis of computer experiment, 
+the resulting outputs can then be analyzed further, either for the purpose of 
+quantifying the model prediction uncertainty (*uncertainty propagation*) or 
+of understanding better the input/output relationship of the complex model 
+(*sensitivity analysis*). This document details the implementation of a 
+Python3-based utility to assist in carrying out computer experiment for 
+TRACE model.
 
 The global flowchart of the utility is shown in Figure 1.
 The process is done in three sequential steps with clearly defined inputs 
 and outputs as well as a set of required command line arguments.
 The flowchart also explicitly states the scope of the utility development that 
 begins with a set of input files and ends with a set of csv files. 
-The most important input file for a simulation experiment campaign is the 
+The most important input file for a computer experiment campaign is the 
 design matrix which contains normalized input parameters values at which 
 TRACE will be run. The design matrix is produced by generic numerical routine 
 and is outside the scope of `trace-simexp`.
@@ -64,10 +70,16 @@ The csv files are ready to be further post-processed for sensitivity/uncertainty
 analysis. The tools required to carry out such an analysis is also outside 
 the scope of `trace-simexp`.
 
-<!--TODO Give short background, emphasize on the current version and its use cases--> 
 ![Figure 1: Generic flowchart of trace-simexp including the required input files](figures/flowchart.png)
 
-In the subsequent sections the implementation will be explained in more detail.
+The current version and its features were a consolidation from the developments
+made for the PSI contributions to the PREMIUM Phase-IV benchmark 
+(application of uncertainty propagation), the NUTHOS-11 conference 
+(application of the Morris method), and the NURETH-16 conference (application 
+of the Sobol' method). All the aforementioned applications were related to TRACE
+reflood model on the basis of FEBA separate effect facility for reflood 
+experiment.
+In the subsequent sections, the implementation will be explained in more detail.
 
 ## Description of Features (v1.0)
 
