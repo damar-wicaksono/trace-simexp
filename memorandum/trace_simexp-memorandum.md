@@ -3,17 +3,23 @@
 ## STARS Memorandum
 
 Date: 23.06.2016
+
 From: D. Wicaksono
+
 Phone: +41 56 310 2759
+
 Loc.: OHSA/D08
+
 Email: damar.wicaksono@psi.ch
 
 To: 
- 1. STARS / O. Zerkak
+
+ 1. STARS / O. Zerkak 
  2. STARS / Y. Aounallah
  3. ERP / G. Perret
 
 cc:
+ 
  1. STARS / STARS_TRACE
  2. STARS / M. Krack
  3. STARS / H. Ferroukhi 
@@ -38,12 +44,30 @@ as well as its usage.
 
 ## Introduction and Scope of the Utility
  
-<!--TODO Give short background, emphasize on the current version and its use cases--> 
-![Generic flowchart of trace-simexp including the required input files](figures/flowchart.png)
-
+In the context of 
 This version and the features were consolidated from the developments
 made for the PSI contributions to the PREMIUM Phase-IV benchmark, 
 the NUTHOS-11 conference, and the NURETH-16 conference.
+
+The global flowchart of the utility is shown in Figure 1.
+The process is done in three sequential steps with clearly defined inputs 
+and outputs as well as a set of required command line arguments.
+The flowchart also explicitly states the scope of the utility development that 
+begins with a set of input files and ends with a set of csv files. 
+The most important input file for a simulation experiment campaign is the 
+design matrix which contains normalized input parameters values at which 
+TRACE will be run. The design matrix is produced by generic numerical routine 
+and is outside the scope of `trace-simexp`.
+The set of csv files, each of which contains TRACE graphic variables extracted 
+from the produced binary xtv files.
+The csv files are ready to be further post-processed for sensitivity/uncertainty 
+analysis. The tools required to carry out such an analysis is also outside 
+the scope of `trace-simexp`.
+
+<!--TODO Give short background, emphasize on the current version and its use cases--> 
+![Figure 1: Generic flowchart of trace-simexp including the required input files](figures/flowchart.png)
+
+In the subsequent sections the implementation will be explained in more detail.
 
 ## Description of Features (v1.0)
 
