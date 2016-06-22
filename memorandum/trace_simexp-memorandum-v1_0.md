@@ -44,46 +44,55 @@ as well as its usage.
 
 ## Introduction and Scope of the Utility
  
-In the context of PSI contribution to the OECD/NEA PREMIUM Benchmark Phase IV, 
-there was a need to be able to execute numerous TRACE runs of a given model with 
-different values of the input parameters in a systematic manner. 
-By taking the developments from the design and analysis of computer experiment, 
-the resulting outputs can then be analyzed further, either for the purpose of 
-quantifying the model prediction uncertainty (*uncertainty propagation*) or 
-of understanding better the input/output relationship of the complex model 
+In the context of PSI contribution to the OECD/NEA PREMIUM Benchmark 
+Phase IV, there was a need to be able to execute numerous TRACE runs of 
+a given model with different values of the input parameters in a 
+systematic manner. By taking the developments from the design and 
+analysis of computer experiment, a reasonable number of inputs 
+combinations (directly translated to the number of code runs) can be 
+judiciously selected and the resulting outputs can then be analyzed 
+further. These were done either for the purpose of quantifying the 
+model prediction uncertainty (*uncertainty propagation*) or of 
+understanding better the input/output relationship of the complex model 
 (*sensitivity analysis*). This document details the implementation of a 
 Python3-based utility to assist in carrying out computer experiment for 
 TRACE model.
 
 The global flowchart of the utility is shown in Figure 1.
-The process is done in three sequential steps with clearly defined inputs 
-and outputs as well as a set of required command line arguments.
-The flowchart also explicitly states the scope of the utility development that 
-begins with a set of input files and ends with a set of csv files. 
-The most important input file for a computer experiment campaign is the 
-design matrix which contains normalized input parameters values at which 
-TRACE will be run. The design matrix is produced by generic numerical routine 
-and is outside the scope of `trace-simexp`.
-The set of csv files, each of which contains TRACE graphic variables extracted 
-from the produced binary xtv files.
-The csv files are ready to be further post-processed for sensitivity/uncertainty 
-analysis. The tools required to carry out such an analysis is also outside 
-the scope of `trace-simexp`.
+The process is done in three sequential steps with clearly defined 
+inputs and outputs as well as a set of required command line arguments.
+The flowchart also explicitly states the scope of the utility 
+development that begins with a set of input files and ends with a set of
+csv files. The most important input file for a computer experiment 
+campaign is the design matrix which contains normalized input parameters 
+values at which TRACE will be run. The design matrix is produced by 
+generic numerical routine and is outside the scope of `trace-simexp`.
+The set of csv files, each of which contains TRACE graphic variables 
+extracted from the produced binary xtv files is the ultimate output of 
+the utility.
+The csv files are ready to be further post-processed for 
+sensitivity/uncertainty analysis. The tools required to carry out such 
+an analysis is also outside the scope of `trace-simexp`.
 
 ![Figure 1: Generic flowchart of trace-simexp including the required input files](figures/flowchart.png)
 
-The current version and its features were a consolidation from the developments
-made for the PSI contributions to the PREMIUM Phase-IV benchmark 
-(application of uncertainty propagation), the NUTHOS-11 conference 
-(application of the Morris method), and the NURETH-16 conference (application 
-of the Sobol' method). All the aforementioned applications were related to TRACE
-reflood model on the basis of FEBA separate effect facility for reflood 
-experiment.
-In the subsequent sections, the implementation will be explained in more detail.
+
+In the subsequent sections, the implementation will be explained in more 
+detail.
 
 ## Description of Features (v1.0)
 
-<!--TODO Give short listing of features that have been implemented so far --> 
+The current version and its features were a consolidation from the 
+developments made for the PSI contributions to the PREMIUM Phase-IV 
+benchmark (the application of uncertainty propagation), the NUTHOS-11 
+conference (the application of the Morris method), and the NURETH-16 
+conference (the application of the Sobol' method). 
+All the aforementioned applications were related to TRACE reflood model 
+on the basis of FEBA separate effect facility for reflood experiment.
+
+The features of this release are:
+
+1. 
 
 ## Implementation
 
@@ -93,7 +102,16 @@ In the subsequent sections, the implementation will be explained in more detail.
 
 <!--TODO Carefully mention/list the assumptions used--> 
 
-### Usage
+### Known Limitations
+
+<!-- TODO list the current known limitations -->
+
+### Distribution 
+
+<!--TODO How the utility being distributed within STARS--> 
+
+
+## Usage
 
 <!--TODO General usage of the utility--> 
 
@@ -121,9 +139,6 @@ In the subsequent sections, the implementation will be explained in more detail.
 
 <!--TODO Carefully describe the syntax of list of graphic variable--> 
 
-### Distribution 
-
-<!--TODO How the utility being distributed within STARS--> 
 
 ## Examples of Use Cases
 
