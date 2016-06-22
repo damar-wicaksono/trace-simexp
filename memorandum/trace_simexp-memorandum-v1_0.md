@@ -78,8 +78,8 @@ implementation will be explained in more detail.
 
 ## List of Features (v1.0)
 
-The current version and its features were a consolidation from the developments 
-made for the PSI contributions to the PREMIUM Phase-IV benchmark 
+The current version and all its features were consolidated from the 
+developments made for the PSI contributions to the PREMIUM Phase-IV benchmark 
 (the application of uncertainty propagation), the NUTHOS-11 conference 
 (the application of the Morris method), and the NURETH-16 conference 
 (the application of the Sobol' method). All the aforementioned applications 
@@ -113,7 +113,121 @@ The features of this release are:
 
 ### Step 1: Preprocessing
 
-<!--TODO What does the prepro phase do?-->
+In the preprocessing, the base TRACE input deck is modified by changing the 
+parameter values of the parameters listed in the list of parameter files 
+according to the values listed in the design matrix file. A set of new 
+perturbed TRACE input decks will be created into separate directories.
+In subsequent execute step, these directories will serve as the run 
+directories. The preprocessing step driver script can be invoked in the 
+terminal using the following command:
+
+    python prepro.py {-as, -ns, -nr} <argument to select samples to create> \
+                     -b <the base run directory name> \
+                     -tracin <the base TRACE input deck> \
+                     -dm <the design matrix> \
+                     -parlist <the list of parameters file> \
+                     -info <The short description of the campaign> \
+                     -ow <flag to overwrite existing directory structure>
+
+Brief explanation on this parameter can be shown using the following command:
+
+    python prepro.py --help
+
+|No.|Short Name|Long Name      |Type      |Required                         |Description                                    |Default     | 
+|---|----------|---------------|----------|---------------------------------|-----------------------------------------------|------------|
+|1  |-as       |--all_sample   |flag      | Yes, iff -nr or -ns not supplied| Preprocess all samples in design matrix       |False       |
+|2  |-ns       |--num_samples  |integer(s)| Yes, iff -as or -nr not supllied| Preprocess the selected samples               |None        |
+|3  |-nr       |--num_range    |2 integers| Yes, iff -as or -ns not supplied| Preprocess the range of samples, inclusive    |None        |
+|4  |-b        |--base_name    |string    | No                              | The base run directory name                   |./simulation|
+|5  |-tracin   |--base_tracin  |string    | Yes                             | The base TRACE input deck, path+filename      |None        |
+|6  |-dm       |--design_matrix|string    | Yes                             | The design matrix, path+filename              |None        |
+|7  |-parlist  |--params_list  |string    | Yes                             | The list of parameters file, path+filenam     |None        |
+|8  |-info     |--info         |string    | No                              | Short message of the experiment               |None        |
+|9  |-ow       |--overwrite    |flag      | No                              | Flag to overwrite existing directory structure|False       |
+
+
+The directories created is nested in the following form:
+
+    .
+    |
+    +---<the base run directory name>
+    |   +---<tracin>
+    |       +---<name based on dm and parlist>
+    |           +---<tracin-run_1>
+    |                   tracin-run_1.inp
+    |           +---<tracin-run_2>
+    |                   tracin-run_2.inp
+    |           +---<tracin-run_3>
+    |                   tracin-run_3.inp
+    |
+    ...
+    
+For example, upon executing the following command:
+
+    python prepro.py -as \
+                     -b ./simulation \
+                     -tracin ./simulation/base/febaTrans214.inp \
+                     -dm ./simulation/dmfiles/optLHS_110_2.csv \
+                     -parlist ./simulation/paramfiles/febaVars2Params.inp \
+                     -info "FEBA Test No. 214, 110 Samples, 2 Parameters"
+
+A set of directory will be created
+
+    .
+    |
+    +---simulation
+    |   +---febaTrans214
+    |       +---febaVars7Params-optLHS_110_2
+    |           +---febaTrans214-run_1
+    |                   febaTrans214-run_1.inp
+    |           +---febaTrans214-run_2
+    |                   febaTrans214-run_2.inp
+    |           +---febaTrans214-run_2
+    |                   febaTrans214-run_3.inp
+    ...
+    |           +---febaTrans214-run_110
+    |                   febaTrans214-run_110.inp              
+
+In addition to the creation of the run directory structure and perturbed TRACE 
+input deck, the script execution will also produce an info file. The info file
+is produced by default with the following naming convention:
+
+    prepro-<tracin name>-<parlist name>-<dm name>-<sample_start>-<sample_end>.info
+    
+The file is used to document the command line arguments specified when the 
+script was called. It will also be used in the subsequent step. Based on the 
+example above, the prepro info file has the following form:
+
+    TRACE Simulation Experiment - Date: 2016-03-27 00:21:07.196979
+    FEBA Test No. 214, 110 Samples, 2 Parameters
+    ***Preprocessing Phase Info***
+    Base Name                     -> simulation
+    Base Directory Name           -> ./simulation
+    Base Case Name                -> febaTrans214
+    Base Case File                -> ./simulation/base/febaTrans214.inp
+    List of Parameters Name       -> febaVars2Params
+    List of Parameters File       -> ./simulation/paramfiles/febaVars2Params.inp
+    Design Matrix Name            -> optLHS_110_2
+    Design Matrix File            -> ./simulation/dmfiles/optLHS_110_2.csv
+    Overwrite Directory           -> 0
+    Samples to Run                ->
+    1      2      3      4      5      6      7      8      9     10
+     ...
+    101    102    103    104    105    106    107    108    109    110
+    *** 1***
+    Sensitivity Coefficient with ID *1039* is specified
+    Parameter type: scalar
+    Parameter perturbation mode: 3 (multiplicative)
+    Parameter distribution: logunif
+    1st distribution parameter: 0.250
+    2nd distribution parameter: 4.000
+    *** 2***
+    Sensitivity Coefficient with ID *1011* is specified
+    Parameter type: scalar
+    Parameter perturbation mode: 3 (multiplicative)
+    Parameter distribution: logunif
+    1st distribution parameter: 0.500
+    2nd distribution parameter: 2.000
 
 ### Step 2: Execute
 
