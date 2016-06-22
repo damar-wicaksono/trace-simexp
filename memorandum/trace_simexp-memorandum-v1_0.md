@@ -1,6 +1,6 @@
 # TRACE-SIMEXP v1.0 - Scripting Utility for Computer Experiment of TRACE
 
-## STARS Memorandum
+# STARS Memorandum
 
 Date: 23.06.2016
 
@@ -24,7 +24,7 @@ cc:
  2. STARS / M. Krack
  3. STARS / H. Ferroukhi
 
-## Abstract
+# Abstract
 
 A computer experiment is a multiple model runs using different values of the
 model parameters. Its design, in particular the selection of the design points
@@ -43,7 +43,7 @@ sensitivity and uncertainty analyses. This memorandum describes the development
 of the tool, including the description on its usage, implementations, and
 assumptions.
 
-## Introduction and Scope of the Utility
+# Introduction and Scope of the Utility
 
 In the context of PSI contribution to the OECD/NEA PREMIUM Benchmark Phase IV,
 there was a need to be able to execute numerous TRACE runs of a given model
@@ -78,14 +78,14 @@ analysis is also outside the scope of `trace-simexp`.
 In the subsequent sections, the usage information as well as the notes on the
 implementation will be explained in more detail.
 
-## List of Features (v1.0)
+# List of Features (v1.0)
 
-The current version and all its features were consolidated from the 
-developments made for the PSI contributions to the PREMIUM Phase-IV benchmark 
-(the application of uncertainty propagation), the NUTHOS-11 conference 
-(the application of the Morris method), and the NURETH-16 conference 
-(the application of the Sobol' method). All the aforementioned applications 
-were related to TRACE reflood model on the basis of FEBA separate effect 
+The current version and all its features were consolidated from the
+developments made for the PSI contributions to the PREMIUM Phase-IV benchmark
+(the application of uncertainty propagation), the NUTHOS-11 conference
+(the application of the Morris method), and the NURETH-16 conference
+(the application of the Sobol' method). All the aforementioned applications
+were related to TRACE reflood model on the basis of FEBA separate effect
 facility for reflood experiment.
 
 The features of this release are:
@@ -109,18 +109,18 @@ The features of this release are:
    available for uniform, discrete uniform, log-uniform, and normal
    distributions.
 
-## Usage
+# Usage
 
 <!--TODO General usage of the utility-->
 
-### Step 1: Preprocessing
+## Step 1: Preprocessing
 
-In the preprocessing, the base TRACE input deck is modified by changing the 
-parameter values of the parameters listed in the list of parameter files 
-according to the values listed in the design matrix file. A set of new 
+In the preprocessing, the base TRACE input deck is modified by changing the
+parameter values of the parameters listed in the list of parameter files
+according to the values listed in the design matrix file. A set of new
 perturbed TRACE input decks will be created into separate directories.
-In subsequent execute step, these directories will serve as the run 
-directories. The preprocessing step driver script can be invoked in the 
+In subsequent execute step, these directories will serve as the run
+directories. The preprocessing step driver script can be invoked in the
 terminal using the following command:
 
     python prepro.py {-as, -ns, -nr} <argument to select samples to create> \
@@ -135,7 +135,7 @@ Brief explanation on this parameter can be shown using the following command:
 
     python prepro.py --help
 
-|No.|Short Name|Long Name      |Type      |Required                         |Description                                    |Default     | 
+|No.|Short Name|Long Name      |Type      |Required                         |Description                                    |Default     |
 |---|----------|---------------|----------|---------------------------------|-----------------------------------------------|------------|
 |1  |-as       |--all_sample   |flag      | Yes, iff -nr or -ns not supplied| Preprocess all samples in design matrix       |False       |
 |2  |-ns       |--num_samples  |integer(s)| Yes, iff -as or -nr not supllied| Preprocess the selected samples               |None        |
@@ -163,7 +163,7 @@ The directories created is nested in the following form:
     |                   tracin-run_3.inp
     |
     ...
-    
+
 For example, upon executing the following command:
 
     python prepro.py -as \
@@ -190,16 +190,20 @@ A set of directory will be created
     |           +---febaTrans214-run_110
     |                   febaTrans214-run_110.inp              
 
-In addition to the creation of the run directory structure and perturbed TRACE 
-input deck, the script execution will also produce an info file (from here on 
-in will be called *prepro info file*). The info file is produced by default 
+In addition to the creation of the run directory structure and perturbed TRACE
+input deck, the script execution will also produce an info file (from here on
+in will be called *prepro info file*). The info file is produced by default
 with the following naming convention:
 
     prepro-<tracin name>-<parlist name>-<dm name>-<sample_start>-<sample_end>.info
-    
-The file is used to document the command line arguments specified when the 
-script was called. It will also be used in the subsequent step. Based on the 
-example above, the prepro info file has the following form:
+
+The file is used to document the command line arguments specified when the
+script was called. It will also be used in the subsequent step. Based on the
+example above, the prepro info file will be created with name:
+
+    prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.Info
+
+The file has the following contents:
 
     TRACE Simulation Experiment - Date: 2016-03-27 00:21:07.196979
     FEBA Test No. 214, 110 Samples, 2 Parameters
@@ -232,47 +236,45 @@ example above, the prepro info file has the following form:
     1st distribution parameter: 0.500
     2nd distribution parameter: 2.000
 
-### Step 2: Execute
+## Step 2: Execute
 
 <!--TODO What does the exec phase do?-->
 
-### Step 3: Postprocessing
+## Step 3: Postprocessing
 
 <!--TODO What does the postpro phase do?-->
 
-### The list of parameters file
+## The list of parameters file
 
 <!--TODO Carefully describe the syntax of `paramlist` file-->
 
-### The design of experiment file
+## The design of experiment file
 
 <!--TODO Carefully describe the syntax of design of experiment file-->
 
-### The list of graphic variable file
+## The list of graphic variable file
 
 <!--TODO Carefully describe the syntax of list of graphic variable-->
 
-### TRACE and aptplot
+## TRACE and aptplot
 
 
-## Implementation
+# Implementation
 
 <!--TODO Some notes on implementation-->
 
-### Assumptions
+## Assumptions
 
 <!--TODO Carefully mention/list the assumptions used-->
 
-### Known Limitations
+## Known Limitations
 
 <!-- TODO list the current known limitations -->
 
-### Distribution
+## Distribution
 
 <!--TODO How the utility being distributed within STARS-->
 
-
-
-## Examples of Use Cases
+# Examples of Use Cases
 
 <!--TODO Some example of use cases-->
