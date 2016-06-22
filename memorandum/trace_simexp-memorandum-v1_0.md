@@ -189,8 +189,9 @@ A set of directory will be created
     |                   febaTrans214-run_110.inp              
 
 In addition to the creation of the run directory structure and perturbed TRACE 
-input deck, the script execution will also produce an info file. The info file
-is produced by default with the following naming convention:
+input deck, the script execution will also produce an info file (from here on 
+in will be called *prepro info file*). The info file is produced by default 
+with the following naming convention:
 
     prepro-<tracin name>-<parlist name>-<dm name>-<sample_start>-<sample_end>.info
     
