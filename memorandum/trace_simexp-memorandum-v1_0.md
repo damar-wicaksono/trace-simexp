@@ -171,7 +171,7 @@ input deck, the script execution will also produce an info file (from here on
 in will be called *prepro info file*). The info file is produced by default
 with the following naming convention:
 
-    prepro-<tracin name>-<parlist name>-<dm name>-<sample_start>-<sample_end>.info
+    prepro-<tracin name>-<parlist name>-<dm name>-<sample_start>_<sample_end>.info
 
 The file is used to document the command line arguments specified when the
 script was called. It will also be used in the subsequent step.
@@ -289,8 +289,8 @@ The table below lists all the arguments used in the `execute.py` driver script.
 |4  |-ns       |--num_samples       |integer(s)| Yes, iff -as or -nr not supplied| Preprocess the selected samples               |None        |
 |5  |-nr       |--num_range         |2 integers| Yes, iff -as or -ns not supplied| Preprocess the range of samples, inclusive    |None        |
 |6  |-scratch  |--scratch_directory |string    | Yes                             | The path of the scratch directory             |None        |
-|7  |-trace    |--trace_executable  |string    | Yes                             | The path+filename of the TRACE executable     |None        |
-|8  |-xtv2dmx  |--xtv2dmx_executable|string    | Yes                             | The path+filename of the XTV2DM executable    |None        |
+|7  |-trace    |--trace_executable  |string    | Yes                             | The path to the TRACE executable              |None        |
+|8  |-xtv2dmx  |--xtv2dmx_executable|string    | Yes                             | The path to the XTV2DM executable             |None        |
 
 **Example**
 
@@ -320,8 +320,12 @@ command and put the job in the background with the following command instead:
 
 After all the requested TRACE input decks (or samples) have been executed, the 
 resulting `xtv` files can be post-processed to extract the relevant variables 
-and put them into separate `csv` files. The `csv` files, being text files, can 
-be easily processed further with other tool for various purposes.
+and put them into separate `csv` files, placed inside the respective running 
+directory. The `csv` files, being text files, can be easily processed further 
+with other tool for various purposes. Similar to the execute step before, the 
+utility will traversed each of the executed running directory and process the 
+`xtv` file inside using the `aptplot` program to extract the requested 
+variables. The script also supports batch parallel execution.
 
 The postprocessing step driver script can be invoked in the terminal using 
 the following command:
@@ -345,8 +349,23 @@ The table below lists all the required arguments in detail.
 |3  |-nprocs   |--num_processors    |integer   |No      |The number of processors to use for postprocessing|1      |
 |4  |-vars     |--trace_variables   |string    |Yes     |Preprocess the selected samples                   |None   |
 
-**REMARKS**: When running the script under Windows, the `aptplot` utility 
-requires an X Server running in the background (e.g., `Xming`).
+**Remarks 1**: When running the script interactively under Windows which is 
+connected to an `lclrs` machine, the `aptplot` program requires an X Server 
+running in the background (e.g., `Xming`).
+
+**Remarks 2**: Make sure there is enough disk space in the running directory 
+as the csv files being produced. Depending on how many variables are being 
+extracted, the files (being a text file) can take considerable amount of disk
+space.
+
+In addition to the postprocessing of the `xtv` files, the execution of postpro
+script will also produced an info file (hereinafter *postpro info file*). 
+The info file is produced by default with the following naming convention:
+
+    postpro-<tracin name>-<parlist name>-<dm name>-<sample_start>-_<sample_end>.info
+
+The file is used to document the command line arguments specified when the
+script was called.
 
 ## The list of parameters file
 
