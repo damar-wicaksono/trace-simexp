@@ -206,9 +206,9 @@ A set of directory will be created
 
 Based on the command above, the prepro info file will be created with name:
 
-    prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.Info
+    prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info
 
-The file has the following contents:
+The file has the following (abridged) contents:
 
     TRACE Simulation Experiment - Date: 2016-03-27 00:21:07.196979
     FEBA Test No. 214, 110 Samples, 2 Parameters
@@ -267,7 +267,7 @@ the call.
 The execute step driver script can be invoked in the terminal using the
 following command:
 
-    python execute-py -info <the preprocessing step info file> \
+    python execute-py -prepro <the preprocessing step info file> \
                       -nprocs <the number of available processors> \
                       -{ns, nr, as} <selection of samples to be executed> \
                       -scratch <the scratch directory> \
@@ -283,7 +283,7 @@ The table below lists all the arguments used in the `execute.py` driver script.
 
 |No.|Short Name|Long Name           |Type      |Required                         |Description                                    |Default     |
 |---|----------|--------------------|----------|---------------------------------|-----------------------------------------------|------------|
-|1  |-info     |--prepro_file       |string    | Yes                             | The path to the preprocess info file          |None        |
+|1  |-prepro   |--prepro_file       |string    | Yes                             | The path to the preprocess info file          |None        |
 |2  |-nprocs   |--num_processors    |integer   | No                              | The number of processors to use for execution |1           |
 |3  |-as       |--all_sample        |flag      | Yes, iff -nr or -ns not supplied| Preprocess all samples in design matrix       |False       |
 |4  |-ns       |--num_samples       |integer(s)| Yes, iff -as or -nr not supplied| Preprocess the selected samples               |None        |
@@ -306,26 +306,68 @@ contents.
 **Example**
 
 Following the previous example, executing the following command will
-execute all of the TRACE input decks created in the previous step using 16 
-processors (or, parallel jobs with batch size of 16).
+execute all of the TRACE input decks created in the previous step using 5 
+processors (or, parallel jobs with multiple batches each of size 5).
 
-    python execute.py -info prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info \
+    python execute.py -prepro prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info \
                       -as \
                       -scratch /afs/psi.ch/group/lrs/scratch/grp.lrs.scr001.nb/wicaksono_d/ \
                       -trace trace_v5.0p3.uq_extended \
                       -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
-                      -nprocs 16 >& 214_1060_7.log &
+                      -nprocs 5 >& 214_1060_7.log &
 
 **TIPS**: The utility was so far tested in the `lclrs` machines. To keep the 
-kerberos token active for long calculation, it is advised to use the `k5run -B` 
+kerberos token active for a long session, it is advised to use the `k5run -B` 
 command and put the job in the background with the following command instead:
 
-    k5run -B python execute.py -info prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info \
-                      -as \
-                      -scratch /afs/psi.ch/group/lrs/scratch/grp.lrs.scr001.nb/wicaksono_d/ \
-                      -trace trace_v5.0p3.uq_extended \
-                      -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
-                      -nprocs 16 >& 214_1060_7.log &
+    k5run -B python execute.py -prepro prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info \
+                               -as \
+                               -scratch /afs/psi.ch/group/lrs/scratch/grp.lrs.scr001.nb/wicaksono_d/ \
+                               -trace trace_v5.0p3.uq_extended \
+                               -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
+                               -nprocs 5 >& 214_1060_7.log &
+
+Based on the command above, the prepro info file will be created with name:
+
+    exec-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info
+
+The file has the following (abridged) contents:
+
+    TRACE Simulation Experiment - Date: 2016-03-27 00:26:06.547934
+    ***Execute Phase Info***
+    prepro.info Filename          -> prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info
+    TRACE Executable              -> trace_v5.0p3.uq_extended      
+    XTV2DMX Executable            -> xtv2dmx_v6.5.2_inst01.sh      
+    Scratch Directory Name        -> /afs/psi.ch/group/lrs/scratch/grp.lrs.scr001.nb/wicaksono_d
+    Number of Processors          -> 5  (lclrs73)
+    Samples to Run                -> 
+      1      2      3      4      5      6      7      8      9     10
+     11     12     13     14     15     16     17     18     19     20
+    ...
+    101    102    103    104    105    106    107    108    109    110
+    *** Batch Execution -     1 ***
+    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_1
+    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_3
+    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_5
+    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_2
+    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_4
+    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_1.xtv -d febaTrans214-run_1.dmx
+    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_3.xtv -d febaTrans214-run_3.dmx
+    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_5.xtv -d febaTrans214-run_5.dmx
+    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_2.xtv -d febaTrans214-run_2.dmx
+    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_4.xtv -d febaTrans214-run_4.dmx
+    ...
+    *** Batch Execution -    22 ***
+    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_106
+    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_108
+    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_110
+    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_107
+    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_109
+    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_106.xtv -d febaTrans214-run_106.dmx
+    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_108.xtv -d febaTrans214-run_108.dmx
+    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_110.xtv -d febaTrans214-run_110.dmx
+    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_107.xtv -d febaTrans214-run_107.dmx
+    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_109.xtv -d febaTrans214-run_109.dmx
 
 ## Step 3: Postprocessing
 
