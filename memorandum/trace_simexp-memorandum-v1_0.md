@@ -135,6 +135,8 @@ Brief explanation on this parameter can be shown using the following command:
 
     python prepro.py --help
 
+The table below lists all the arguments in detail.
+
 |No.|Short Name|Long Name      |Type      |Required                         |Description                                    |Default     |
 |---|----------|---------------|----------|---------------------------------|-----------------------------------------------|------------|
 |1  |-as       |--all_sample   |flag      | Yes, iff -nr or -ns not supplied| Preprocess all samples in design matrix       |False       |
@@ -272,18 +274,19 @@ following command:
                       -trace <the trace executable> \
                       -xtv2dmx <the xtv2dmx executable>
 
-Brief explanation on this parameter can be shown using the following command:
+Brief explanation on the required arguments can be printed on the screen 
+using the following command:
 
     python prepro.py --help
 
-The table below list all the arguments used in the `execute.py` driver script.
+The table below lists all the arguments used in the `execute.py` driver script.
 
 |No.|Short Name|Long Name           |Type      |Required                         |Description                                    |Default     |
 |---|----------|--------------------|----------|---------------------------------|-----------------------------------------------|------------|
 |1  |-info     |--info_file         |string    | Yes                             | The path+filename of the preprocess info file |None        |
 |2  |-nprocs   |--num_processors    |integer   | No                              | The number of processors to use for execution |1           |
 |3  |-as       |--all_sample        |flag      | Yes, iff -nr or -ns not supplied| Preprocess all samples in design matrix       |False       |
-|4  |-ns       |--num_samples       |integer(s)| Yes, iff -as or -nr not supllied| Preprocess the selected samples               |None        |
+|4  |-ns       |--num_samples       |integer(s)| Yes, iff -as or -nr not supplied| Preprocess the selected samples               |None        |
 |5  |-nr       |--num_range         |2 integers| Yes, iff -as or -ns not supplied| Preprocess the range of samples, inclusive    |None        |
 |6  |-scratch  |--scratch_directory |string    | Yes                             | The path of the scratch directory             |None        |
 |7  |-trace    |--trace_executable  |string    | Yes                             | The path+filename of the TRACE executable     |None        |
@@ -315,7 +318,35 @@ command and put the job in the background with the following command instead:
 
 ## Step 3: Postprocessing
 
-<!--TODO What does the postpro phase do?-->
+After all the requested TRACE input decks (or samples) have been executed, the 
+resulting `xtv` files can be post-processed to extract the relevant variables 
+and put them into separate `csv` files. The `csv` files, being text files, can 
+be easily processed further with other tool for various purposes.
+
+The postprocessing step driver script can be invoked in the terminal using 
+the following command:
+
+    python postpro.py -exec <the execute phase info file> \
+                      -aptplot <the aptplot executable> \
+                      -nprocs <the number of available processors> \
+                      -vars <the list of TRACE graphic variables file>
+
+Brief explanation on the required arguments can be printed on the screen using 
+the following command:
+
+    python postpro-py --help
+
+The table below lists all the required arguments in detail.
+
+|No.|Short Name|Long Name           |Type      |Required|Description                                       |Default|
+|---|----------|--------------------|----------|--------|--------------------------------------------------|-------|
+|1  |-exec     |--exec_info         |string    |Yes     |the path to the execute info file                 |None   |
+|2  |-aptplot  |--aptplot_executable|string    |Yes     |the path to `aptplot` executable                  |None   |
+|3  |-nprocs   |--num_processors    |integer   |No      |The number of processors to use for postprocessing|1      |
+|4  |-vars     |--trace_variables   |string    |Yes     |Preprocess the selected samples                   |None   |
+
+**REMARKS**: When running the script under Windows, the `aptplot` utility 
+requires an X Server running in the background (e.g., `Xming`).
 
 ## The list of parameters file
 
