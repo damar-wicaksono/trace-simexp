@@ -304,7 +304,7 @@ processors (or, parallel jobs with batch size of 16).
 
 **TIPS**: The utility was so far tested in the `lclrs` machines. To keep the 
 kerberos token active for long calculation, it is advised to use the `k5run -B` 
-command and put the job in the bacground with the following command instead:
+command and put the job in the background with the following command instead:
 
     k5run -B python execute.py -info prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info \
                       -as \
