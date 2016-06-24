@@ -204,7 +204,8 @@ A set of directory will be created
     |           +---febaTrans214-run_110
     |                   febaTrans214-run_110.inp              
 
-Based on the command above, the prepro info file will be created with name:
+Based on the command above, the prepro info file will be created with the 
+following name:
 
     prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info
 
@@ -316,7 +317,7 @@ processors (or, parallel jobs with multiple batches each of size 5).
                       -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
                       -nprocs 5 >& 214_1060_7.log &
 
-**TIPS**: The utility was so far tested in the `lclrs` machines. To keep the 
+**Remarks**: The utility was so far tested in the `lclrs` machines. To keep the 
 kerberos token active for a long session, it is advised to use the `k5run -B` 
 command and put the job in the background with the following command instead:
 
@@ -327,7 +328,8 @@ command and put the job in the background with the following command instead:
                                -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
                                -nprocs 5 >& 214_1060_7.log &
 
-Based on the command above, the prepro info file will be created with name:
+Based on the command above, the prepro info file will be created with the 
+following name:
 
     exec-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info
 
@@ -420,6 +422,63 @@ The info file is produced by default with the following naming convention:
 The file is used to document the command line arguments specified when the
 script was called as well as to log all the shell commands run during the 
 execution. See below for example of the contents.
+
+
+**Example**
+
+Following the previous example, executing the following command will
+postprocessed all of the TRACE `xtv` files produced in the previous step using 
+5 processors (or, parallel jobs with multiple batches each of size 5) to 
+extract TRACE graphic variables listed in the `./simulation/listVars.apt` file.
+
+    python postpro.py -exec exec-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info \
+                      -aptplot aptplot_v6.5.2_inst01.sh \
+                      -nprocs 5 \
+                      -vars ./simulation/listVars.apt
+
+**Remarks**: Similar to the execute phase, if the postprocess step is expected
+to take a long time it is advised that the job is sent to the background with 
+`k5run -B` utility as given in the previous example.
+
+Based on the command above, the prepro info file will be created with the 
+following name:
+
+    postpro-febaTrans214-febaVars2Params-optLHS_110_2-1_110-listVars.info
+
+The file has the following (abridged) contents:
+
+    TRACE Simulation Experiment - Date: 2016-03-24 17:34:10.713350
+    ***Post-process Phase Info***
+    prepro.info Filename          -> prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info
+    exec.info Filename            -> exec-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info
+    APTPlot Executable            -> aptplot_v6.5.2_inst01.sh      
+    Number of Processors (Host)   -> 5  (lclrs73)
+    List of XTV Variables Files   -> ./simulation/listVars.apt
+    List of XTV Variables         -> 
+        rdzNperm-20A01        rdzNperm-20A02        rdzNperm-20A03
+        rdzNperm-20A04        rdzNperm-20A05        rdzNperm-20A06
+        rdzNperm-20A07        rdzNperm-20A08        rdzNperm-20A09
+        ...
+        rftn-20A141R29        rftn-20A142R29 
+    Samples to Post-processed     -> 
+      1      2      3      4      5      6      7      8      9     10
+     11     12     13     14     15     16     17     18     19     20
+     21     22     23     24     25     26     27     28     29     30
+     31     32     33     34     35     36     37     38     39     40
+     41     42     43     44     45     46     47     48     49     50
+     51     52     53     54     55     56     57     58     59     60
+     61     62     63     64     65     66     67     68     69     70
+     71     72     73     74     75     76     77     78     79     80
+     81     82     83     84     85     86     87     88     89     90
+     91     92     93     94     95     96     97     98     99    100
+    101    102    103    104    105 
+    *** Batch Execution -     1 ***
+    Execution Successful: aptplot_v6.5.2_inst01.sh -batch febaTrans214-run_1-listVars.apt -nowin
+    Execution Successful: aptplot_v6.5.2_inst01.sh -batch febaTrans214-run_3-listVars.apt -nowin
+    Execution Successful: aptplot_v6.5.2_inst01.sh -batch febaTrans214-run_5-listVars.apt -nowin
+    Execution Successful: aptplot_v6.5.2_inst01.sh -batch febaTrans214-run_2-listVars.apt -nowin
+    Execution Successful: aptplot_v6.5.2_inst01.sh -batch febaTrans214-run_4-listVars.apt -nowin
+    ...
 
 ## The list of parameters file
 
