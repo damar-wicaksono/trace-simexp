@@ -303,8 +303,8 @@ processors (or, parallel jobs with batch size of 16).
                       -nprocs 16 >& 214_1060_7.log &
 
 **TIPS**: The utility was so far tested in the `lclrs` machines. To keep the 
-kerberos token active for long calculation, it is advised to use the following
-command instead
+kerberos token active for long calculation, it is advised to use the `k5run -B` 
+command and put the job in the bacground with the following command instead:
 
     k5run -B python execute.py -info prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info \
                       -as \
@@ -312,8 +312,6 @@ command instead
                       -trace trace_v5.0p3.uq_extended \
                       -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
                       -nprocs 16 >& 214_1060_7.log &
-
-Which also put the job directly into the background.
 
 ## Step 3: Postprocessing
 
