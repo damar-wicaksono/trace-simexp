@@ -164,6 +164,18 @@ The directories created is nested in the following form:
     |
     ...
 
+In addition to the creation of the run directory structure and perturbed TRACE
+input deck, the script execution will also produce an info file (from here on
+in will be called *prepro info file*). The info file is produced by default
+with the following naming convention:
+
+    prepro-<tracin name>-<parlist name>-<dm name>-<sample_start>-<sample_end>.info
+
+The file is used to document the command line arguments specified when the
+script was called. It will also be used in the subsequent step.
+
+**Example**
+
 For example, upon executing the following command:
 
     python prepro.py -as \
@@ -190,16 +202,7 @@ A set of directory will be created
     |           +---febaTrans214-run_110
     |                   febaTrans214-run_110.inp              
 
-In addition to the creation of the run directory structure and perturbed TRACE
-input deck, the script execution will also produce an info file (from here on
-in will be called *prepro info file*). The info file is produced by default
-with the following naming convention:
-
-    prepro-<tracin name>-<parlist name>-<dm name>-<sample_start>-<sample_end>.info
-
-The file is used to document the command line arguments specified when the
-script was called. It will also be used in the subsequent step. Based on the
-example above, the prepro info file will be created with name:
+Based on the command above, the prepro info file will be created with name:
 
     prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.Info
 
@@ -239,19 +242,25 @@ The file has the following contents:
 ## Step 2: Execute
 
 In the execute step, all the input decks that were created in the preprocessing
-step are executed sequentially in batch. This means that the script will traverse
-the run directories created before and execute the input deck inside sequentially.  
-The size of a batch is controlled by the number of processors supplied by the user through the command line
-argument. 
+step are executed sequentially in batch. This means that the script will 
+traverse the run directories created before and execute the input deck inside 
+sequentially. The size of a batch is controlled by the number of processors 
+supplied by the user through the command line argument. 
 
-Simultaneous execution of multiple TRACE simulation often requires large amount of disk space even for a single case.
-To save disk space, the utility takes two measures. First, the binary `xtv` file is not written directly in the run directory during the execution. Instead a soft link is created inside the running directory, linked to the actual `xtv` file written in the *scratch* directory. This approach
-was adopted to limit the disk space usage in the (*STARS project*) working
-directory (activity folder) that is a backup volume and limited to 200 [GB] currently. The so-called *scratch* directory usually
-resides in a non-backup volume.
-Second, after each execution, the resulting `xtv` file will be directly converted to the more space efficient *dmx* format. This is done by using `xtv2dmx` utility.
-As such, the scratch directory as well as the executable for `xtv2dmx` utility 
-are needed to be supplied during the call.
+Simultaneous execution of multiple TRACE simulation often requires large amount
+of disk space even for a single case. To save disk space, the utility takes two 
+measures. First, the binary `xtv` file is not written directly in the running 
+directory during the execution. Instead a soft link is created inside the 
+running directory, linked to the actual `xtv` file written in a *scratch* 
+directory. This approach was adopted to limit the disk space usage in a 
+STARS project working directory (or *the activity folder*) that is a backup 
+volume and limited to 200 [GB] currently. 
+The so-called *scratch* directory usually resides in a non-backup volume.
+Second, after each execution, the resulting `xtv` file will be directly 
+converted to the more space efficient *dmx* format. This is done by using 
+`xtv2dmx` utility. As such, the path to the scratch directory as well as the 
+path to the executable for `xtv2dmx` utility are needed to be supplied during 
+the call.
 
 The execute step driver script can be invoked in the terminal using the
 following command:
