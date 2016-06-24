@@ -239,23 +239,26 @@ The file has the following contents:
 ## Step 2: Execute
 
 In the execute step, all the input decks that were created in the preprocessing
-step are executed sequentially in batch. The size of a batch is controlled by
-the number of processors supplied by the user throught the command line
-argument.
+step are executed sequentially in batch. This means that the script will traverse
+the run directories created before and execute the input deck inside sequentially.  
+The size of a batch is controlled by the number of processors supplied by the user through the command line
+argument. 
 
-Executing TRACE often requires large amount of disk space even for a single case.
-To save disk space, the utility takes two measures. First, the binary `xtv` file is not directly written in the run directory during the execution. Instead a soft link is created inside the running directory, linked to the actual `xtv` file written in the *scratch* directory. This approach
-was adopted to limit the disk space usage in the back-upped (*STARS project*) working
-directory that is limited to 200 [GB]. The so-called *scratch* directory usually
+Simultaneous execution of multiple TRACE simulation often requires large amount of disk space even for a single case.
+To save disk space, the utility takes two measures. First, the binary `xtv` file is not written directly in the run directory during the execution. Instead a soft link is created inside the running directory, linked to the actual `xtv` file written in the *scratch* directory. This approach
+was adopted to limit the disk space usage in the (*STARS project*) working
+directory (activity folder) that is a backup volume and limited to 200 [GB] currently. The so-called *scratch* directory usually
 resides in a non-backup volume.
 Second, after each execution, the resulting `xtv` file will be directly converted to the more space efficient *dmx* format. This is done by using `xtv2dmx` utility.
+As such, the scratch directory as well as the executable for `xtv2dmx` utility 
+are needed to be supplied during the call.
 
 The execute step driver script can be invoked in the terminal using the
 following command:
 
     python execute-py -info <the preprocessing step info file> \
                       -nprocs <the number of available processors> \
-                      -{ns, nr, as} <selection of samples to execute> \
+                      -{ns, nr, as} <selection of samples to be executed> \
                       -scratch <the scratch directory> \
                       -trace <the trace executable> \
                       -xtv2dmx <the xtv2dmx executable>
@@ -273,12 +276,35 @@ The table below list all the arguments used in the `execute.py` driver script.
 |3  |-as       |--all_sample        |flag      | Yes, iff -nr or -ns not supplied| Preprocess all samples in design matrix       |False       |
 |4  |-ns       |--num_samples       |integer(s)| Yes, iff -as or -nr not supllied| Preprocess the selected samples               |None        |
 |5  |-nr       |--num_range         |2 integers| Yes, iff -as or -ns not supplied| Preprocess the range of samples, inclusive    |None        |
-|6  |-scratch  |--scratch_directory |string    | Yes                             | The path of scratch directory                 |None        |
+|6  |-scratch  |--scratch_directory |string    | Yes                             | The path of the scratch directory             |None        |
 |7  |-trace    |--trace_executable  |string    | Yes                             | The path+filename of the TRACE executable     |None        |
 |8  |-xtv2dmx  |--xtv2dmx_executable|string    | Yes                             | The path+filename of the XTV2DM executable    |None        |
 
-Following the previous example, executing the following terminal command will
-execute all of the TRACE input decks created before.
+**Example**
+
+Following the previous example, executing the following command will
+execute all of the TRACE input decks created in the previous step using 16 
+processors (or, parallel jobs with batch size of 16).
+
+    python execute.py -info prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info \
+                      -as \
+                      -scratch /afs/psi.ch/group/lrs/scratch/grp.lrs.scr001.nb/wicaksono_d/ \
+                      -trace trace_v5.0p3.uq_extended \
+                      -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
+                      -nprocs 16 >& 214_1060_7.log &
+
+**TIPS**: The utility was so far tested in the `lclrs` machines. To keep the 
+kerberos token active for long calculation, it is advised to use the following
+command instead
+
+    k5run -B python execute.py -info prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info \
+                      -as \
+                      -scratch /afs/psi.ch/group/lrs/scratch/grp.lrs.scr001.nb/wicaksono_d/ \
+                      -trace trace_v5.0p3.uq_extended \
+                      -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
+                      -nprocs 16 >& 214_1060_7.log &
+
+Which also put the job directly into the background.
 
 ## Step 3: Postprocessing
 
