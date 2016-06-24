@@ -24,7 +24,7 @@ def get():
 
     # The fullname of info_file from the pre-processing phase
     parser.add_argument(
-        "-info", "--info_file",
+        "-prepro", "--prepro_file",
         type=str,
         help="The pre-processing phase info file",
         required=True
