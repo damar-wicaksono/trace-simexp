@@ -115,8 +115,8 @@ The features of this release are:
 
 ## Step 1: Preprocessing
 
-In the preprocessing, the base TRACE input deck is modified by changing the
-parameter values of the parameters listed in the list of parameter files
+In the preprocessing step, the base TRACE input deck is modified by changing
+the parameter values of the parameters listed in the list of parameter files
 according to the values listed in the design matrix file. A set of new
 perturbed TRACE input decks will be created into separate directories.
 In subsequent execute step, these directories will serve as the run
@@ -238,7 +238,47 @@ The file has the following contents:
 
 ## Step 2: Execute
 
-<!--TODO What does the exec phase do?-->
+In the execute step, all the input decks that were created in the preprocessing
+step are executed sequentially in batch. The size of a batch is controlled by
+the number of processors supplied by the user throught the command line
+argument.
+
+Executing TRACE often requires large amount of disk space even for a single case.
+To save disk space, the utility takes two measures. First, the binary `xtv` file is not directly written in the run directory during the execution. Instead a soft link is created inside the running directory, linked to the actual `xtv` file written in the *scratch* directory. This approach
+was adopted to limit the disk space usage in the back-upped (*STARS project*) working
+directory that is limited to 200 [GB]. The so-called *scratch* directory usually
+resides in a non-backup volume.
+Second, after each execution, the resulting `xtv` file will be directly converted to the more space efficient *dmx* format. This is done by using `xtv2dmx` utility.
+
+The execute step driver script can be invoked in the terminal using the
+following command:
+
+    python execute-py -info <the preprocessing step info file> \
+                      -nprocs <the number of available processors> \
+                      -{ns, nr, as} <selection of samples to execute> \
+                      -scratch <the scratch directory> \
+                      -trace <the trace executable> \
+                      -xtv2dmx <the xtv2dmx executable>
+
+Brief explanation on this parameter can be shown using the following command:
+
+    python prepro.py --help
+
+The table below list all the arguments used in the `execute.py` driver script.
+
+|No.|Short Name|Long Name           |Type      |Required                         |Description                                    |Default     |
+|---|----------|--------------------|----------|---------------------------------|-----------------------------------------------|------------|
+|1  |-info     |--info_file         |string    | Yes                             | The path+filename of the preprocess info file |None        |
+|2  |-nprocs   |--num_processors    |integer   | No                              | The number of processors to use for execution |1           |
+|3  |-as       |--all_sample        |flag      | Yes, iff -nr or -ns not supplied| Preprocess all samples in design matrix       |False       |
+|4  |-ns       |--num_samples       |integer(s)| Yes, iff -as or -nr not supllied| Preprocess the selected samples               |None        |
+|5  |-nr       |--num_range         |2 integers| Yes, iff -as or -ns not supplied| Preprocess the range of samples, inclusive    |None        |
+|6  |-scratch  |--scratch_directory |string    | Yes                             | The path of scratch directory                 |None        |
+|7  |-trace    |--trace_executable  |string    | Yes                             | The path+filename of the TRACE executable     |None        |
+|8  |-xtv2dmx  |--xtv2dmx_executable|string    | Yes                             | The path+filename of the XTV2DM executable    |None        |
+
+Following the previous example, executing the following terminal command will
+execute all of the TRACE input decks created before.
 
 ## Step 3: Postprocessing
 
@@ -257,7 +297,6 @@ The file has the following contents:
 <!--TODO Carefully describe the syntax of list of graphic variable-->
 
 ## TRACE and aptplot
-
 
 # Implementation
 
