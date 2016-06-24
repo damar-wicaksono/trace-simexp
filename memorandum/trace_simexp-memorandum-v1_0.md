@@ -300,7 +300,8 @@ with the following naming convention:
 
 The file is used to document the command line arguments specified when the
 script was called, to log the process run for diagnostic purpose, as well as be 
-used in the subsequent (postpro) step.
+used in the subsequent (postpro) step. See below for the example of the 
+contents.
 
 **Example**
 
@@ -376,7 +377,7 @@ The info file is produced by default with the following naming convention:
 
 The file is used to document the command line arguments specified when the
 script was called as well as to log all the shell commands run during the 
-execution.
+execution. See below for example of the contents.
 
 ## The list of parameters file
 
