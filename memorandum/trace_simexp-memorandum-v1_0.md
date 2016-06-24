@@ -277,13 +277,13 @@ following command:
 Brief explanation on the required arguments can be printed on the screen 
 using the following command:
 
-    python prepro.py --help
+    python execute.py --help
 
 The table below lists all the arguments used in the `execute.py` driver script.
 
 |No.|Short Name|Long Name           |Type      |Required                         |Description                                    |Default     |
 |---|----------|--------------------|----------|---------------------------------|-----------------------------------------------|------------|
-|1  |-info     |--info_file         |string    | Yes                             | The path+filename of the preprocess info file |None        |
+|1  |-info     |--prepro_file       |string    | Yes                             | The path to the preprocess info file          |None        |
 |2  |-nprocs   |--num_processors    |integer   | No                              | The number of processors to use for execution |1           |
 |3  |-as       |--all_sample        |flag      | Yes, iff -nr or -ns not supplied| Preprocess all samples in design matrix       |False       |
 |4  |-ns       |--num_samples       |integer(s)| Yes, iff -as or -nr not supplied| Preprocess the selected samples               |None        |
@@ -291,6 +291,16 @@ The table below lists all the arguments used in the `execute.py` driver script.
 |6  |-scratch  |--scratch_directory |string    | Yes                             | The path of the scratch directory             |None        |
 |7  |-trace    |--trace_executable  |string    | Yes                             | The path to the TRACE executable              |None        |
 |8  |-xtv2dmx  |--xtv2dmx_executable|string    | Yes                             | The path to the XTV2DM executable             |None        |
+
+The script execution will also produce an info file (from here on
+in will be called *exec info file*). The info file is produced by default
+with the following naming convention:
+
+    exec-<tracin name>-<parlist name>-<dm name>-<sample_start>_<sample_end>.info
+
+The file is used to document the command line arguments specified when the
+script was called, to log the process run for diagnostic purpose, as well as be 
+used in the subsequent (postpro) step.
 
 **Example**
 
@@ -362,10 +372,11 @@ In addition to the postprocessing of the `xtv` files, the execution of postpro
 script will also produced an info file (hereinafter *postpro info file*). 
 The info file is produced by default with the following naming convention:
 
-    postpro-<tracin name>-<parlist name>-<dm name>-<sample_start>-_<sample_end>.info
+    postpro-<tracin name>-<parlist name>-<dm name>-<sample_start>-_<sample_end>-<vars name>.info
 
 The file is used to document the command line arguments specified when the
-script was called.
+script was called as well as to log all the shell commands run during the 
+execution.
 
 ## The list of parameters file
 
