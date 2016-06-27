@@ -480,11 +480,63 @@ The file has the following (abridged) contents:
     Execution Successful: aptplot_v6.5.2_inst01.sh -batch febaTrans214-run_4-listVars.apt -nowin
     ...
 
-## The list of parameters file
+## List of parameters file (`params_list` file)
 
-<!--TODO Carefully describe the syntax of `paramlist` file-->
+The list of parameters file contains the specification of the selected TRACE
+parameters to be perturbed during the experiment. The list of parameters file 
+is specified by the user and in general, for each line, contains the 
+information listed in the table.
 
-## The design matrix file
+|No.|Name       |Description         |Type      |Values  |
+|---|-----------|--------------------|----------|--------|
+|1  |`enum`     |      |string    |Yes     |
+|2  |`data_type`||string    |Yes     |           |
+|3  |`var_num`  |    |integer   |No      |The number of processors to use for postprocessing|
+|4  |`var_name` |   |string    |Yes     |Preprocess the selected samples                   |
+|5  |`var_type` |
+|6  |`var_mode` |
+|7  |`var_card` |
+|8  |`var_word` |
+|9  |`var_dist` |
+|10 |`var_par2` |
+|11 |`var_par1` |
+|12 |`str_fmt`  |
+
+ 1. `enum`: The enumeration of the specified parameter in the list.
+ 2. `data_type`: the type of parameters
+ 3. ``: the ID number of parameters (typically, a unique TRACE ID)
+ 4. `var_name`: the name of the parameter
+ 5. `var_type`: the type of the parameter 
+ 6. `var_mode`: the mode of perturbation
+ 7. `var_card`: the 
+ 8. `var_word`
+ 9. `var_dist`
+10. `var_par1`
+11. `var_par2`
+12. `str_fmt`
+
+Several supported parameters which can be accessed during the computer 
+experiment are classified into several categories or, referring to the table
+above, `data_type`. The currently supported *data_types* are:
+
+ 1. Spacer grid model specification (keyword `spacer`)
+ 2. Material properties (keyword `matprop`)
+ 3. TRACE *sensitivity coefficients* (keyword `senscoefs`)
+ 4. TRACE components, specifically for `pipe`, `vessel`, `power`, `fill`, and
+    `break`
+
+The full specification of the parameters in the list of parameters differs 
+from type to type and will be explained in more detail below.
+
+### Spacer Grid Model Parameters
+
+### Material Properties
+
+### TRACE *Sensitivity Coefficient*
+
+### TRACE Component Parameters
+
+## Design matrix file (`design_matrix` file)
 
 The design matrix (or *the design of experiment*) file is a text file that 
 contains the sampled and normalized (values between 0 - 1) input parameters 
@@ -515,7 +567,7 @@ The excerpt below is taken from the first 7 lines of a design matrix file with
     2.832927e-01,8.773572e-01,3.679600e-01,5.648471e-01,2.747036e-01
     ...
 
-## The list of graphic variable file
+## List of graphic variable file (`trace_variables` file)
 
 The list of (TRACE) graphic variable file is a simple text file that contains 
 in each row, a single TRACE graphic variable name to be extracted from 
@@ -535,7 +587,9 @@ An example of the content of the file is the following
 The three variables above correspond to the evolution of temperature for HtStr 
 No. 20 at axial levels 11, 12, 13 and radial node 29, respectively.
 
-## TRACE and aptplot
+## TRACE and aptplot (`trace_executable` and `aptplot_executable`)
+
+## CSV Output File
 
 # Implementation
 
