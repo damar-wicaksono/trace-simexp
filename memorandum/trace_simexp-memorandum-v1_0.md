@@ -498,7 +498,7 @@ listed in the table.
 |6  |`var_mode` |mode of perturbation                                          |
 |7  |`var_card` |**card**, where the specific perturbed parameter is located   |
 |8  |`var_word` |**word**, where the specific perturbed parameter is located   |
-|9  |`var_dist` |probability distribution for the perturbation factor          |
+|9  |`var_dist` |Distribution of the perturbation factor (as random variable)  |
 |10 |`var_par2` |the 1st parameter of the distribution                         |
 |11 |`var_par1` |the 2nd parameter of the distribution                         |
 |12 |`str_fmt`  |string formatting of the parameter within the trace input deck|
@@ -523,13 +523,32 @@ to type and will be explained in their corresponding subsection.
 A perturbation factor will be assigned for each of the specified parameter. 
 There are three modes of perturbation according to the table.
 
-|`var_mode` value|Description                                                                         |
-|----------------|------------------------------------------------------------------------------------|
-|`1`             |substitutive, the sampled factor is directly substitutes the nominal parameter value|
-|`2`             |additive, the sampled factor is added to the nominal parameter value                |
-|`3`             |multiplicative, the sampled factor is multiplied by the nominal parameter value     |
+|`var_mode`|Description                                                                         |
+|----------|------------------------------------------------------------------------------------|
+|`1`       |substitutive, the sampled factor is directly substitutes the nominal parameter value|
+|`2`       |additive, the sampled factor is added to the nominal parameter value                |
+|`3`       |multiplicative, the sampled factor is multiplied by the nominal parameter value     |
 
 ### var_dist, var_par1, var_par2
+
+In `trace-simexp`, the perturbation factor associated with each specified model
+parameter is modeled as random variable. The variables `var_dist`, `var_par1`, 
+and `var_par2` are required to fully specify the probability density 
+(or *mass*, if discrete) function of the random variable. These specifications 
+are used to transform the normalized value given in the design matrix file into
+the actual perturbed TRACE model parameter value. 
+
+The table below describes the currently supported univariate distribution and 
+the meaning of the variables. The type of the variable is written in the 
+bracket.
+
+|No.|Name             |`var_dist`|`var_par1` (type)                            |`var_par2` (type)    |                                                                         |
+|---|-----------------|----------|---------------------------------------------|---------------------|
+|1  |uniform          |`uniform` |minimum value (float)                        |maximum value (float)|
+|2  |discrete uniform |`discunif`|list of choices with equal probability (list)|N/A                  |
+|3  |log-uniform      |`logunif` |minimum value (float)                        |maximum value (float)|
+|4  |normal (gaussian)|`normal`  |mean (float)                                 |variance (float)     |
+
 
 ### str_fmt
 
@@ -542,7 +561,6 @@ string. The formatting follow the conventional printf format string such as
 accordance between perturbed parameter and its string format in the input deck.
 The complete specification on the string formatting for TRACE input deck 
 (in FORTRAN) can be found in the User's Manual Vol. 1.
-
 
 ### Spacer Grid Model Parameters
 
