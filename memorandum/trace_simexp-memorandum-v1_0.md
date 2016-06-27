@@ -483,39 +483,29 @@ The file has the following (abridged) contents:
 ## List of parameters file (`params_list` file)
 
 The list of parameters file contains the specification of the selected TRACE
-parameters to be perturbed during the experiment. The list of parameters file 
-is specified by the user and in general, for each line, contains the 
-information listed in the table.
+parameters to be perturbed during the experiment. The file also contains the 
+specification of the perturbation factor. The user specified all of the 
+required information in a text file and for each line contains the information 
+listed in the table.
 
-|No.|Name       |Description         |Type      |Values  |
-|---|-----------|--------------------|----------|--------|
-|1  |`enum`     |      |string    |Yes     |
-|2  |`data_type`||string    |Yes     |           |
-|3  |`var_num`  |    |integer   |No      |The number of processors to use for postprocessing|
-|4  |`var_name` |   |string    |Yes     |Preprocess the selected samples                   |
-|5  |`var_type` |
-|6  |`var_mode` |
-|7  |`var_card` |
-|8  |`var_word` |
-|9  |`var_dist` |
-|10 |`var_par2` |
-|11 |`var_par1` |
-|12 |`str_fmt`  |
+|No.|Name       |Description                                                   |
+|---|-----------|--------------------------------------------------------------|
+|1  |`enum`     |enumeration of specified parameter in the list                |
+|2  |`data_type`|type of the parameters                                        |
+|3  |`var_num`  |parameter ID number, typically a unique TRACE input deck ID   |
+|4  |`var_name` |parameter name                                                |
+|5  |`var_type` |parameter type                                                |
+|6  |`var_mode` |mode of perturbation                                          |
+|7  |`var_card` |**card**, where the specific perturbed parameter is located   |
+|8  |`var_word` |**word**, where the specific perturbed parameter is located   |
+|9  |`var_dist` |probability distribution for the perturbation factor          |
+|10 |`var_par2` |the 1st parameter of the distribution                         |
+|11 |`var_par1` |the 2nd parameter of the distribution                         |
+|12 |`str_fmt`  |string formatting of the parameter within the trace input deck|
 
- 1. `enum`: The enumeration of the specified parameter in the list.
- 2. `data_type`: the type of parameters
- 3. ``: the ID number of parameters (typically, a unique TRACE ID)
- 4. `var_name`: the name of the parameter
- 5. `var_type`: the type of the parameter 
- 6. `var_mode`: the mode of perturbation
- 7. `var_card`: the 
- 8. `var_word`
- 9. `var_dist`
-10. `var_par1`
-11. `var_par2`
-12. `str_fmt`
+### data_type
 
-Several supported parameters which can be accessed during the computer 
+The available parameters which can be accessed during the computer 
 experiment are classified into several categories or, referring to the table
 above, `data_type`. The currently supported *data_types* are:
 
@@ -525,8 +515,23 @@ above, `data_type`. The currently supported *data_types* are:
  4. TRACE components, specifically for `pipe`, `vessel`, `power`, `fill`, and
     `break`
 
-The full specification of the parameters in the list of parameters differs 
-from type to type and will be explained in more detail below.
+The variables `var_num`, `var_type`, `var_card`, `var_word` differ from type
+to type and will be explained in their corresponding subsection.
+
+### var_mode
+
+A perturbation factor will be assigned for each of the specified parameter. 
+There are three modes of perturbation according to the table.
+
+|`var_mode` value|Description                                                                         |
+|----------------|------------------------------------------------------------------------------------|
+|`1`             |substitutive, the sampled factor is directly substitutes the nominal parameter value|
+|`2`             |additive, the sampled factor is added to the nominal parameter value                |
+|`3`             |multiplicative, the sampled factor is multiplied by the nominal parameter value     |
+
+### **var_dist, var_par1, var_par2**
+
+### **str_fmt**
 
 ### Spacer Grid Model Parameters
 
