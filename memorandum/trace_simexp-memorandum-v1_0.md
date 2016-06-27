@@ -513,10 +513,27 @@ The excerpt below is taken from the first 7 lines of a design matrix file with
     9.250452e-01,6.194709e-01,6.873275e-01,5.125879e-01,8.598690e-01
     1.974221e-01,4.532642e-01,4.914747e-01,6.819097e-01,8.206347e-02
     2.832927e-01,8.773572e-01,3.679600e-01,5.648471e-01,2.747036e-01
+    ...
 
 ## The list of graphic variable file
 
-<!--TODO Carefully describe the syntax of list of graphic variable-->
+The list of (TRACE) graphic variable file is a simple text file that contains 
+in each row, a single TRACE graphic variable name to be extracted from 
+the  `xtv` output file. The extracted values will be in time-series over all 
+the transient. The complete documentation of the graphic variables can be found 
+in Chapter 3 of the TRACE User's Manual Volume 1. 
+
+**Example**
+
+An example of the content of the file is the following
+
+    rftn-20A11R29
+    rftn-20A12R29
+    rftn-20A13R29
+    ...
+
+The three variables above correspond to the evolution of temperature for HtStr 
+No. 20 at axial levels 11, 12, 13 and radial node 29, respectively.
 
 ## TRACE and aptplot
 
