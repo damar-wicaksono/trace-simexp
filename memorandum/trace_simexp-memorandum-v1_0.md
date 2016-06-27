@@ -529,9 +529,20 @@ There are three modes of perturbation according to the table.
 |`2`             |additive, the sampled factor is added to the nominal parameter value                |
 |`3`             |multiplicative, the sampled factor is multiplied by the nominal parameter value     |
 
-### **var_dist, var_par1, var_par2**
+### var_dist, var_par1, var_par2
 
-### **str_fmt**
+### str_fmt
+
+The variable `str_fmt` in `params_list` file specified the string formatting 
+of the perturbed parameter when it is writen in the TRACE input deck as a 
+string. The formatting follow the conventional printf format string such as 
+`14.4e`, `14d`, `14.4e`, etc.
+
+**Remarks**: In the current version, the users have to check by themselves the 
+accordance between perturbed parameter and its string format in the input deck.
+The complete specification on the string formatting for TRACE input deck 
+(in FORTRAN) can be found in the User's Manual Vol. 1.
+
 
 ### Spacer Grid Model Parameters
 
