@@ -499,8 +499,8 @@ listed in the table.
 |7  |`var_card` |**card**, where the specific perturbed parameter is located   |
 |8  |`var_word` |**word**, where the specific perturbed parameter is located   |
 |9  |`var_dist` |Distribution of the perturbation factor (as random variable)  |
-|10 |`var_par2` |the 1st parameter of the distribution                         |
-|11 |`var_par1` |the 2nd parameter of the distribution                         |
+|10 |`var_par1` |the 1st parameter of the distribution                         |
+|11 |`var_par2` |the 2nd parameter of the distribution                         |
 |12 |`str_fmt`  |string formatting of the parameter within the trace input deck|
 
 ### data_type
@@ -549,7 +549,6 @@ bracket.
 |3  |log-uniform      |`logunif` |minimum value (float)                        |maximum value (float)|
 |4  |normal (gaussian)|`normal`  |mean (float)                                 |variance (float)     |
 
-
 ### str_fmt
 
 The variable `str_fmt` in `params_list` file specified the string formatting 
@@ -562,11 +561,93 @@ accordance between perturbed parameter and its string format in the input deck.
 The complete specification on the string formatting for TRACE input deck 
 (in FORTRAN) can be found in the User's Manual Vol. 1.
 
+### Comment symbol
+
+The utility supports in-line commenting through the use of hash character.
+
+**Example**
+
+The following lines are ignored by the parsing utility and was written down as 
+a guidance for user
+
+    # 0     1        2       3        4        5        6        7        8        9        10       11
+    # enum data_type var_num var_name var_type var_mode var_card var_word var_dist var_par1 var_par2 str_fmt
+
+
 ### Spacer Grid Model Parameters
 
 ### Material Properties
 
 ### TRACE *Sensitivity Coefficient*
+
+The term *sensitivity coefficient* was introduced in the special delivery of 
+`trace_v5.0p3` and now it becomes a standard feature of the new release of 
+TRACE (`trace_v5.0p4`). This coefficient, in principle, is simply a 
+perturbation factor applied to TRACE closure laws parameters (e.g., heat transfer 
+coefficient or interfacial drag) and made available to the user via the 
+input deck. As such, the term is a misnomer and it is always written in this 
+document in italic.
+
+An example of how sensitivity coefficient is defined in the input deck is given
+below,
+
+    ***************
+    * Model flags *
+    ***************
+    *
+    .....
+    *
+    ****************************
+    * Sensitivity Coefficients *
+    ****************************
+    *
+    * Spacer Grid Pressure Loss Coefficient Multiplier
+    *id    mode   value
+    1033    3     1.0
+    *
+    *************************
+    * component-number data *
+    *************************
+    *
+    ......
+
+The *sensitivity coefficients inside the input deck requires three variables:
+`id`, a unique integer number identifying the coefficient (see table); 
+`mode`, the mode of perturbation (see table); `value`, the actual value of 
+perturbation factor.
+
+The table below gives all the required information, to specify the 
+*sensitivity coefficient* in the list of parameters file. Not the if a variable
+is not used it has to be specify with `-` (i.e., dash symbol) inside the list
+file.
+
+|No.|Name       |Description                                         | Value     |
+|---|-----------|----------------------------------------------------|-----------|
+|1  |`enum`     |enumeration in the list                             |integer    |
+|2  |`data_type`|type of parameters                                  |`senscoef` |
+|3  |`var_num`  |unique integer ID for the *sensitivity coefficient* |(see table)|
+|4  |`var_name` |**not used**                                        |`-`        |
+|5  |`var_type` |type of variable                                    |`scalar`   |
+|6  |`var_mode` |mode of perturbation                                |(see table)|
+|7  |`var_card` |**not used**                                        | `-`       |
+|8  |`var_word` |**not used**                                        | `-`       |
+|9  |`var_dist` |distribution of the perturbation factor             |(see table)|
+|10 |`var_par1` |the 1st parameter of the distribution               |(see table)|
+|11 |`var_par2` |the 2nd parameter of the distribution               |(see table)|
+|12 |`str_fmt`  |string formatting of the parameter                  | `14.4f`   |
+
+**Example**
+
+An example of how a *sensitivity coefficient* is specified inside the list 
+of parameters file is shown below
+
+    # 0     1        2       3        4        5        6        7        8        9        10       11
+    # enum data_type var_num var_name var_type var_mode var_card var_word var_dist var_par1 var_par2 str_fmt
+      16   senscoef  1035    -        scalar   3        -        -        logunif  0.5      2.0      14.4f
+
+The example above showed the perturbed parameter no. 16 of type *sensitivity 
+coefficient* applied to the input as a multiplication factor with log-uniform 
+distribution between 0.5 to 2.0. 
 
 ### TRACE Component Parameters
 
