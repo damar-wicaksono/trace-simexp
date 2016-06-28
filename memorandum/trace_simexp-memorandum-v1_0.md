@@ -484,7 +484,9 @@ The file has the following (abridged) contents:
 
 The list of parameters file contains the specification of the selected TRACE
 parameters to be perturbed during the experiment. The file also contains the 
-specification of the perturbation factor. The user specified all of the 
+distributional specification of the perturbation factor. This specification is 
+used to transform the normalized value in the design matrix to the actual value 
+of the parameter to be written in the input deck. The user specified all of the 
 required information in a text file and for each line contains the information 
 listed in the table.
 
@@ -573,8 +575,46 @@ a guidance for user
     # 0     1        2       3        4        5        6        7        8        9        10       11
     # enum data_type var_num var_name var_type var_mode var_card var_word var_dist var_par1 var_par2 str_fmt
 
-
 ### Spacer Grid Model Parameters
+
+To model thermal and hydraulic effects of spacer grids, TRACE includes a spacer 
+grid model. This model can be activated by setting the `NAMELIST` variable 
+`GRIDTYPES` to be greater than `0` and specify a spacer grid data for each of 
+different spacer grid types used (if more than `1`). The documentation on the 
+required design parameters to specify a spacer grid can be found in TRACE 
+User's Manual, Vol. 1, Chapter 6, Subsection "Spacer Grid Data".
+
+`trace-simexp` utility supports perturbing all of the design parameters 
+independently. The specification for an entry in the list of parameters file 
+can be seen on the table below.
+
+|No.|Name       |Description                            | Value                                                               |
+|---|-----------|---------------------------------------|---------------------------------------------------------------------|
+|1  |`enum`     |enumeration in the list                |integer                                                              |
+|2  |`data_type`|type of parameters                     |`spacer`                                                             |
+|3  |`var_num`  |Spacer grid type identifier number     |integer                                                              |
+|4  |`var_name` |name of the variable                   |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
+|5  |`var_type` |type of variable                       |`scalar`                                                             |
+|6  |`var_mode` |mode of perturbation                   |(see Table XX)                                                       |
+|7  |`var_card` |**card** number of the variable        |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
+|8  |`var_word` |**word** number of the variable        |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
+|9  |`var_dist` |distribution of the perturbation factor|(see Table XX)                                                       |
+|10 |`var_par1` |the 1st parameter of the distribution  |(see Table XX)                                                       |
+|11 |`var_par2` |the 2nd parameter of the distribution  |(see Table XX)                                                       |
+|12 |`str_fmt`  |string formatting of the parameter     | `14d` if `var_num == spmatid`, else `14.4f`                         |
+
+**Example**
+
+The example below shows how a parameter related to spacer grid model is listed
+in the list of parameters file,
+
+    # 0     1        2       3        4        5        6        7        8        9        10       11
+    # enum data_type var_num var_name var_type var_mode var_card var_word var_dist var_par1 var_par2 str_fmt
+      2    spacer    101     vnbloc   scalar   3        2        2        unif     0.95     1.05      14.4f
+
+The example showed an entry of mixing vane blockage ratio perturbation factor 
+for spacer grid `101`, with the factor applied to the model parameter as a 
+multiplication factor of uniform distribution between `0.95 - 1.05`.      
 
 ### Material Properties
 
@@ -588,8 +628,8 @@ coefficient or interfacial drag) and made available to the user via the
 input deck. As such, the term is a misnomer and it is always written in this 
 document in italic.
 
-An example of how sensitivity coefficient is defined in the input deck is given
-below,
+An example of how *sensitivity coefficient* is defined in the input deck is 
+shown below,
 
     ***************
     * Model flags *
@@ -617,24 +657,79 @@ The *sensitivity coefficients inside the input deck requires three variables:
 perturbation factor.
 
 The table below gives all the required information, to specify the 
-*sensitivity coefficient* in the list of parameters file. Not the if a variable
-is not used it has to be specify with `-` (i.e., dash symbol) inside the list
-file.
+*sensitivity coefficient* in the list of parameters file. Note the if a 
+variable is not used it has to be specify with `-` (i.e., dash symbol) inside 
+the list file.
 
-|No.|Name       |Description                                         | Value     |
-|---|-----------|----------------------------------------------------|-----------|
-|1  |`enum`     |enumeration in the list                             |integer    |
-|2  |`data_type`|type of parameters                                  |`senscoef` |
-|3  |`var_num`  |unique integer ID for the *sensitivity coefficient* |(see table)|
-|4  |`var_name` |**not used**                                        |`-`        |
-|5  |`var_type` |type of variable                                    |`scalar`   |
-|6  |`var_mode` |mode of perturbation                                |(see table)|
-|7  |`var_card` |**not used**                                        | `-`       |
-|8  |`var_word` |**not used**                                        | `-`       |
-|9  |`var_dist` |distribution of the perturbation factor             |(see table)|
-|10 |`var_par1` |the 1st parameter of the distribution               |(see table)|
-|11 |`var_par2` |the 2nd parameter of the distribution               |(see table)|
-|12 |`str_fmt`  |string formatting of the parameter                  | `14.4f`   |
+|No.|Name       |Description                            | Value     |
+|---|-----------|---------------------------------------|-----------|
+|1  |`enum`     |enumeration in the list                |integer    |
+|2  |`data_type`|type of parameters                     |`senscoef` |
+|3  |`var_num`  |unique 4-digit integer ID              |(see table)|
+|4  |`var_name` |**not used**                           |`-`        |
+|5  |`var_type` |type of variable                       |`scalar`   |
+|6  |`var_mode` |mode of perturbation                   |(see table)|
+|7  |`var_card` |**not used**                           | `-`       |
+|8  |`var_word` |**not used**                           | `-`       |
+|9  |`var_dist` |distribution of the perturbation factor|(see table)|
+|10 |`var_par1` |the 1st parameter of the distribution  |(see table)|
+|11 |`var_par2` |the 2nd parameter of the distribution  |(see table)|
+|12 |`str_fmt`  |string formatting of the parameter     | `14.4f`   |
+
+The table below lists the currently available sensitivity coefficients 
+implemented in the modified version of `trace_v5.0p3.uq` (cite PREMIUM). This 
+particular version of TRACE was modified from the original special delivery by 
+adding additional *sensitivity coefficients*. The version was tested and used 
+in the sensitivity analysis and uncertainty quantification studies of post-CHF 
+closure laws for PREMIUM Phase IV benchmark, NUTHOS-10, NURETH-16, and 
+NUTHOS-11 conference contributions.
+
+|No.|ID  | Name          |Description                                               |Supported Perturbation Mode|
+|---|----|---------------|----------------------------------------------------------|---------------------------|
+|1  |1000|bubSlugLIHTCSV |Liquid to interface bubbly-slug heat transfer coefficient | 3                         |
+|2  |1001|annMistLIHTCSV |Liquid to interface annular-mist heat transfer coefficient| 3                         |
+|3  |1002|transLIHTCSV   |Liquid to interface transition heat transfer coefficient  | 3                         |
+|4  |1003|stratLIHTCSV   |Liquid to interface stratified heat transfer coefficient  | 3                         |
+|5  |1004|bubSlugVIHTCSV |Vapor to interface bubbly-slug heat transfer coefficient  | 3                         |
+|6  |1005|annMistVIHTCSV |Vapor to interface annular-mist heat transfer coefficient | 3                         |
+|7  |1006|transVIHTCSV   |Vapor to interface transition heat transfer coefficient   | 3                         |
+|8  |1007|stratVIHTCSV   |Vapor to interface stratified heat transfer coefficient   | 3                         |
+|9  |1008|spLHTCWallSV   |Single Phase Liquid to Wall heat transfer coefficient     | 3                         |
+|10 |1009|spVHTCWallSV   |Single Phase Vapor to Wall heat transfer coefficient      | 3                         |
+|11 |1010|tMINWallSV     |Film to Transition Boiling Tmin Criterion Temperature     | 1,2,3                     |
+|12 |1011|dFFBHTCWallSV  |Dispersed Flow Film Boiling HTC                           | 3                         |
+|13 |1012|subcHTCWallSV  |Subcooled boiling heat transfer coefficient               | 3                         |
+|14 |1013|nuclHTCWallSV  |Nucleate boiling heat transfer coefficient                | 3                         |
+|15 |1014|dnbchfWallSV   |Departure from nucleate boiling / critical heat flux      | 3                         |
+|16 |1015|transHTCWallSV |Transition boiling heat transfer coefficient              | 3                         |
+|17 |1016|gapCondSV      |Gap Conductance coefficient                               | 3                         |
+|19 |1018|fuelCndBBSV    |Fuel Thermal Condutivity before Burst coefficient         | 3                         |
+|20 |1019|fuelCndABSV    |Fuel Thermal Condutivity after Burst coefficient          | 3                         |
+|21 |1020|cladMWRxnRteSV |Cladding Metal-Water Reaction Rate coefficient            | 3                         |
+|22 |1021|rodIntPressSV  |Rod Internal Pressure coefficient                         | 3                         |
+|23 |1022|burstTempSV    |Burst Temperature coefficient                             | 3                         |
+|24 |1023|burstStrainSV  |Burst Strain coefficient                                  | 3                         |
+|25 |1024|wallDragSV     |Wall Drag coefficient                                     | 3                         |
+|26 |1025|formLossSV     |Form Loss coefficient                                     | 3                         |
+|27 |1026|bubIntfDragSV  |Interfacial Drag (bubbly) coefficient                     | 3                         |
+|28 |1027|slugIntfDragSV |Interfacial Drag (slug) coefficient                       | 3                         |
+|29 |1028|chrnIntfDragSV |Interfacial Drag (churn) coefficient                      | 3                         |
+|30 |1029|annIntfDragSV  |Interfacial Drag (annular) coefficient                    | 3                         |
+|31 |1030|drpltIntfDragSV|Interfacial Drag (droplet) coefficient                    | 3                         |
+|32 |1031|fldTempSV      |Flooding Coefficient Temperature coefficient              | 3                         |
+|33 |1032|fldLengthSV    |Flooding Coefficient Length coefficient')                 | 3                         |
+|34 |1033|kGridSV        |Spacer Grid Pressure Loss Coefficient Multiplier')        | 3                         |
+|35 |1034|gridHTEnhSV    |Spacer Grid Heat Transfer Enhancement')                   | 3                         |
+|36 |1035|iAFBHTCWallSV  |Inverted Annular Film Boiling Wall HTC')                  | 3                         |
+|37 |1036|iAFBLIHTCSV    |Liquid-to-interface Inverted Annular Film Boiling HTC     | 3                         |
+|38 |1037|iAFBVIHTCSV    |Vapor-to-interface Inverted Annular Film Boiling HTC      | 3                         |
+|39 |1038|dFFBLIHTCSV    |Liquid-to-interface Dispersed Flow Film Boiling HTC       | 3                         |
+|40 |1039|dFFBVIHTCSV    |Vapor-to-interface Dispersed Flow Film Boiling HTC        | 3                         |
+|41 |1040|iAFBIntfDragSV |Interfacial Drag Coefficient for IAFB Regime              | 3                         |
+|42 |1041|dFFBIntfDragSV |Interfacial Drag Coefficient for DFFB Regime              | 3                         |
+|43 |1042|iAFBWallDragSV |Wall Drag Coefficient for IAFB Regime                     | 3                         |
+|44 |1043|dFFBWallDragSV |Wall Drag Coefficient for DFFB Regime                     | 3                         |
+|45 |1044|tQuenchSV      |Quench Temperature                                        | 2                         |
 
 **Example**
 
