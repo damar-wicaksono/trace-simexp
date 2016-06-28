@@ -610,11 +610,11 @@ in the list of parameters file,
 
     # 0     1        2       3        4        5        6        7        8        9        10       11
     # enum data_type var_num var_name var_type var_mode var_card var_word var_dist var_par1 var_par2 str_fmt
-      2    spacer    101     vnbloc   scalar   3        2        2        unif     0.95     1.05      14.4f
+      2    spacer    101     vnbloc   scalar   3        2        2        unif     0.95     1.05     14.4f
 
 The example showed an entry of mixing vane blockage ratio perturbation factor 
 for spacer grid `101`, with the factor applied to the model parameter as a 
-multiplication factor of uniform distribution between `0.95 - 1.05`.      
+multiplication factor of uniform distribution between `0.95 - 1.05`.
 
 ### Material Properties
 
@@ -742,9 +742,69 @@ of parameters file is shown below
 
 The example above showed the perturbed parameter no. 16 of type *sensitivity 
 coefficient* applied to the input as a multiplication factor with log-uniform 
-distribution between 0.5 to 2.0. 
+distribution between 0.5 to 2.0.
 
 ### TRACE Component Parameters
+
+Parameters related to TRACE components of `PIPE`, `VESSEL`, `POWER`, `FILL`,
+and `BREAK` can be accessed and perturbed by creating an entry in the `parlist`
+file. 
+
+|No.|Name       |Description                                           | Value                                                       |
+|---|-----------|------------------------------------------------------|-------------------------------------------------------------|
+|1  |`enum`     |enumeration in the list                               |integer                                                      |
+|2  |`data_type`|type of parameters                                    |`(pipe, vessel, power, fill, or break)`                      |
+|3  |`var_num`  |unique TRACE component ID                             |model specific                                               |
+|4  |`var_name` |name of the variable                                  |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
+|5  |`var_type` |type of variable                                      |`scalar or table`, explanation below                         |
+|6  |`var_mode` |mode of perturbation                                  |(see Table)                                                  |
+|7  |`var_card` |the table column number where the parameter is located|see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
+|8  |`var_word` |the number on entry in table                          |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
+|9  |`var_dist` |distribution of the perturbation factor               |(see Table)                                                  |
+|10 |`var_par1` |the 1st parameter of the distribution                 |(see Table)                                                  |
+|11 |`var_par2` |the 2nd parameter of the distribution                 |(see Table)                                                  |
+|12 |`str_fmt`  |string formatting of the parameter                    |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
+
+Parameters associated with the TRACE components are classified into two 
+different types. The `scalar` type is a single value parameter, while the 
+`table` type variable can contain multiple values and is input using the `LOAD`
+format (TRACE User's Manual, Vol. 1, Ch. 5, Subsection "LOAD Format"). 
+Typically, a `table` type variable consist of a set of grouped values (tuple) 
+representing independent vs. dependent variables.
+                                                      |
+An example of `scalar` type variable in component-related parameters is shown 
+below where each of the values is of scalar type.
+
+    *       twtold          rfmx       concin          felv
+               0.0         1.0E20         0.0           0.0
+    *         dxin         volin        alpin          vlin          tlin
+             0.046   1.794484E-4          0.0         0.038         336.0
+
+As an example for a `table` type variable is shown below for a power table 
+where a pair of time and power is given as input,
+
+    * rpwtbr*         0.0     1.875E5s
+    * rpwtbr*         2.5       2.0E5s
+    * rpwtbr*         5.0     1.925E5s
+    * rpwtbr*        10.0       1.9E5s
+    * rpwtbr*        20.0       1.8E5s
+    * rpwtbr*        30.0      1.75E5s
+    * rpwtbr*        50.0     1.675E5s
+    * rpwtbr*        75.0       1.6E5s
+
+**Example**
+
+An example of how a component-related parameter is specified inside the list 
+of parameters file is shown below,
+
+    # 0    1         2       3        4        5        6        7        8        9        10       11
+    # enum data_type var_num var_name var_type var_mode var_card var_word var_dist var_par1 var_par2 str_fmt
+      11   fill      10      vmtbm    table    3        2        16       unif     0.9      1.1       14.4f
+
+The example above showed the perturbation of the fill table (`vmtbm`) using 
+multiplication factor drawn from uniform distribution with value between 
+`0.9 - 1.0`. The perturbed parameter is located in the 2nd column of the table 
+(`var_card == 2`) and there are 16 entries in the table (`var_word == 2`).
 
 ## Design matrix file (`design_matrix` file)
 
