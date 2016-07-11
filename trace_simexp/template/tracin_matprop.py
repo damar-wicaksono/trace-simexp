@@ -4,8 +4,34 @@
 __author__ = "Damar Wicaksono"
 
 
+# Default hard-coded values
 MATPROP_TRACIN_KEY = "User Defined Material"
 MATPROP_TABLE_KEY = "prptb"
+
+
+def get_col_num(param_dict: dict) -> int:
+    r"""Get the column number of a specified material property number
+    
+    Assign column number for each var_name, prptb consists of 7 columns
+    the asterisk, prptb comment, temperature, rho, cp, cond, and emis 
+    
+    **Example**
+    *  prptb         temp         rho          cp        cond        emis
+    *  prptb*      273.15      8300.0       432.0        12.5         1.0s
+    
+    :param param_dict: the dictionary of the matprop parameter
+    :return: the integer signifying column number, zero-indexed
+    """
+    if param_dict["var_name"] == "rho":
+        col_var = 3
+    elif param_dict["var_name"] == "cp":
+        col_var = 4
+    elif param_dict["var_name"] == "cond":
+        col_var = 5
+    elif param_dict["var_name"] == "emis":
+        col_var = 6
+    
+    return col_var
 
 
 def get_nom_val(tracin_lines, param_dict):
@@ -35,6 +61,9 @@ def read_table(tracin_lines, param_dict):
     :return: (list) the nominal values of the matprop parameter
     """
     nom_val = []
+    
+    # Grab the column number based on var_name
+    col_num = get_col_num(param_dict)
 
     # loop over tracin lines
     for line_num, tracin_line in enumerate(tracin_lines):
@@ -56,11 +85,10 @@ def read_table(tracin_lines, param_dict):
                     if MATPROP_TABLE_KEY not in tracin_lines[line_num+offset]:
                         break
                     else:
-                        # Grab the specified parameter based on the "var_card"
-                        col_num = param_dict["var_card"] + 2 # offset column
+                        # Grab the specified parameter based on the "var_name"
                         val = tracin_lines[line_num+offset].split()[col_num]
-                        if param_dict["var_card"] != 4:
-                            # no continuation , matprop definitely has 5 columns
+                        if col_num != 6:
+                            # no continuation, not the last column
                             nom_val.append(float(val))
                         else:
                             # last column has a continuation symbol, skip it
@@ -101,13 +129,16 @@ def put_key(tracin_lines, param_dict):
 
 
 def edit_table(tracin_lines, param_dict):
-    r"""Get the nominal values of table-type matprop parameters
+    r"""Replace the table type material property with key to be substituted
 
     :param tracin_lines: (list of str) the tracin base as a list of string
     :param param_dict: (dict) the dictionary of the matprop parameter
     :returns:(list of str) the modified base tracin with key for the matprop
         parameter as specified by param_dict
     """
+
+    # Grab the column number based on var_name
+    col_num = get_col_num(param_dict)
 
     # loop over tracin lines
     for line_num, tracin_line in enumerate(tracin_lines):
@@ -141,25 +172,22 @@ def edit_table(tracin_lines, param_dict):
                                                       param_dict["enum"],
                                                       i)
                         # Replace the nominal value with key
-                        col_num = param_dict["var_card"] + 2 # offset column
                         card[col_num] = key
 
                         # Replace the whole line with modified line
-                        if param_dict["var_card"] != 4:
-                            # no continuation , matprop definitely has 5 columns
+                        if col_num != 6:
+                            # no continuation, not the last column
                              tracin_lines[line_num+offset] = \
                                  "{} {}{:>14s}{:>14s}{:>14s}{:>14s}{:>14s}" \
-                                 .format(card[0], card[1], card[2],
-                                         card[3], card[4], card[5], card[6])
+                                 .format(*card)
                         else:
                             # last column has a continuation symbol, skip it
+                            print(card)
+                            card.append(cont)
                             tracin_lines[line_num+offset] = \
                                 "{} {}{:>14s}{:>14s}{:>14s}{:>14s}{:>14s}{}" \
-                                 .format(card[0], card[1], card[2],
-                                         card[3], card[4], card[5],
-                                         card[6], cont)
-
-
+                                 .format(*card)
+                    
                     offset += 1
                     i += 1
                 break
