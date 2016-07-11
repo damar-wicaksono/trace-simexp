@@ -659,8 +659,13 @@ in the list of parameters file,
 
     # 0     1        2       3        4        5        6        7        8        9        10       11
     # enum data_type var_num var_name var_type var_mode var_card var_word var_dist var_par1 var_par2 str_fmt
-      2    spacer    101     vnbloc   scalar   3        2        2        unif     0.95     1.05     14.4f
+      5    matprop   51      cond     table    3        -        -        unif     0.95     1.05     14.4f
 
+The example showed an entry for perturbation of conductivity parameter 
+(`var_name == cond`) of material number 51 (`var_num == 51`). The material 
+property specification is of type `table`. The factor is applied to the model 
+parameter as a multiplication factor of uniform distribution between 
+`0.95 - 1.05`.
 
 ### TRACE *Sensitivity Coefficient*
 
