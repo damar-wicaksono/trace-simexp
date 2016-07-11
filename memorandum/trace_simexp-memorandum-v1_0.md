@@ -565,7 +565,8 @@ The complete specification on the string formatting for TRACE input deck
 
 ### Comment symbol
 
-The utility supports in-line commenting through the use of hash character.
+The utility supports in-line commenting through the use of hash character 
+(`#`).
 
 **Example**
 
@@ -617,6 +618,43 @@ for spacer grid `101`, with the factor applied to the model parameter as a
 multiplication factor of uniform distribution between `0.95 - 1.05`.
 
 ### Material Properties
+
+Parameters related to material properties are accessible if the material is 
+specified as a **user-defined** material properties, using a table format. 
+The table format implies that the material properties is given with temperature
+as the independent variable and perturbation will be carried out on each of the 
+dependent variables (density, specific heat, conductivity, emissivity).
+The required inputs are given in the table below.
+
+
+|No.|Name       |Description                            | Value         |
+|---|-----------|---------------------------------------|---------------|
+|1  |`enum`     |enumeration in the list                |integer        |
+|2  |`data_type`|type of parameters                     |`matprop`      |
+|3  |`var_num`  |unique user-defined material identifier|integer        |
+|4  |`var_name` |name of the variable keyword           |(see Table XX) |
+|5  |`var_type` |type of variable keyword               |`table`        |                                                             |
+|6  |`var_mode` |mode of perturbation                   |(see Table XX) |
+|7  |`var_card` |**not used**                           |(see Table XX) |
+|8  |`var_word` |**not used**                           |(see Table XX) |
+|9  |`var_dist` |distribution of the perturbation factor|(see Table XX) |
+|10 |`var_par1` |the 1st parameter of the distribution  |(see Table XX) |
+|11 |`var_par2` |the 2nd parameter of the distribution  |(see Table XX) |
+|12 |`str_fmt`  |string formatting of the parameter     |`14.4f`        |
+
+The `var_name` is the actual material properties that can be perturbed and the 
+table below provide the keyword to be input.
+
+|No.|`var_type` |Description   |
+|---|-----------|--------------|
+|1  |`rho`      |Density       |
+|2  |`cp`       |Specific heat |
+|3  |`cond`     |Conductivity  |
+|4  |`emis`     |Emissivity    |
+
+
+**Example**
+
 
 ### TRACE *Sensitivity Coefficient*
 
