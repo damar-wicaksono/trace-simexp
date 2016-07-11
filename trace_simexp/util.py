@@ -148,7 +148,8 @@ def parse_csv(csv_filename: str) -> np.ndarray:
     with open(csv_filename, "r") as csv_file:
         lines = csv_file.readlines()
         for line in lines:
-            output.append(re.split("\t|,| |;", line.rsplit()[0]))
-        output = np.array(output).astype(np.float)
+            output.append(re.split("\t|,| |;", line))
 
+        output = np.array(output).astype(np.float)
+    
     return output
