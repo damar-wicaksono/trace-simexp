@@ -652,8 +652,14 @@ table below provide the keyword to be input.
 |3  |`cond`     |Conductivity  |
 |4  |`emis`     |Emissivity    |
 
-
 **Example**
+
+The example below shows how a parameter related to material property is listed 
+in the list of parameters file,
+
+    # 0     1        2       3        4        5        6        7        8        9        10       11
+    # enum data_type var_num var_name var_type var_mode var_card var_word var_dist var_par1 var_par2 str_fmt
+      2    spacer    101     vnbloc   scalar   3        2        2        unif     0.95     1.05     14.4f
 
 
 ### TRACE *Sensitivity Coefficient*
@@ -809,7 +815,7 @@ different types. The `scalar` type is a single value parameter, while the
 format (TRACE User's Manual, Vol. 1, Ch. 5, Subsection "LOAD Format"). 
 Typically, a `table` type variable consist of a set of grouped values (tuple) 
 representing independent vs. dependent variables.
-                                                      |
+                                                      
 An example of `scalar` type variable in component-related parameters is shown 
 below where each of the values is of scalar type.
 
