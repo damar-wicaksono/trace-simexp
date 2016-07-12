@@ -137,7 +137,7 @@ def edit_table(tracin_lines, param_dict):
         parameter as specified by param_dict
     """
     from ..tracin_util import keygen
-    
+
     # Grab the column number based on var_name
     col_num = get_col_num(param_dict)
 
@@ -169,12 +169,9 @@ def edit_table(tracin_lines, param_dict):
 
                         # Create key, enclosed because of the continuation char
                         # three-value key due to enumeration of tabular values
-                        key = "${{{}_{}_{}}}" .format(param_dict["var_name"],
-                                                      param_dict["enum"],
-                                                      i)
+                        key = keygen.create(param_dict, template=True, index=i)
                         # Replace the nominal value with key
                         cards[col_num] = key
-
                         # Replace the whole line with modified line with key                          
                         if col_num != 6:
                             # no continuation, not the last column

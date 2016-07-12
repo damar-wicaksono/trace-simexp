@@ -38,6 +38,8 @@ def put_key(tracin_lines, param_dict):
     """
     from ..tracin_util import keygen
 
+    word = 2 # the parameter values for senscoef is always at the 3rd values
+    
     # loop over tracin lines
     for line_num, tracin_line in enumerate(tracin_lines):
 
@@ -46,9 +48,7 @@ def put_key(tracin_lines, param_dict):
             # the sensitivity coefficient identifier is the beginning of line
             card = tracin_line.split()
             # Create the key and replace the word in the card
-            word = 2 # the parameter values always located as the 3rd values
-            card[word] = "${}_{}" .format(param_dict["data_type"],
-                                          param_dict["enum"])
+            card[word] = keygen.create(param_dict, template=True, index=None)
             # Sensitivity coefficient always have 3 cards
             card = "{:<8s}{:1s}{:>16s} " .format(card[0], card[1], card[2])
             # replace the line in tracin with the modified line
