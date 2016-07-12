@@ -127,11 +127,12 @@ def read_array(tracin_lines, param_dict):
 
 
 def put_key(tracin_lines, param_dict):
-    r"""
+    r"""Replace the nominal value of component parameter with key
 
-    :param tracin_lines:
-    :param param_dict:
-    :return:
+    :param tracin_lines: (list of str) the tracin base as a list of string
+    :param param_dict: (dict) the dictionary of the perturbed comp parameter
+    :returns:(list of str) the modified base tracin with key for the parameter
+        as specified by param_dict
     """
     # select the type of variable
     if param_dict["var_type"] == "scalar":
