@@ -54,6 +54,7 @@ def put_key(tracin_lines, param_dict):
         according to the grid parameters specification
     """
     import re
+    from ..tracin_util import keygen
 
     # loop over lines
     for line_num, tracin_line in enumerate(tracin_lines):

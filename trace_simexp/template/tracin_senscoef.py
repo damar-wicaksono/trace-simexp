@@ -36,7 +36,9 @@ def put_key(tracin_lines, param_dict):
     :return: (list of str) the base tracin with line(s) modified according to
         the senscoef parameter key
     """
-     # loop over tracin lines
+    from ..tracin_util import keygen
+
+    # loop over tracin lines
     for line_num, tracin_line in enumerate(tracin_lines):
 
         var_num = tracin_line.split()[0]            # safer to keep it as string

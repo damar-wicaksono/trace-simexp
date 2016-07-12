@@ -136,7 +136,8 @@ def edit_table(tracin_lines, param_dict):
     :returns:(list of str) the modified base tracin with key for the matprop
         parameter as specified by param_dict
     """
-
+    from ..tracin_util import keygen
+    
     # Grab the column number based on var_name
     col_num = get_col_num(param_dict)
 
@@ -162,9 +163,9 @@ def edit_table(tracin_lines, param_dict):
                         break
                     else:
                         # Grab the card and split the string
-                        card = tracin_lines[line_num+offset]
-                        cont = card[-1]     # the continuation character
-                        card = card.split()
+                        cards = tracin_lines[line_num+offset]
+                        cont = cards[-1]     # the continuation character
+                        cards = cards.split()
 
                         # Create key, enclosed because of the continuation char
                         # three-value key due to enumeration of tabular values
@@ -172,21 +173,20 @@ def edit_table(tracin_lines, param_dict):
                                                       param_dict["enum"],
                                                       i)
                         # Replace the nominal value with key
-                        card[col_num] = key
+                        cards[col_num] = key
 
-                        # Replace the whole line with modified line
+                        # Replace the whole line with modified line with key                          
                         if col_num != 6:
                             # no continuation, not the last column
                              tracin_lines[line_num+offset] = \
                                  "{} {}{:>14s}{:>14s}{:>14s}{:>14s}{:>14s}" \
-                                 .format(*card)
+                                 .format(*cards)
                         else:
-                            # last column has a continuation symbol, skip it
-                            print(card)
-                            card.append(cont)
+                            # last column has a continuation symbol
+                            cards.append(cont)
                             tracin_lines[line_num+offset] = \
                                 "{} {}{:>14s}{:>14s}{:>14s}{:>14s}{:>14s}{}" \
-                                 .format(*card)
+                                 .format(*cards)
                     
                     offset += 1
                     i += 1

@@ -191,6 +191,7 @@ def edit_table(tracin_lines, param_dict):
         parameter values replaced with keys
     """
     import re
+    from ..tracin_util import keygen
 
     # loop over lines
     for line_num, tracin_line in enumerate(tracin_lines):
