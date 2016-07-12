@@ -88,7 +88,7 @@ def perturb_param(param_dict, scaled_val):
 
 
 def create_dict(param_dict, perturbed_param):
-    r"""Create a key-value pair between template key and the perturbed parameter
+    r"""Create a key-value pair between template key & the perturbed parameter
 
     This key-value pair will be collected and use for substitution in the
     tracin template. The function will generate this key and value pair for
@@ -98,23 +98,19 @@ def create_dict(param_dict, perturbed_param):
     :param perturbed_param: (variant) the perturbed parameter value
     :returns: (dict) the key-value pair
     """
+    from . import keygen
 
     perturb_dict = dict()
 
     # Create key and return the key-value dictionary
     if param_dict["var_type"] == "scalar":
-        key = "{}_{}" .format(param_dict["data_type"], param_dict["enum"])
+        key = keygen.create(param_dict, template=False, index=None)
         perturb_dict.update({key: perturbed_param[0]})
 
-    elif param_dict["var_type"] == "table":
+    elif param_dict["var_type"] == "table" or param_dict["var_type"] == "array":
         for i in range(len(perturbed_param)):
-            key = "{}_{}_{}" .format(param_dict["var_name"],
-                                     param_dict["enum"],
-                                     i)
+            key = keygen.create(param_dict, template=False, index=i)
             perturb_dict.update({key: perturbed_param[i]})
-
-    elif param_dict["var_type"] == "array":
-        pass
 
     elif param_dict["var_type"] == "fit":
         pass

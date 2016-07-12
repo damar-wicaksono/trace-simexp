@@ -54,6 +54,7 @@ def put_key(tracin_lines, param_dict):
         according to the grid parameters specification
     """
     import re
+    from ..tracin_util import keygen
 
     # loop over lines
     for line_num, tracin_line in enumerate(tracin_lines):
@@ -71,8 +72,9 @@ def put_key(tracin_lines, param_dict):
                 word = param_dict["var_word"] - 1
                 # Replace the particular word with keys
                 card = tracin_lines[line_num+offset].split()
-                card[word] = "${}_{}" .format(param_dict["data_type"],
-                                              param_dict["enum"])
+                card[word] = keygen.create(param_dict, 
+                                           template=True, 
+                                           index=None)
                 card = "".join("%14s" %k for k in card)
                 # replace the line of tracin with the new one
                 tracin_lines[line_num+offset] = card

@@ -853,7 +853,9 @@ of parameters file is shown below,
 The example above showed the perturbation of the fill table (`vmtbm`) using 
 multiplication factor drawn from uniform distribution with value between 
 `0.9 - 1.0`. The perturbed parameter is located in the 2nd column of the table 
-(`var_card == 2`) and there are 16 entries in the table (`var_word == 2`).
+(`var_card == 2`) and there are 16 entries in the table (`var_word == 16`).
+
+For a scalar
 
 ## Design matrix file (`design_matrix` file)
 
