@@ -855,7 +855,17 @@ multiplication factor drawn from uniform distribution with value between
 `0.9 - 1.0`. The perturbed parameter is located in the 2nd column of the table 
 (`var_card == 2`) and there are 16 entries in the table (`var_word == 16`).
 
-For a scalar
+The entry below is an example of a scalar type component-related parameter,
+
+    # 0    1         2       3        4        5        6        7        8        9        10       11
+    # enum data_type var_num var_name var_type var_mode var_card var_word var_dist var_par1 var_par2 str_fmt
+      11   vessel    1       epsw     scalar   1        6        2        unif     6.1E-7   2.44E-6  14.4e
+
+The example gives a specification for perturbation of vessel component no. 1 
+roughness parameter (`var_name == epsw`). The parameter is specified in the 
+input deck of vessel component at card number 6 (`var_card == 6`) and word 
+number 2 (`var_word == 2`). The perturbation is done using substitutive factor 
+(`var_mode == 1`) with uniform distribution between `6.1e-7 - 2.55e-6` [m].
 
 ## Design matrix file (`design_matrix` file)
 
