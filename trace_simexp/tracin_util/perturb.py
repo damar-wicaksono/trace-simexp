@@ -88,7 +88,7 @@ def perturb_param(param_dict, scaled_val):
 
 
 def create_dict(param_dict, perturbed_param):
-    r"""Create a key-value pair between template key and the perturbed parameter
+    r"""Create a key-value pair between template key & the perturbed parameter
 
     This key-value pair will be collected and use for substitution in the
     tracin template. The function will generate this key and value pair for
@@ -107,13 +107,10 @@ def create_dict(param_dict, perturbed_param):
         key = keygen.create(param_dict, template=False, index=None)
         perturb_dict.update({key: perturbed_param[0]})
 
-    elif param_dict["var_type"] == "table":
+    elif param_dict["var_type"] == "table" or param_dict["var_type"] == "array":
         for i in range(len(perturbed_param)):
             key = keygen.create(param_dict, template=False, index=i)
             perturb_dict.update({key: perturbed_param[i]})
-
-    elif param_dict["var_type"] == "array":
-        pass
 
     elif param_dict["var_type"] == "fit":
         pass
