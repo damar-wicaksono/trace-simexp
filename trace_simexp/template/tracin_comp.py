@@ -127,11 +127,12 @@ def read_array(tracin_lines, param_dict):
 
 
 def put_key(tracin_lines, param_dict):
-    r"""
+    r"""Replace the nominal value of component parameter with key
 
-    :param tracin_lines:
-    :param param_dict:
-    :return:
+    :param tracin_lines: (list of str) the tracin base as a list of string
+    :param param_dict: (dict) the dictionary of the perturbed comp parameter
+    :returns:(list of str) the modified base tracin with key for the parameter
+        as specified by param_dict
     """
     # select the type of variable
     if param_dict["var_type"] == "scalar":
@@ -157,6 +158,8 @@ def edit_scalar(tracin_lines, param_dict):
     :returns: (list of str) the modified base tracin with key for the parameter
         as specified by param_dict
     """
+    from ..tracin_util import keygen
+
     nom_val = None
 
     # loop over lines
@@ -170,8 +173,9 @@ def edit_scalar(tracin_lines, param_dict):
                 # "var_word" specify the element
                 word = param_dict["var_word"] - 1
                 # Replace the word in the card
-                card[word] = "${}_{}" .format(param_dict["data_type"],
-                                              param_dict["enum"])
+                card[word] = keygen.create(param_dict, 
+                                           template=True, 
+                                           index=None)
                 # concatenate the list of string to remake the card
                 card = "".join("%14s" % k for k in card)
                 # replace the input with modified card
@@ -191,6 +195,7 @@ def edit_table(tracin_lines, param_dict):
         parameter values replaced with keys
     """
     import re
+    from ..tracin_util import keygen
 
     # loop over lines
     for line_num, tracin_line in enumerate(tracin_lines):
@@ -222,12 +227,10 @@ def edit_table(tracin_lines, param_dict):
                                           tracin_lines[line_num+offset])[0]
                         # Create key, enclosed because of the continuation char
                         # three-value key due to enumeration of tabular values
-                        key = "${{{}_{}_{}}}" .format(param_dict["var_name"],
-                                                      param_dict["enum"],
-                                                      i)
+                        key = keygen.create(param_dict, template=True, index=i)
                         # replace the value according to the "var_word" w/ key
                         vals[param_dict["var_card"]-1] = key
-                        vals = "".join("%16s" % k for k in vals)
+                        vals = "".join("%15s" % k for k in vals)
 
                         # Replace the line with modified line
                         tracin_lines[line_num+offset] = "{} {}{}" .format(
