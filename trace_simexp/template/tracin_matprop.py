@@ -176,13 +176,13 @@ def edit_table(tracin_lines, param_dict):
                         if col_num != 6:
                             # no continuation, not the last column
                              tracin_lines[line_num+offset] = \
-                                 "{} {}{:>14s}{:>14s}{:>14s}{:>14s}{:>14s}" \
+                                 "{} {}{:>14s}{:>15s}{:>15s}{:>15s}{:>15s}" \
                                  .format(*cards)
                         else:
                             # last column has a continuation symbol
                             cards.append(cont)
                             tracin_lines[line_num+offset] = \
-                                "{} {}{:>14s}{:>14s}{:>14s}{:>14s}{:>14s}{}" \
+                                "{} {}{:>14s}{:>15s}{:>15s}{:>15s}{:>15s}{}" \
                                  .format(*cards)
                     
                     offset += 1

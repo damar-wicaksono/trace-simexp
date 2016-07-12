@@ -14,11 +14,11 @@ def create(param_dict: dict, template: bool=False, index: int=None) -> str:
     """
     if index != None:
         # Multiple perturbed parameters
-        key = "par_{}_{}" .format(param_dict["enum"], index)
+        key = "par_{:03d}_{:03d}" .format(param_dict["enum"], index)
         if template:
             key = "{{{}}}" .format(key) # Curly bracket to accomodate cont. sym
     else:
-        key = "par_{}" .format(param_dict["enum"])
+        key = "par_{:03d}" .format(param_dict["enum"])
 
     if template:
         # Add key flag if written for the template

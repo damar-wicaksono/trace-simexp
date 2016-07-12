@@ -229,7 +229,7 @@ def edit_table(tracin_lines, param_dict):
                         key = keygen.create(param_dict, template=True, index=i)
                         # replace the value according to the "var_word" w/ key
                         vals[param_dict["var_card"]-1] = key
-                        vals = "".join("%16s" % k for k in vals)
+                        vals = "".join("%15s" % k for k in vals)
 
                         # Replace the line with modified line
                         tracin_lines[line_num+offset] = "{} {}{}" .format(

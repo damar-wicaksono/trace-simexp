@@ -50,7 +50,7 @@ def put_key(tracin_lines, param_dict):
             # Create the key and replace the word in the card
             card[word] = keygen.create(param_dict, template=True, index=None)
             # Sensitivity coefficient always have 3 cards
-            card = "{:<8s}{:1s}{:>16s} " .format(card[0], card[1], card[2])
+            card = "{:<8s}{:1s}{:>14s} " .format(card[0], card[1], card[2])
             # replace the line in tracin with the modified line
             tracin_lines[line_num] = card
             break
