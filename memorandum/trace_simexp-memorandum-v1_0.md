@@ -120,9 +120,9 @@ sequential steps (Figure 1):
    design. 
 2. execution: execute all the generated TRACE input decks in sequential batch. 
    Jobs within a single batch can be run in parallel.
-3. postprocessing: convert all the TRACE output graphic file (`.xtv`) into a 
-   csv for selected variables. The csv files are ready to be used in downstream
-   analyses.  
+3. postprocessing: convert all the TRACE output graphic file (`xtv`) into a set
+   of `csv` files for selected variables. The csv files are ready to be used in 
+   the downstream analyses.  
 
 To carry out the task of each, `trace-simexp` contains a set of driver scripts 
 associated with each of the processes: `prepro.py`, `execute.py`, and 
@@ -301,7 +301,7 @@ using the following command:
 
     python execute.py --help
 
-The table below lists all the arguments used in the `execute.py` driver script.
+Table 2 below lists all the arguments used in the `execute.py` driver script.
 
 <!--Table 2: the command line options for the execute.py driver script-->
 
@@ -418,7 +418,7 @@ the following command:
 
     python postpro-py --help
 
-The table below lists all the required arguments in detail.
+Table 3 lists all the required arguments in detail.
 
 <!--Table 3: the command line options for the postpro.py driver script-->
 
@@ -505,6 +505,13 @@ The file has the following (abridged) contents:
     ...
 
 # Usage: Auxialiary Input Files
+
+Additional auxiliary files are needed for many of the command line options 
+explained above. Some of the auxiliary files are binaries, mainly the 
+executables for TRACE or APTPlot programs. While the other auxiliary files are 
+text files that need to be prepared by the user for each simulation experiment 
+following a predefined syntax. This section will explain the syntax in creating 
+such files as well as give some remarks on the binary executables files.
 
 ## List of parameters file (`params_list` file)
 
@@ -651,7 +658,6 @@ The table format implies that the material properties is given with temperature
 as the independent variable and perturbation will be carried out on each of the 
 dependent variables (density, specific heat, conductivity, emissivity).
 The required inputs are given in the table below.
-
 
 |No.|Name       |Description                            | Value         |
 |---|-----------|---------------------------------------|---------------|
