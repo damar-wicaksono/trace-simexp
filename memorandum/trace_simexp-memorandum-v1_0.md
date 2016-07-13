@@ -72,7 +72,7 @@ The csv files are ready to be further post-processed for
 sensitivity/uncertainty analysis. The tools required to carry out such an
 analysis is also outside the scope of `trace-simexp`.
 
-![Figure 1: Generic flowchart of trace-simexp including the required input files](figures/flowchart.png)
+![Figure 1: Workflow trace-simexp including the required input files at a glance](figures/flowchart.png)
 
 
 In the subsequent sections, the usage information as well as the notes on the
@@ -170,7 +170,6 @@ The table below lists all the options/flag in detail.
 |7  |-parlist  |--params_list  |string    | Yes                             | The list of parameters file, path+filenam     |None        |
 |8  |-info     |--info         |string    | No                              | Short message of the experiment               |None        |
 |9  |-ow       |--overwrite    |flag      | No                              | Flag to overwrite existing directory structure|False       |
-
 
 The directories created is nested in the following form:
 
@@ -304,6 +303,8 @@ using the following command:
 
 The table below lists all the arguments used in the `execute.py` driver script.
 
+<!--Table 2: the command line options for the execute.py driver script-->
+
 |No.|Short Name|Long Name           |Type      |Required                         |Description                                    |Default     |
 |---|----------|--------------------|----------|---------------------------------|-----------------------------------------------|------------|
 |1  |-prepro   |--prepro_file       |string    | Yes                             | The path to the preprocess info file          |None        |
@@ -419,6 +420,8 @@ the following command:
 
 The table below lists all the required arguments in detail.
 
+<!--Table 3: the command line options for the postpro.py driver script-->
+
 |No.|Short Name|Long Name           |Type      |Required|Description                                       |Default|
 |---|----------|--------------------|----------|--------|--------------------------------------------------|-------|
 |1  |-exec     |--exec_info         |string    |Yes     |the path to the execute info file                 |None   |
@@ -427,13 +430,13 @@ The table below lists all the required arguments in detail.
 |4  |-vars     |--trace_variables   |string    |Yes     |Preprocess the selected samples                   |None   |
 
 **Remarks 1**: When running the script interactively under Windows which is 
-connected to an `lclrs` machine, the `aptplot` program requires an X Server 
-running in the background (e.g., `Xming`).
+connected to an `lclrs` machine, the `aptplot` program requires that an X 
+Server running in the background (e.g., `Xming`).
 
 **Remarks 2**: Make sure there is enough disk space in the running directory 
 as the csv files being produced. Depending on how many variables are being 
 extracted, the files (being a text file) can take considerable amount of disk
-space.
+space. Running out of space will break the postprocessing operations.
 
 In addition to the postprocessing of the `xtv` files, the execution of postpro
 script will also produced an info file (hereinafter *postpro info file*). 
@@ -444,7 +447,6 @@ The info file is produced by default with the following naming convention:
 The file is used to document the command line arguments specified when the
 script was called as well as to log all the shell commands run during the 
 execution. See below for example of the contents.
-
 
 **Example**
 
@@ -724,7 +726,7 @@ shown below,
     *
     ......
 
-The *sensitivity coefficients inside the input deck requires three variables:
+The *sensitivity coefficients* inside the input deck requires three variables:
 `id`, a unique integer number identifying the coefficient (see table); 
 `mode`, the mode of perturbation (see table); `value`, the actual value of 
 perturbation factor.
