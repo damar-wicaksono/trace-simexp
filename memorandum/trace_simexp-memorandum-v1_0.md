@@ -521,7 +521,9 @@ distributional specification of the perturbation factor. This specification is
 used to transform the normalized value in the design matrix to the actual value 
 of the parameter to be written in the input deck. The user specified all of the 
 required information in a text file and for each line contains the information 
-listed in the table.
+listed in Table 4.
+
+<!--Table 4: Generic required information for an entry in `params_list` file-->
 
 |No.|Name       |Description                                                   |
 |---|-----------|--------------------------------------------------------------|
@@ -556,7 +558,9 @@ to type and will be explained in their corresponding subsection.
 ### var_mode
 
 A perturbation factor will be assigned for each of the specified parameter. 
-There are three modes of perturbation according to the table.
+There are three modes of perturbation according to Table 5 below.
+
+<!--Table 5: Available modes of perturbation of a model parameter-->
 
 |`var_mode`|Description                                                                         |
 |----------|------------------------------------------------------------------------------------|
@@ -573,9 +577,11 @@ and `var_par2` are required to fully specify the probability density
 are used to transform the normalized value given in the design matrix file into
 the actual perturbed TRACE model parameter value. 
 
-The table below describes the currently supported univariate distribution and 
+Table 6 below describes the currently supported univariate density and 
 the meaning of the variables. The type of the variable is written in the 
 bracket.
+
+<!--Table 6: Currently supported probability density function-->
 
 |No.|Name             |`var_dist`|`var_par1` (type)                            |`var_par2` (type)    |                                                                         |
 |---|-----------------|----------|---------------------------------------------|---------------------|
@@ -620,7 +626,9 @@ User's Manual, Vol. 1, Chapter 6, Subsection "Spacer Grid Data".
 
 `trace-simexp` utility supports perturbing all of the design parameters 
 independently. The specification for an entry in the list of parameters file 
-can be seen on the table below.
+can be seen in Table 7.
+
+<!--Table 7: Specifcation for spacer grid-related parameters in `param_list` file-->
 
 |No.|Name       |Description                            | Value                                                               |
 |---|-----------|---------------------------------------|---------------------------------------------------------------------|
@@ -629,12 +637,12 @@ can be seen on the table below.
 |3  |`var_num`  |Spacer grid type identifier number     |integer                                                              |
 |4  |`var_name` |name of the variable                   |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
 |5  |`var_type` |type of variable                       |`scalar`                                                             |
-|6  |`var_mode` |mode of perturbation                   |(see Table XX)                                                       |
+|6  |`var_mode` |mode of perturbation                   |(see Table 5)                                                        |
 |7  |`var_card` |**card** number of the variable        |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
 |8  |`var_word` |**word** number of the variable        |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
-|9  |`var_dist` |distribution of the perturbation factor|(see Table XX)                                                       |
-|10 |`var_par1` |the 1st parameter of the distribution  |(see Table XX)                                                       |
-|11 |`var_par2` |the 2nd parameter of the distribution  |(see Table XX)                                                       |
+|9  |`var_dist` |distribution of the perturbation factor|(see Table 6)                                                        |
+|10 |`var_par1` |the 1st parameter of the distribution  |(see Table 6)                                                        |
+|11 |`var_par2` |the 2nd parameter of the distribution  |(see Table 6)                                                        |
 |12 |`str_fmt`  |string formatting of the parameter     | `14d` if `var_num == spmatid`, else `14.4f`                         |
 
 **Example**
@@ -657,25 +665,29 @@ specified as a **user-defined** material properties, using a table format.
 The table format implies that the material properties is given with temperature
 as the independent variable and perturbation will be carried out on each of the 
 dependent variables (density, specific heat, conductivity, emissivity).
-The required inputs are given in the table below.
+The required inputs are given in Table 8 below.
 
-|No.|Name       |Description                            | Value         |
-|---|-----------|---------------------------------------|---------------|
-|1  |`enum`     |enumeration in the list                |integer        |
-|2  |`data_type`|type of parameters                     |`matprop`      |
-|3  |`var_num`  |unique user-defined material identifier|integer        |
-|4  |`var_name` |name of the variable keyword           |(see Table XX) |
-|5  |`var_type` |type of variable keyword               |`table`        |                                                             |
-|6  |`var_mode` |mode of perturbation                   |(see Table XX) |
-|7  |`var_card` |**not used**                           |(see Table XX) |
-|8  |`var_word` |**not used**                           |(see Table XX) |
-|9  |`var_dist` |distribution of the perturbation factor|(see Table XX) |
-|10 |`var_par1` |the 1st parameter of the distribution  |(see Table XX) |
-|11 |`var_par2` |the 2nd parameter of the distribution  |(see Table XX) |
-|12 |`str_fmt`  |string formatting of the parameter     |`14.4f`        |
+<!--Table 8: Specification for material property-related parameters in `param_list` file-->
 
-The `var_name` is the actual material properties that can be perturbed and the 
-table below provide the keyword to be input.
+|No.|Name       |Description                            | Value        |
+|---|-----------|---------------------------------------|--------------|
+|1  |`enum`     |enumeration in the list                |integer       |
+|2  |`data_type`|type of parameters                     |`matprop`     |
+|3  |`var_num`  |unique user-defined material identifier|integer       |
+|4  |`var_name` |name of the variable keyword           |(see Table 9) |
+|5  |`var_type` |type of variable keyword               |`table`       |                                                             |
+|6  |`var_mode` |mode of perturbation                   |(see Table 5) |
+|7  |`var_card` |**not used**                           |`-`           |
+|8  |`var_word` |**not used**                           |`-`           |
+|9  |`var_dist` |distribution of the perturbation factor|(see Table 6) |
+|10 |`var_par1` |the 1st parameter of the distribution  |(see Table 6) |
+|11 |`var_par2` |the 2nd parameter of the distribution  |(see Table 6) |
+|12 |`str_fmt`  |string formatting of the parameter     |`14.4f`       |
+
+The `var_name` is the actual material properties that can be perturbed and 
+Table 9 provide the keyword to be input.
+
+<!--Table 9: Material properties available to be perturbed-->
 
 |No.|`var_type` |Description   |
 |---|-----------|--------------|
@@ -737,33 +749,38 @@ The *sensitivity coefficients* inside the input deck requires three variables:
 `mode`, the mode of perturbation (see table); `value`, the actual value of 
 perturbation factor.
 
-The table below gives all the required information, to specify the 
+Table 10 gives all the required information to specify the 
 *sensitivity coefficient* in the list of parameters file. Note the if a 
 variable is not used it has to be specify with `-` (i.e., dash symbol) inside 
 the list file.
 
-|No.|Name       |Description                            | Value     |
-|---|-----------|---------------------------------------|-----------|
-|1  |`enum`     |enumeration in the list                |integer    |
-|2  |`data_type`|type of parameters                     |`senscoef` |
-|3  |`var_num`  |unique 4-digit integer ID              |(see table)|
-|4  |`var_name` |**not used**                           |`-`        |
-|5  |`var_type` |type of variable                       |`scalar`   |
-|6  |`var_mode` |mode of perturbation                   |(see table)|
-|7  |`var_card` |**not used**                           | `-`       |
-|8  |`var_word` |**not used**                           | `-`       |
-|9  |`var_dist` |distribution of the perturbation factor|(see table)|
-|10 |`var_par1` |the 1st parameter of the distribution  |(see table)|
-|11 |`var_par2` |the 2nd parameter of the distribution  |(see table)|
-|12 |`str_fmt`  |string formatting of the parameter     | `14.4f`   |
+<!--Table 10: Specification for TRACE *sensitivity coefficient* in `param_list` file-->
 
-The table below lists the currently available sensitivity coefficients 
+|No.|Name       |Description                            | Value        |
+|---|-----------|---------------------------------------|--------------|
+|1  |`enum`     |enumeration in the list                |integer       |
+|2  |`data_type`|type of parameters                     |`senscoef`    |
+|3  |`var_num`  |unique 4-digit integer ID              |(see Table 11)|
+|4  |`var_name` |**not used**                           |`-`           |
+|5  |`var_type` |type of variable                       |`scalar`      |
+|6  |`var_mode` |mode of perturbation                   |(see Table 5) |
+|7  |`var_card` |**not used**                           | `-`          |
+|8  |`var_word` |**not used**                           | `-`          |
+|9  |`var_dist` |distribution of the perturbation factor|(see Table 6) |
+|10 |`var_par1` |the 1st parameter of the distribution  |(see Table 6) |
+|11 |`var_par2` |the 2nd parameter of the distribution  |(see Table 6) |
+|12 |`str_fmt`  |string formatting of the parameter     | `14.4f`      |
+
+Table 11 below lists the currently available sensitivity coefficients 
 implemented in the modified version of `trace_v5.0p3.uq` (cite PREMIUM). This 
 particular version of TRACE was modified from the original special delivery by 
 adding additional *sensitivity coefficients*. The version was tested and used 
 in the sensitivity analysis and uncertainty quantification studies of post-CHF 
 closure laws for PREMIUM Phase IV benchmark, NUTHOS-10, NURETH-16, and 
-NUTHOS-11 conference contributions.
+NUTHOS-11 conference contributions. The meaning of the perturbation mode can 
+be seen in Table 5.
+
+<!--Table 11: Currently available *sensitivity coefficient* in TRACE v5.0p3.uq-->
 
 |No.|ID  | Name          |Description                                               |Supported Perturbation Mode|
 |---|----|---------------|----------------------------------------------------------|---------------------------|
@@ -829,7 +846,10 @@ distribution between 0.5 to 2.0.
 
 Parameters related to TRACE components of `PIPE`, `VESSEL`, `POWER`, `FILL`,
 and `BREAK` can be accessed and perturbed by creating an entry in the `parlist`
-file. 
+file. The required information to specify an entry in the `param_list` file 
+is given in Table 12.
+
+<!--Table 12: Specification for TRACE component-related parameters in `param_list` file-->
 
 |No.|Name       |Description                                           | Value                                                       |
 |---|-----------|------------------------------------------------------|-------------------------------------------------------------|
@@ -838,12 +858,12 @@ file.
 |3  |`var_num`  |unique TRACE component ID                             |model specific                                               |
 |4  |`var_name` |name of the variable                                  |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
 |5  |`var_type` |type of variable                                      |`scalar or table`, explanation below                         |
-|6  |`var_mode` |mode of perturbation                                  |(see Table)                                                  |
+|6  |`var_mode` |mode of perturbation                                  |(see Table 5)                                                |
 |7  |`var_card` |the table column number where the parameter is located|see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
 |8  |`var_word` |the number on entry in table                          |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
-|9  |`var_dist` |distribution of the perturbation factor               |(see Table)                                                  |
-|10 |`var_par1` |the 1st parameter of the distribution                 |(see Table)                                                  |
-|11 |`var_par2` |the 2nd parameter of the distribution                 |(see Table)                                                  |
+|9  |`var_dist` |distribution of the perturbation factor               |(see Table 6)                                                |
+|10 |`var_par1` |the 1st parameter of the distribution                 |(see Table 6)                                                |
+|11 |`var_par2` |the 2nd parameter of the distribution                 |(see Table 6)                                                |
 |12 |`str_fmt`  |string formatting of the parameter                    |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
 
 Parameters associated with the TRACE components are classified into two 
@@ -913,8 +933,8 @@ such as the simple random sampling (SRS), Latin Hypercube Sampling (LHS), or
 quasi-random sequence (Sobol' Sequence, Halton Sequence, Hammersley set, etc) 
 each with its own statistical property. The procedure to generate the values is 
 outside the scope of `trace-simexp` utility. Example of tools to generate such 
-values is Simlab [1], DiceDesign (an R package [2]), or OpenTurns 
-(a Python module [3]).
+values is SimLab (stand alone Windows program [1]), DiceDesign 
+(an R package [2]), or OpenTurns (a Python module [3]).
 
 **Example**
 
