@@ -24,9 +24,9 @@ def parse(line: str) -> dict:
         "var_num": int(spacer_data[2]),
         "var_name": spacer_data[3].lower(),
         "var_type": spacer_data[4].lower(),
-        "var_mode": int(spacer_data[5]),
-        "var_card": int(spacer_data[6]),
-        "var_word": int(spacer_data[7]),
+        "var_card": int(spacer_data[5]),
+        "var_word": int(spacer_data[6]),
+        "var_mode": int(spacer_data[7]),
         "var_dist": spacer_data[8].lower(),
     }
     if spacer_dict["var_name"] == "spmatid":
