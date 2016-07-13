@@ -504,7 +504,7 @@ The file has the following (abridged) contents:
     Execution Successful: aptplot_v6.5.2_inst01.sh -batch febaTrans214-run_4-listVars.apt -nowin
     ...
 
-# Usage: Auxialiary Input Files
+# Usage: Auxiliary Input Files
 
 Additional auxiliary files are needed for many of the command line options 
 explained above. Some of the auxiliary files are binaries, mainly the 
@@ -512,6 +512,8 @@ executables for TRACE or APTPlot programs. While the other auxiliary files are
 text files that need to be prepared by the user for each simulation experiment 
 following a predefined syntax. This section will explain the syntax in creating 
 such files as well as give some remarks on the binary executables files.
+
+## Base TRACE Input Deck
 
 ## List of parameters file (`params_list` file)
 
@@ -643,7 +645,7 @@ can be seen in Table 7.
 |9  |`var_dist` |distribution of the perturbation factor|(see Table 6)                                                        |
 |10 |`var_par1` |the 1st parameter of the distribution  |(see Table 6)                                                        |
 |11 |`var_par2` |the 2nd parameter of the distribution  |(see Table 6)                                                        |
-|12 |`str_fmt`  |string formatting of the parameter     | `14d` if `var_num == spmatid`, else `14.4f`                         |
+|12 |`str_fmt`  |string formatting of the parameter     | `14d` if `var_num == spmatid`, otherwise `14.4f`                    |
 
 **Example**
 
@@ -972,6 +974,22 @@ No. 20 at axial levels 11, 12, 13 and radial node 29, respectively.
 
 ## TRACE and aptplot (`trace_executable` and `aptplot_executable`)
 
+The only TRACE executable which has been tested for conducting simulation 
+experiment so far is the modified version of TRACE v5.0p3 (named v5.0p3.uq). 
+The version was a special delivery provided by US NRC through C. Gingrich for 
+PSI. The version externalized several model parameters and made them available 
+to the user through the input deck. For the purpose of PREMIUM benchmark, the 
+version was modified by further extending the externalized model parameters, 
+or the so-called *sensitivity coefficients* (cite PREMIUM). 
+The *sensitivity coefficients* are now part of standard features in TRACE 
+v5.0p4. However, `trace-simexp` has never been tested on the new version of 
+TRACE.
+
+The `aptplot` utility tested so far is the PMS-installed versions of the 
+utility. The currently available version in the `lclrs` machices as the default 
+is v6.5.2. `trace-simexp` is also known to work with other PMS-installed 
+version of `aptplot`, namely `v6.5.0` and `v6.5.1`.
+
 ## CSV Output File
 
 # Implementation
@@ -989,10 +1007,6 @@ No. 20 at axial levels 11, 12, 13 and radial node 29, respectively.
 ## Distribution
 
 <!--TODO How the utility being distributed within STARS-->
-
-# Examples of Use Cases
-
-<!--TODO Some example of use cases-->
 
 # References
 
