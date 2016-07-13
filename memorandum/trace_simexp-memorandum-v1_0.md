@@ -992,6 +992,25 @@ version of `aptplot`, namely `v6.5.0` and `v6.5.1`.
 
 ## CSV Output File
 
+The final output of `trace-simexp`, after the postprocessing step, is a 
+set of comma-separated values (`csv`) files that contain all the time series of 
+selected TRACE graphic variables as specified in the `trace_variables` file. 
+These values are extracted from the resulting TRACE `xtv` output files by 
+running the `aptplot` utility in batch mode.
+
+**Example**
+
+The example below shows the content of an `csv` file with 4 selected variables.
+Note that the `time` variable is extracted by default. 
+
+    time, rftn-20A69R29, rftn-20A89R29, rftn-20A109R29, pn-30A04
+    (s), (K), (K), (K), (Pa)
+    0.0, 1063.1500244140625, 1063.1500244140625, 1003.1500244140625, 410000.5
+    0.10358193516731262, 1063.1307373046875, 1063.1326904296875, 1003.1729736328125, 408214.15625
+    0.2050851434469223, 1063.11669921875, 1063.1375732421875, 1003.2138671875, 408214.34375, 408357.5
+    0.31815436482429504, 1063.0703125, 1063.136474609375, 1003.2931518554688, 408214.40625
+    0.42635729908943176, 1063.0157470703125, 1063.14013671875, 1003.3980102539062, 408214.125
+
 # Implementation
 
 <!--TODO Some notes on implementation-->
