@@ -90,8 +90,9 @@ facility for reflood experiment.
 
 The features of this release are:
 
-1. Complete separation of the process in 3 different steps: prepro,
-   exec, and postpro. At each step an auxiliary file (so called info file) is
+1. Complete separation of the processes in 3 different steps: **prepro**,
+   **exec**, and **postpro**. At each step an auxiliary file 
+   (so-called **info file**) is
    produced and used at the subsequent step (except the postpro info file) as
    well as for documentation and diagnostic purposes.
 2. Three modes of parameter perturbation are supported: additive,
@@ -109,9 +110,28 @@ The features of this release are:
    available for uniform, discrete uniform, log-uniform, and normal
    distributions.
 
-# Usage
+# Usage: Driver Scripts
 
-<!--TODO General usage of the utility-->
+In a typical simulation experiment setting, the processes are divided in three 
+sequential steps (Figure 1):
+
+1. preprocessing: construct directory structure and generate set of perturbed 
+   TRACE input decks for selected parameters based on a given experimental 
+   design. 
+2. execution: execute all the generated TRACE input decks in sequential batch. 
+   Jobs within a single batch can be run in parallel.
+3. postprocessing: convert all the TRACE output graphic file (`.xtv`) into a 
+   csv for selected variables. The csv files are ready to be used in downstream
+   analyses.  
+
+To carry out the task of each, `trace-simexp` contains a set of driver scripts 
+associated with each of the processes: `prepro.py`, `execute.py`, and 
+`postpro.py`, respectively. `trace-simexp` is a command line utility and all 
+users interactions are given through the terminal. Each driver script requires 
+its own command line options and arguments that need to be supplied by the 
+user. The rest of the section will explain the command line options available 
+for each of the driver scripts, while the next section will explain the 
+required auxiliary files.
 
 ## Step 1: Preprocessing
 
@@ -135,7 +155,9 @@ Brief explanation on this parameter can be shown using the following command:
 
     python prepro.py --help
 
-The table below lists all the arguments in detail.
+The table below lists all the options/flag in detail.
+
+<!--Table 1: the command line options for the prepro.py driver script-->
 
 |No.|Short Name|Long Name      |Type      |Required                         |Description                                    |Default     |
 |---|----------|---------------|----------|---------------------------------|-----------------------------------------------|------------|
@@ -479,6 +501,8 @@ The file has the following (abridged) contents:
     Execution Successful: aptplot_v6.5.2_inst01.sh -batch febaTrans214-run_2-listVars.apt -nowin
     Execution Successful: aptplot_v6.5.2_inst01.sh -batch febaTrans214-run_4-listVars.apt -nowin
     ...
+
+# Usage: Auxialiary Input Files
 
 ## List of parameters file (`params_list` file)
 
