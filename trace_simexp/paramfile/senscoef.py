@@ -25,7 +25,7 @@ def parse(line) -> dict:
         "var_mode": int(senscoef_data[7]),
         "var_dist": senscoef_data[8].lower(),
         "var_pars": parse_var_params(line),
-        "str_fmt": senscoef_data[11]
+        "str_fmt": senscoef_data[-1]
     }
 
     # Check the validity
