@@ -10,6 +10,8 @@ def parse(line) -> dict:
     :param line: (list of str) a line read from list of parameters file
     :returns: (dict) the parsed input parameter with pre-specified key
     """
+    from .common import parse_var_params
+
     comp_data = line.split()
 
     # Check the validity of the component data
@@ -25,9 +27,8 @@ def parse(line) -> dict:
         "var_word": int(comp_data[6]),
         "var_mode": int(comp_data[7]),
         "var_dist": comp_data[8].lower(),
-        "var_par1": float(comp_data[9]),
-        "var_par2": float(comp_data[10]),
-        "str_fmt": comp_data[11]
+        "var_pars": parse_var_params(line),
+        "str_fmt": comp_data[-1]
     }
 
     # Add the message to be written in prepro.info
@@ -42,6 +43,7 @@ def create_msg(comp_dict: dict) -> str:
     :param comp_dict: (dict) the parsed component parameter
     """
     from .common import var_type_str
+    from .common import print_var_params
 
     str_msg = list()
 
@@ -55,12 +57,10 @@ def create_msg(comp_dict: dict) -> str:
     str_msg.append("Parameter perturbation mode: {} ({})"
                    .format(comp_dict["var_mode"],
                            var_type_str(comp_dict["var_mode"])))
-    str_msg.append("Parameter distribution: *{}*"
+    str_msg.append("Parameter Probability Distribution:")
+    str_msg.append(" - distribution: *{}*"
                    .format(comp_dict["var_dist"]))
-    str_msg.append("1st distribution parameter: {:.3e}"
-                   .format(comp_dict["var_par1"]))
-    str_msg.append("2nd distribution parameter: {:.3e}\n"
-                   .format(comp_dict["var_par2"]))
+    str_msg.append(print_var_params(comp_dict["var_pars"]))
 
     return "\n".join(str_msg)
 
