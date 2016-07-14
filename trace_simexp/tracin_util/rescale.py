@@ -29,7 +29,7 @@ def uniform(quantile, min_val, max_val):
     return unif
 
 
-def discunif(quantile, choices):
+def discrete(quantile, choices):
     r"""Rescale uniform random number according to a discrete unif distribution
 
     :param quantile: (float) the sample taken from univariate distribution [0,1]
@@ -82,7 +82,7 @@ def loguniform(quantile, min_val, max_val):
     return logunif
 
 
-def normal(quantile, truncations, mean=0, variance=1):
+def normal(quantile, mean=0, variance=1, truncations_level=0):
     """Rescale uniform random number into a normal distribution
 
     Rescale the uniformly sampled value [0,1] into a value taken of a
@@ -95,8 +95,8 @@ def normal(quantile, truncations, mean=0, variance=1):
     distribution in uniform distribution.
 
     :param quantile: (float) the sample taken from uniform distribution [0,1]
-    :param truncations: (list of float) (2 elements) the truncation bound of the
-        normal distribution, e.g. [0.005, 0.995]
+    :param truncations: (list of float) (2 elements) the truncation bound of 
+        the normal distribution, e.g. [0.005, 0.995]
     :param mean: (float, optional) the mean value of the normal distribution
     :param variance: (float, optional) the variance of normal distribution
     :returns: (float) the rescaled value
@@ -107,7 +107,13 @@ def normal(quantile, truncations, mean=0, variance=1):
     if variance < 0.:
         raise ValueError("Variance has to be positive")
     else:
-        quantile = uniform(quantile, truncations[0], truncations[1])
-        norm = mean + sqrt(2*variance) * erfinv(2*quantile-1)
+        if truncations_level == 0:
+            norm = mean + sqrt(2*variance) * erfinv(2*quantile-1)
+        else:
+            # Truncated at both ends, renormalized the quantile
+            quantile = uniform(quantile, 
+                               (truncations_level/2)/100.0, 
+                               (100 - truncations_level/2)/100.0)
+            norm = mean + sqrt(2*variance) * erfinv(2*quantile-1)
 
     return norm
