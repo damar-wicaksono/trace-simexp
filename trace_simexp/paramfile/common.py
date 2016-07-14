@@ -38,3 +38,13 @@ def parse_var_params(parlist_entry: str) -> dict:
     var_params = ast.literal_eval("{{{}}}" .format(var_params))
 
     return var_params
+
+
+def print_var_params(var_params: dict) -> str:
+    r"""Print the parsed var_params in the message"""
+    str_msg = list()
+
+    for key, value in var_params.items():
+        str_msg.append(" - {}: {}" .format(key, value))
+    
+    return "\n".join(str_msg)
