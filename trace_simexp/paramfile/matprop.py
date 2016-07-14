@@ -56,5 +56,5 @@ def create_msg(matprop_dict) -> list:
     str_msg.append(" - distribution: *{}*"
                    .format(matprop_dict["var_dist"]))
     str_msg.append(print_var_params(matprop_dict["var_pars"]))
-    print("\n".join(str_msg))
+
     return "\n".join(str_msg)
