@@ -13,6 +13,8 @@ def parse(line: str) -> dict:
     :param params_dict: (list of dict) the list of parameters in a dictionary
     :returns: (list of dict) an updated params_dict with spacer specification
     """
+    from .common import parse_var_params
+
     spacer_data = line.split()
 
     # Check the validity of the data
@@ -28,15 +30,9 @@ def parse(line: str) -> dict:
         "var_word": int(spacer_data[6]),
         "var_mode": int(spacer_data[7]),
         "var_dist": spacer_data[8].lower(),
+        "var_pars": parse_var_params(line),
+        "str_fmt": spacer_data[-1]
     }
-    if spacer_dict["var_name"] == "spmatid":
-        spacer_dict["var_par1"] = [int(_) for _ in spacer_data[9].split(",")]
-        spacer_dict["var_par2"] = None
-        spacer_dict["str_fmt"] = "14d"
-    else:
-        spacer_dict["var_par1"] = float(spacer_data[9])
-        spacer_dict["var_par2"] = float(spacer_data[10])
-        spacer_dict["str_fmt"] = spacer_data[11]
 
     # Add the message to be written in prepro.info
     spacer_dict["str_msg"] = create_msg(spacer_dict)
@@ -62,18 +58,10 @@ def create_msg(spacer_dict: dict) -> str:
     str_msg.append("Parameter perturbation mode: {} ({})"
                    .format(spacer_dict["var_mode"],
                            var_type_str(spacer_dict["var_mode"])))
-    str_msg.append("Parameter distribution: *{}*"
-                   .format(spacer_dict["var_dist"]))
-    if spacer_dict["var_name"] == "spmatid":
-        str_msg.append("1st distribution parameter: {}"
-                       .format(spacer_dict["var_par1"]))
-        str_msg.append("2nd distribution parameter: {}\n"
-                       .format(spacer_dict["var_par2"]))
-    else:
-        str_msg.append("1st distribution parameter: {:.3f}"
-                       .format(spacer_dict["var_par1"]))
-        str_msg.append("2nd distribution parameter: {:.3f}\n"
-                       .format(spacer_dict["var_par2"]))
+    str_msg.append("Perturbation factor probability distribution:")
+    str_msg.append(" - distribution: *{}*"
+                   .format(senscoef_dict["var_dist"]))
+    str_msg.append("{}\n" .format(print_var_params(spacer_dict["var_pars"])))
 
     return "\n".join(str_msg)
 
