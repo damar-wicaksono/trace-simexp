@@ -46,7 +46,8 @@ def create_msg(spacer_dict: dict) -> str:
     :param spacer_dict: (dict) the parsed parameter specifications
     """
     from .common import var_type_str
-
+    from .common import print_var_params
+    
     str_msg = list()
 
     str_msg.append("***{:2d}***" .format(spacer_dict["enum"]))
@@ -60,7 +61,7 @@ def create_msg(spacer_dict: dict) -> str:
                            var_type_str(spacer_dict["var_mode"])))
     str_msg.append("Perturbation factor probability distribution:")
     str_msg.append(" - distribution: *{}*"
-                   .format(senscoef_dict["var_dist"]))
+                   .format(spacer_dict["var_dist"]))
     str_msg.append("{}\n" .format(print_var_params(spacer_dict["var_pars"])))
 
     return "\n".join(str_msg)
@@ -72,17 +73,18 @@ def check_spacer(spacer_data):
     :param spacer_data: (list) list of specifications for spacer grid data
     """
     # Check the number of parameters in the data
-    num_params = 12
-    if spacer_data[3].lower() == "spmatid":
-        if len(spacer_data) != num_params - 1:
-            raise TypeError("The amount of information specified does not match."
-                            "Required {}, supplied {}. check again!"
-                            .format(num_params, len(spacer_data)))
-    else:
-        if len(spacer_data) != num_params:
-            raise TypeError("The amount of information specified does not match."
-                            "Required {}, supplied {}. check again!"
-                            .format(num_params, len(spacer_data)))
+#    num_params = 12
+#    if spacer_data[3].lower() == "spmatid":
+#        if len(spacer_data) != num_params - 1:
+#            print(spacer_data)
+#            raise TypeError("The amount of information specified does not match."
+#                            "Required {}, supplied {}. check again!"
+#                            .format(num_params-1, len(spacer_data)))
+#    else:
+#        if len(spacer_data) != num_params:
+#            raise TypeError("The amount of information specified does not match."
+#                            "Required {}, supplied {}. check again!"
+#                            .format(num_params, len(spacer_data)))
 
     # Check the variable type
     if spacer_data[4].lower() != "scalar":
@@ -98,29 +100,29 @@ def check_spacer(spacer_data):
         .format(spacer_data[3], spacer_data[6], spacer_data[5])
 
     # Check the card choice and variable/parameter names
-    if int(spacer_data[6]) == 2:
+    if int(spacer_data[5]) == 2:
         if not spacer_data[3].lower() in valid_names1:
             raise TypeError("the var_name *{}* is not a valid spacer "
                             "grid parameter names of card *{}*"
                             .format(spacer_data[3], spacer_data[5]))
-        elif not int(spacer_data[7]) in [1, 2, 3, 4]:
+        elif not int(spacer_data[6]) in [1, 2, 3, 4]:
             raise TypeError("The var_word *{}* is not a valid word "
                             "of grid parameters of card *{}*"
                             .format(spacer_data[6], spacer_data[5]))
         if spacer_data[3].lower() == "spbloc":
-            if int(spacer_data[7]) != 1:
+            if int(spacer_data[6]) != 1:
                 raise TypeError(err_msg)
         if spacer_data[3].lower() == "vnbloc":
-            if int(spacer_data[7]) != 2:
+            if int(spacer_data[6]) != 2:
                 raise TypeError(err_msg)
         if spacer_data[3].lower() == "phi":
-            if int(spacer_data[7]) != 3:
+            if int(spacer_data[6]) != 3:
                 raise TypeError(err_msg)
         if spacer_data[4].lower() == "wetperm":
-            if int(spacer_data[7]) != 4:
+            if int(spacer_data[6]) != 4:
                 raise TypeError(err_msg)
 
-    elif int(spacer_data[6]) == 3:
+    elif int(spacer_data[5]) == 3:
         if not spacer_data[3].lower() in valid_names2:
             raise TypeError("the var_name *{}* is not a valid spacer "
                             "grid parameter names of card *{}*"
@@ -130,15 +132,16 @@ def check_spacer(spacer_data):
                             "of grid parameters of card *{}*"
                             .format(spacer_data[6], spacer_data[5]))
         if spacer_data[3].lower() == "height":
-            if int(spacer_data[7]) != 1:
+            if int(spacer_data[6]) != 1:
                 raise TypeError(err_msg)
         if spacer_data[3].lower() == "strthick":
-            if int(spacer_data[7]) != 2:
+            if int(spacer_data[6]) != 2:
                 raise TypeError(err_msg)
         if spacer_data[3].lower() == "spmatid":
-            if int(spacer_data[7]) != 3:
+            if int(spacer_data[6]) != 3:
+                print(spacer_data)
                 raise TypeError(err_msg)
-            if spacer_data[8].lower() != "discunif":
+            if spacer_data[8].lower() != "discrete":
                 raise TypeError("Not appropriate distribution selected!")
 
     else:
