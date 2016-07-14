@@ -67,6 +67,6 @@ def create_msg(senscoef_dict: dict) -> str:
     str_msg.append("Perturbation factor probability distribution:")
     str_msg.append(" - distribution: *{}*"
                    .format(senscoef_dict["var_dist"]))
-    str_msg.append(print_var_params(senscoef_dict["var_pars"]))
+    str_msg.append("{}\n" .format(print_var_params(comp_dict["var_pars"])))
 
     return "\n".join(str_msg)
