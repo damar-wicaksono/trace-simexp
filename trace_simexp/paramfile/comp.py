@@ -57,7 +57,7 @@ def create_msg(comp_dict: dict) -> str:
     str_msg.append("Parameter perturbation mode: {} ({})"
                    .format(comp_dict["var_mode"],
                            var_type_str(comp_dict["var_mode"])))
-    str_msg.append("Parameter Probability Distribution:")
+    str_msg.append("Perturbation factor probability distribution:")
     str_msg.append(" - distribution: *{}*"
                    .format(comp_dict["var_dist"]))
     str_msg.append(print_var_params(comp_dict["var_pars"]))
@@ -65,7 +65,7 @@ def create_msg(comp_dict: dict) -> str:
     return "\n".join(str_msg)
 
 
-def check_comp(comp_data):
+def check_comp(comp_data: list):
     r"""Check the validity of component data
 
     :param comp_data: (list) list of specifications for spacer grid data
