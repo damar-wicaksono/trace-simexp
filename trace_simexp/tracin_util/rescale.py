@@ -32,7 +32,7 @@ def uniform(quantile, min_val, max_val):
 def discrete(quantile, choices):
     r"""Rescale uniform random number according to a discrete unif distribution
 
-    :param quantile: (float) the sample taken from univariate distribution [0,1]
+    :param quantile: (float) the sample taken from uniform distribution [0,1]
     :param choices: (list of int) the choices of value
     :return: (int) the choice picked based on the sampled quantile
     """
