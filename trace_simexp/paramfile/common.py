@@ -23,3 +23,18 @@ def var_type_str(var_type):
         return "substitutive"
     elif var_type == 3:
         return "multiplicative"
+
+
+def parse_var_params(parlist_entry: str) -> dict:
+    r"""Parse an entry of param_list file, grab the parameters of distribution
+
+    :param parlist_entry: an entry (a line) in the param_list file
+    :return: dictionary with the parameters of the distribution
+    """
+    import re 
+    import ast
+
+    var_params = re.search("[\[({](.*?)[})\]]", parlist_entry).group(1)
+    var_params = ast.literal_eval("{{{}}}" .format(var_params))
+
+    return var_params
