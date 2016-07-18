@@ -95,7 +95,7 @@ def loguniform(quantile, min_val, max_val):
     return logunif
 
 
-def normal(quantile, mean=0, variance=1, truncations_level=0):
+def normal(quantile, mu=0, sigma=1, truncations_level=0):
     """Rescale uniform random number into a normal distribution
 
     Rescale the uniformly sampled value [0,1] into a value taken of a
@@ -117,16 +117,18 @@ def normal(quantile, mean=0, variance=1, truncations_level=0):
     from scipy.special import erfinv
     from math import sqrt
 
-    if variance < 0.:
-        raise ValueError("Variance has to be positive")
+    if sigma < 0.:
+        raise ValueError("Sigma has to be positive")
+    elif truncations_level >= 100:
+        raise ValueError("Truncations level >= 100%")
     else:
         if truncations_level == 0:
-            norm = mean + sqrt(2*variance) * erfinv(2*quantile-1)
+            norm = mu + sigma*sqrt(2) * erfinv(2*quantile-1)
         else:
             # Truncated at both ends, renormalized the quantile
             quantile = uniform(quantile, 
                                (truncations_level/2)/100.0, 
                                (100 - truncations_level/2)/100.0)
-            norm = mean + sqrt(2*variance) * erfinv(2*quantile-1)
+            norm = mu + sigma*sqrt(2) * erfinv(2*quantile-1)
 
     return norm
