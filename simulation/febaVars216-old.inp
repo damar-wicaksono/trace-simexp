@@ -1,0 +1,44 @@
+################################################################################
+#0         1     2        3        4    5    6   7      8    9    10      11   #
+# Boundary Conditions
+ 1     break    40      ptb    table    3    2   9    unif  0.9   1.1     14.4e
+ 2      fill    10     tltb    table    2    2  16    unif -5.0   5.0     14.4f
+ 3      fill    10    vmtbm    table    3    2  16    unif  0.9   1.1     14.4f
+ 4     power    99   rpwtbr    table    3    2  15    unif 0.95  1.05     14.4e
+# Material Property - Heater Rods - Nichrome
+ 5   matprop    51     cond    table    3    3  17    unif 0.95  1.05     14.4f
+ 6   matprop    51       cp    table    3    2  17    unif 0.95  1.05     14.4f
+ 7   matprop    51     emis    table    1    4  17    unif 0.90  1.00     14.4f
+# Material Property - Heater Rods - Magnesium Oxides
+ 8   matprop    50     cond    table    3    3  12    unif  0.8   1.2     14.4f
+ 9   matprop    50       cp    table    3    2  12    unif  0.8   1.2     14.4f
+# Miscelaneous
+10    vessel     1     epsw   scalar    1    6   2    unif 6.1E-7 2.44E-6 14.4e
+# Material Property - Stainless
+11   matprop    52     cond    table    3    3   8    unif 0.95   1.05    14.4f
+12   matprop    52       cp    table    3    2   8    unif 0.95   1.05    14.4f
+13   matprop    52     emis    table    1    4   8    unif 0.5625 0.9375  14.4f
+# Spacer Grid Model - Multipliers
+14  senscoef  1033        -   scalar    3    -   -    unif   0.25  1.75   14.4f
+15  senscoef  1034        -   scalar    3    -   - logunif   0.5   2.0    14.4f
+# Wall Heat Transfer - IAFB
+16  senscoef  1035        -   scalar    3    -   - logunif   0.5   2.0    14.4f
+# Wall Heat Transfer - DFFB       
+17  senscoef  1011        -   scalar    3    -   - logunif   0.5   2.0    14.4f
+# Interfacial Heat Transfer - IAFB
+18  senscoef  1037        -   scalar    3    -   - logunif   0.25  4.0    14.4f
+19  senscoef  1036        -   scalar    3    -   - logunif   0.25  4.0    14.4f
+# Interfacial Heat Transfer - DFFB
+20  senscoef  1039        -   scalar    3    -   - logunif   0.25  4.0    14.4f
+21  senscoef  1038        -   scalar    3    -   - logunif   0.25  4.0    14.4f
+# Interfacial Drag - IAFB
+22  senscoef  1040        -   scalar    3    -   - logunif   0.125 8.0    14.4f
+# Interfacial Drag - DFFB
+23  senscoef  1041        -   scalar    3    -   - logunif   0.25  4.0    14.4f
+# Wall Drag - IAFB
+24  senscoef  1042        -   scalar    3    -   - logunif   0.5   2.0    14.4f
+# Wall Drag - DFFB
+25  senscoef  1043        -   scalar    3    -   - logunif   0.5   2.0    14.4f
+# Minimum Temperature for Film Boiling
+26  senscoef  1044        -   scalar    2    -   -    unif -50.0  50.0    14.4f
+###############################################################################
