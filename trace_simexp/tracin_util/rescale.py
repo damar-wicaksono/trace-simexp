@@ -70,7 +70,7 @@ def discrete(quantile, choices):
 
 
 def loguniform(quantile, min_val, max_val):
-    """Rescale uniform random number into a log-uniform distribution
+    """Rescale uniform random number into a value from a log-uniform dist.
 
     Rescale the uniformly sampled value [0,1] into a value taken of a
     log-uniform distribution with support of [min_val, max_val].
@@ -95,24 +95,25 @@ def loguniform(quantile, min_val, max_val):
     return logunif
 
 
-def normal(quantile, mu=0, sigma=1, truncations_level=0):
-    """Rescale uniform random number into a normal distribution
+def normal(quantile: float, mu: float=0, sigma: float =1,
+           truncations_level: float =0) -> float:
+    """Rescale uniform random number into a value from a normal distribution
 
-    Rescale the uniformly sampled value [0,1] into a value taken of a
-    normal distribution with given mean and variance (not standard dev.)
+    Rescale the uniformly sampled value [0,1] into a value taken from a
+    normal distribution with given mean and standard deviation
 
-    If mean and variance is not given then the standard normal distribution
-    will be used instead
+    If the mean and the sigma are not given then the standard normal
+    distribution will be used instead (i.e., mu = 0.0, sigma = 1.0)
 
-    Truncation (cut-off) values have to be given and used to rescale the
-    distribution in uniform distribution.
+    Truncation level (cut-off) in 2 sided-percentile can be given to truncate
+    the normal distribution at both ends. For example, `truncations_level` = 10,
+    truncate the 5% percent of the distribution at each side.
 
-    :param quantile: (float) the sample taken from uniform distribution [0,1]
-    :param truncations: (list of float) (2 elements) the truncation bound of 
-        the normal distribution, e.g. [0.005, 0.995]
-    :param mean: (float, optional) the mean value of the normal distribution
-    :param variance: (float, optional) the variance of normal distribution
-    :returns: (float) the rescaled value
+    :param quantile: the sample taken from uniform distribution [0,1]
+    :param mu: the mean of the normal distribution
+    :param sigma: the standard deviation of the normal distribution
+    :param truncations_level: the symmetric truncation level at both ends
+    :return: the rescaled value in the specified normal distribution
     """
     from scipy.special import erfinv
     from math import sqrt
