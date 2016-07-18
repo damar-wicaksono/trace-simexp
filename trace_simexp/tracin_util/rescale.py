@@ -6,16 +6,16 @@ distribution
 __author__ = "Damar Wicaksono"
 
 
-def uniform(quantile, min_val, max_val):
-    """Rescale uniform random number into a uniform distribution
+def uniform(quantile: float, min_val: float, max_val: float) -> float:
+    """Rescale uniform random number into a uniform dist. of a given support
 
     Rescale the uniformly sampled value [0,1] into a value taken of a
     uniform distribution with support of [min_val, max_val].
 
-    :param quantile: (float) the sample taken from uniform distribution [0,1]
-    :param min_val: (float) the minimum value of this uniform distribution
-    :param max_val: (float) the maximum value of this uniform distribution
-    :returns: (float) the rescaled value
+    :param quantile: the sample taken from uniform distribution [0,1]
+    :param min_val: the minimum value of the uniform distribution
+    :param max_val: the maximum value of the uniform distribution
+    :returns: the rescaled value in the specified uniform distribution
     """
     if quantile > 1.0:
         raise ValueError("{} is not a valid [0, 1] quantile" .format(quantile))
@@ -29,11 +29,11 @@ def uniform(quantile, min_val, max_val):
     return unif
 
 
-def discrete(quantile, choices):
-    r"""Rescale uniform random number according to a discrete unif distribution
+def discrete(quantile: float, choices: dict):
+    r"""Make a random selection between choices based on their probabilities
 
-    :param quantile: (float) the sample taken from uniform distribution [0,1]
-    :param choices: (dict) the choices and their probability
+    :param quantile: the sample taken from uniform distribution [0,1]
+    :param choices: the choices (key) and their probability (value)
     :return: the choice picked based on the sampled quantile
     """
     import numpy as np
@@ -69,25 +69,27 @@ def discrete(quantile, choices):
     return choice
 
 
-def loguniform(quantile, min_val, max_val):
+def loguniform(quantile: float, min_val: float, max_val: float) -> float:
     """Rescale uniform random number into a value from a log-uniform dist.
 
     Rescale the uniformly sampled value [0,1] into a value taken of a
     log-uniform distribution with support of [min_val, max_val].
 
-    :param quantile: (float) the sample taken from uniform distribution [0,1]
-    :param min_val: (float) the minimum value of this log-uniform distribution
-    :param max_val: (float) the maximum value of this log-uniform distribution
-    :returns: (float) the rescaled value
+    :param quantile: the sample taken from uniform distribution [0,1]
+    :param min_val: the minimum value of this log-uniform distribution
+    :param max_val: the maximum value of this log-uniform distribution
+    :returns: the rescaled value in the specified log-uniform distribution
     """
     from math import log, e
 
     if quantile > 1.0:
         raise ValueError("{} is not a valid [0, 1] quantile" .format(quantile))
-    if quantile < 0.0:
+    elif quantile < 0.0:
         raise ValueError("{} is not a valid [0, 1] quantile" .format(quantile))
-    if min_val >= max_val:
+    elif min_val >= max_val:
         raise ValueError("min value is greater than or the same as the max")
+    elif min_val < 0 or max_val < 0:
+        raise ValueError("the support of log-unif has to be positive")
     else:
         logunif = quantile * (log(max_val) - log(min_val)) + log(min_val)
         logunif = e**logunif
