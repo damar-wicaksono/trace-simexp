@@ -534,13 +534,12 @@ listed in Table 4.
 |3  |`var_num`  |parameter ID number, typically a unique TRACE input deck ID   |
 |4  |`var_name` |parameter name                                                |
 |5  |`var_type` |parameter type                                                |
-|6  |`var_mode` |mode of perturbation                                          |
-|7  |`var_card` |**card**, where the specific perturbed parameter is located   |
-|8  |`var_word` |**word**, where the specific perturbed parameter is located   |
+|6  |`var_card` |**card**, where the specific perturbed parameter is located   |
+|7  |`var_word` |**word**, where the specific perturbed parameter is located   |
+|8  |`var_mode` |mode of perturbation                                          |
 |9  |`var_dist` |Distribution of the perturbation factor (as random variable)  |
-|10 |`var_par1` |the 1st parameter of the distribution                         |
-|11 |`var_par2` |the 2nd parameter of the distribution                         |
-|12 |`str_fmt`  |string formatting of the parameter within the trace input deck|
+|10 |`var_pars` |the parameters of the distribution                            |
+|11 |`str_fmt`  |string formatting of the parameter within the trace input deck|
 
 ### data_type
 
@@ -570,27 +569,31 @@ There are three modes of perturbation according to Table 5 below.
 |`2`       |additive, the sampled factor is added to the nominal parameter value                |
 |`3`       |multiplicative, the sampled factor is multiplied by the nominal parameter value     |
 
-### var_dist, var_par1, var_par2
+### `var_dist` and `var_pars`
 
 In `trace-simexp`, the perturbation factor associated with each specified model
-parameter is modeled as random variable. The variables `var_dist`, `var_par1`, 
-and `var_par2` are required to fully specify the probability density 
+parameter is modeled as random variable. The variables `var_dist` and 
+`var_pars` are required to fully specify the probability density 
 (or *mass*, if discrete) function of the random variable. These specifications 
 are used to transform the normalized value given in the design matrix file into
 the actual perturbed TRACE model parameter value. 
 
 Table 6 below describes the currently supported univariate density and 
-the meaning of the variables. The type of the variable is written in the 
-bracket.
+the meaning of the variables. `var_dist` is given in `str`
+format and `var_pars` is given in the python dictionary style format (key and value 
+are separated by colon, key-value pairs are separated by comma, and all are 
+enclosed by brackets, curly brackets or parentheses) for choice-probability 
+pairs.
 
 <!--Table 6: Currently supported probability density function-->
 
-|No.|Name             |`var_dist`|`var_par1` (type)                            |`var_par2` (type)    |                                                                         |
-|---|-----------------|----------|---------------------------------------------|---------------------|
-|1  |uniform          |`uniform` |minimum value (float)                        |maximum value (float)|
-|2  |discrete uniform |`discunif`|list of choices with equal probability (list)|N/A                  |
-|3  |log-uniform      |`logunif` |minimum value (float)                        |maximum value (float)|
-|4  |normal (gaussian)|`normal`  |mean (float)                                 |variance (float)     |
+|No.|Name             |`var_dist`|`var_pars` keywords                                |`var_pars` description                                                |
+|---|-----------------|----------|---------------------------------------------------|----------------------------------------------------------------------|
+|1  |uniform          |`uniform` |`min` and `max`  (floats)                          |the minimum and maximum values                                        |
+|2  |discrete uniform |`discrete`|dictionary of discrete choice and probability pairs|choice-probability pair (probabilities summed up to 1)                |
+|3  |log-uniform      |`logunif` |`min` and `max`  (floats)                          |the minimum and maximum values                                        |
+|4  |normal (gaussian)|`normal`  |`mu` and `sigma` (floats)                          |the mean and the standard deviation                                   |
+|5  |truncated normal |`normal`  |`mu`, `sigma`, and `truncations_level` (floats)    |the mean, the standard deviation, and truncation in 2-sided percentile|
 
 ### str_fmt
 
