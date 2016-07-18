@@ -29,30 +29,43 @@ def uniform(quantile, min_val, max_val):
     return unif
 
 
-def discunif(quantile, choices):
+def discrete(quantile, choices):
     r"""Rescale uniform random number according to a discrete unif distribution
 
-    :param quantile: (float) the sample taken from univariate distribution [0,1]
-    :param choices: (list of int) the choices of value
-    :return: (int) the choice picked based on the sampled quantile
+    :param quantile: (float) the sample taken from uniform distribution [0,1]
+    :param choices: (dict) the choices and their probability
+    :return: the choice picked based on the sampled quantile
     """
+    import numpy as np
+
     if quantile > 1.0:
         raise ValueError("{} is not a valid [0, 1] quantile" .format(quantile))
     elif quantile < 0.0:
         raise ValueError("{} is not a valid [0, 1] quantile" .format(quantile))
-    elif not isinstance(choices, list):
-        raise ValueError("{} is not a valid list of choices" .format(choices))
+    elif not isinstance(choices, dict):
+        raise ValueError("{} is not a valid dict of choices" .format(choices))
     else:
-        num_choices = len(choices)
-        choice_odd = []
-        for i in range(1, num_choices):
-            choice_odd.append(i/float(num_choices))
-        for i, odd in enumerate(choice_odd):
-            if quantile < odd:
-                choice = choices[i]
+        # Convert everything to lists and create cumulative sum of probability
+        keys_list = []
+        vals_list = []
+        vals_cum = 0.0
+        for key, val in choices.items():
+            vals_cum += val
+            vals_list.append(vals_cum)
+            keys_list.append(key)
+
+        # Sort the values and the keys accordingly
+        keys_array = np.array(keys_list)
+        vals_array = np.array(vals_list)
+        keys_array = keys_array[vals_array.argsort()]
+        vals_array.sort()
+
+        # Make selection of the choices based on the sampled quantile value
+        for i, val in enumerate(vals_array):
+            if quantile <= val:
+                choice = keys_array[i]
                 break
-            else:
-                choice = choices[i+1]
+
     return choice
 
 
@@ -82,7 +95,7 @@ def loguniform(quantile, min_val, max_val):
     return logunif
 
 
-def normal(quantile, truncations, mean=0, variance=1):
+def normal(quantile, mean=0, variance=1, truncations_level=0):
     """Rescale uniform random number into a normal distribution
 
     Rescale the uniformly sampled value [0,1] into a value taken of a
@@ -95,8 +108,8 @@ def normal(quantile, truncations, mean=0, variance=1):
     distribution in uniform distribution.
 
     :param quantile: (float) the sample taken from uniform distribution [0,1]
-    :param truncations: (list of float) (2 elements) the truncation bound of the
-        normal distribution, e.g. [0.005, 0.995]
+    :param truncations: (list of float) (2 elements) the truncation bound of 
+        the normal distribution, e.g. [0.005, 0.995]
     :param mean: (float, optional) the mean value of the normal distribution
     :param variance: (float, optional) the variance of normal distribution
     :returns: (float) the rescaled value
@@ -107,7 +120,13 @@ def normal(quantile, truncations, mean=0, variance=1):
     if variance < 0.:
         raise ValueError("Variance has to be positive")
     else:
-        quantile = uniform(quantile, truncations[0], truncations[1])
-        norm = mean + sqrt(2*variance) * erfinv(2*quantile-1)
+        if truncations_level == 0:
+            norm = mean + sqrt(2*variance) * erfinv(2*quantile-1)
+        else:
+            # Truncated at both ends, renormalized the quantile
+            quantile = uniform(quantile, 
+                               (truncations_level/2)/100.0, 
+                               (100 - truncations_level/2)/100.0)
+            norm = mean + sqrt(2*variance) * erfinv(2*quantile-1)
 
     return norm
