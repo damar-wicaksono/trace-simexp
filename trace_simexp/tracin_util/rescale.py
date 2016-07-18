@@ -34,7 +34,7 @@ def discrete(quantile, choices):
 
     :param quantile: (float) the sample taken from uniform distribution [0,1]
     :param choices: (dict) the choices and their probability
-    :return: (int) the choice picked based on the sampled quantile
+    :return: the choice picked based on the sampled quantile
     """
     import numpy as np
 
