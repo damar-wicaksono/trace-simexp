@@ -42,5 +42,5 @@
 # Minimum Temperature for Film Boiling
 #26  senscoef  1044        -   scalar    -   -   2   unif    ['min':-50.0, 'max':50.0]       14.4f
 # Minimum Temperature for Film Boiling
-26  spacer    1     spmatid   scalar    3   3   1   discrete [2:0.5, 6:0.5]       14.4f
+26  spacer    1     spmatid   scalar    3   3   1   discrete [2:0.1, 6:0.5, 8:0.25, 10:0.15]       14d
 ###############################################################################

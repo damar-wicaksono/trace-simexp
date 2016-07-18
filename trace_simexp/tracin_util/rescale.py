@@ -33,26 +33,39 @@ def discrete(quantile, choices):
     r"""Rescale uniform random number according to a discrete unif distribution
 
     :param quantile: (float) the sample taken from uniform distribution [0,1]
-    :param choices: (list of int) the choices of value
+    :param choices: (dict) the choices and their probability
     :return: (int) the choice picked based on the sampled quantile
     """
+    import numpy as np
+
     if quantile > 1.0:
         raise ValueError("{} is not a valid [0, 1] quantile" .format(quantile))
     elif quantile < 0.0:
         raise ValueError("{} is not a valid [0, 1] quantile" .format(quantile))
-    elif not isinstance(choices, list):
-        raise ValueError("{} is not a valid list of choices" .format(choices))
+    elif not isinstance(choices, dict):
+        raise ValueError("{} is not a valid dict of choices" .format(choices))
     else:
-        num_choices = len(choices)
-        choice_odd = []
-        for i in range(1, num_choices):
-            choice_odd.append(i/float(num_choices))
-        for i, odd in enumerate(choice_odd):
-            if quantile < odd:
-                choice = choices[i]
+        # Convert everything to lists and create cumulative sum of probability
+        keys_list = []
+        vals_list = []
+        vals_cum = 0.0
+        for key, val in choices.items():
+            vals_cum += val
+            vals_list.append(vals_cum)
+            keys_list.append(key)
+
+        # Sort the values and the keys accordingly
+        keys_array = np.array(keys_list)
+        vals_array = np.array(vals_list)
+        keys_array = keys_array[vals_array.argsort()]
+        vals_array.sort()
+
+        # Make selection of the choices based on the sampled quantile value
+        for i, val in enumerate(vals_array):
+            if quantile <= val:
+                choice = keys_array[i]
                 break
-            else:
-                choice = choices[i+1]
+
     return choice
 
 
