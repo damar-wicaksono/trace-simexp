@@ -33,7 +33,7 @@ with Python v3.5 (https://www.continuum.io/downloads)
 Installation
 ------------
 
-`trace-simexp` is hosted on `BitBucket`.
+`trace-simexp` is hosted on `BitBucket`_.
 
 .. _BitBucket: https://bitbucket.org/lrs-uq/trace-simexp
 
@@ -60,14 +60,14 @@ A set of documentations is available for `trace-simexp`.
 The user's guide can be found in the *Usage* section while the contributor's 
 guide can be found in the *Implementation* section.
 Both sections are combined into a single document in Microsoft Word and 
-pdf formats as a `STARS` Memorandum document.
+pdf formats as a `STARS`_ Memorandum document.
 
 .. _STARS: https://www.psi.ch/stars/
 
 Contribute
 ----------
 
-`trace-simexp` is hosted on a private repository on `BitBucket`.
+`trace-simexp` is hosted on a private repository on `BitBucket`_.
 Only those who has access to the project `lrs-uq` is allowed to read and/or 
 write. 
 
