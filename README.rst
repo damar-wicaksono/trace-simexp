@@ -22,7 +22,7 @@ Features
    of input files (list of parameters file, design matrix file, and list of 
    graphic variables)
  - Iso-probabilistic transformation of the normalized design matrix is 
-   available for uniform, discrete, log-uniform, and uniform
+   available for uniform, discrete, and log-uniform
 
 Requirements
 -----------
