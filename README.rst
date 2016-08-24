@@ -6,4 +6,4 @@ of TRACE code.
 
 The general flow chart of the processes involved in ``trace_simexp`` package is
 
-.. image:: ./notes/flowchart.png
+.. image:: ./docs/figures/flowchart.png
