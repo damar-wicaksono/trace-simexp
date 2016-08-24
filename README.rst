@@ -33,7 +33,7 @@ with Python v3.5 (https://www.continuum.io/downloads)
 Installation
 ------------
 
-`trace-simexp` is hosted on `BitBucket`_.
+``trace-simexp`` is hosted on `BitBucket`_.
 
 .. _BitBucket: https://bitbucket.org/lrs-uq/trace-simexp
 
@@ -47,16 +47,16 @@ the installation can be done easily from the local source directory::
 
 This will make the following available in the path:
 
- - The python module `trace_simexp`
- - `trace_simexp_prepro` executable
- - `trace_simexp_execute` executable
- - `trace_simexp_postpro` executable
- - `trace_simexp_create_h5` executable
+ - The python module ``trace_simexp``
+ - ``trace_simexp_prepro`` executable
+ - ``trace_simexp_execute`` executable
+ - ``trace_simexp_postpro`` executable
+ - ``trace_simexp_create_h5`` executable
 
 Further Documentation
 ---------------------
 
-A set of documentations is available for `trace-simexp`. 
+A set of documentations is available for ``trace-simexp``. 
 The user's guide can be found in the *Usage* section while the contributor's 
 guide can be found in the *Implementation* section.
 Both sections are combined into a single document in Microsoft Word and 
@@ -68,7 +68,7 @@ Contribute
 ----------
 
 `trace-simexp` is hosted on a private repository on `BitBucket`_.
-Only those who is a team member of `lrs-uq` has access and is allowed to read and/or write. 
+Only those who is a team member of ``lrs-uq`` has access and is allowed to read and/or write. 
 
 - Issue Tracker: https://bitbucket.org/lrs-uq/trace-simexp/issues
 - Source Code: https://bitbucket.org/lrs-uq/trace-simexp
@@ -77,5 +77,3 @@ License
 -------
 
 The project is licensed under the MIT License.
-
-This is a paragraph that contains `a link`_.
