@@ -45,7 +45,7 @@ the installation can be done easily from the local source directory::
 
     pip install -e .
 
-This will make the following available:
+This will make the following available in the path:
 
  - The python module `trace_simexp`
  - `trace_simexp_prepro` executable
@@ -68,8 +68,7 @@ Contribute
 ----------
 
 `trace-simexp` is hosted on a private repository on `BitBucket`_.
-Only those who has access to the project `lrs-uq` is allowed to read and/or 
-write. 
+Only those who is a team member of `lrs-uq` has access and is allowed to read and/or write. 
 
 - Issue Tracker: https://bitbucket.org/lrs-uq/trace-simexp/issues
 - Source Code: https://bitbucket.org/lrs-uq/trace-simexp
