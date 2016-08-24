@@ -9,7 +9,6 @@ setup(name="trace-simexp",
       author_email="damar.wicaksono@gmail.com",
       license="MIT",
       packages=["trace_simexp"],
-      install_requires=["ast"],
       scripts=["bin/trace_simexp_prepro", "bin/trace_simexp_execute",
                "bin/trace_simexp_postpro", "bin/trace_simexp_create_h5"],
       zip_safe=False)
