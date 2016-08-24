@@ -67,7 +67,7 @@ pdf formats as a `STARS`_ Memorandum document.
 Contribute
 ----------
 
-`trace-simexp` is hosted on a private repository on `BitBucket`_.
+``trace-simexp`` is hosted on a private repository on `BitBucket`_.
 Only those who is a team member of ``lrs-uq`` has access and is allowed to read and/or write. 
 
 - Issue Tracker: https://bitbucket.org/lrs-uq/trace-simexp/issues
