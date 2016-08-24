@@ -80,5 +80,3 @@ License
 The project is licensed under the MIT License.
 
 This is a paragraph that contains `a link`_.
-
-.. _a link: http://example.com/
