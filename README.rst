@@ -27,9 +27,11 @@ Features
 Requirements
 -----------
 
-The module was developed and tested using the Anaconda Python distribution
-with Python v3.5 (https://www.continuum.io/downloads).
+The module was developed and tested using the `Anaconda Python`_ distribution
+of Python v3.5.
 No additional package except the base installation of the distribution is required.
+
+.. _Anaconda Python: https://www.continuum.io/downloads
 
 Installation
 ------------
