@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 setup(name="trace-simexp",
-      version="1.0",
+      version="0.3.1",
       description="Script utility to assist simulation experiment with TRACE",
       url="https://bitbucket.org/lrs-uq/trace-simexp",
       author="Damar Wicaksono",
