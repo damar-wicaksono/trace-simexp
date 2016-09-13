@@ -155,7 +155,7 @@ def edit_scalar(tracin_lines, param_dict):
 
     :param tracin_lines: (list of str) the tracin base as a list
     :param param_dict: (dict) the dictionary of the comp parameter
-    :returns: (list of str) the modified base tracin with key for the parameter
+    :return: (list of str) the modified base tracin with key for the parameter
         as specified by param_dict
     """
     from ..tracin_util import keygen
