@@ -99,6 +99,15 @@ def get():
         required=False
     )
 
+    # The info filename
+    parser.add_argument(
+        "-prepro_info", "--prepro_filename",
+        type=str,
+        help="The pre-process info filename (will be created by default)",
+        required=False,
+        default=None
+    )
+
     # Get the command line arguments
     args = parser.parse_args()
 
@@ -125,7 +134,7 @@ def get():
         else:
             return args.num_samples, args.base_name, args.base_tracin,\
                    args.design_matrix, args.params_list, args.overwrite, \
-                   args.info
+                   args.info, args.prepro_filename
     # Use range of samples
     elif args.num_range is not None:
         # Sample range number has to be positive
@@ -137,12 +146,12 @@ def get():
             samples = list(range(args.num_range[0], args.num_range[1]+1))
             return samples, args.base_name, args.base_tracin,\
                    args.design_matrix, args.params_list, args.overwrite, \
-                   args.info
+                   args.info, args.prepro_filename
     # Select all samples
     elif args.all_samples is not None:
         return args.all_samples, args.base_name, args.base_tracin,\
                args.design_matrix, args.params_list, args.overwrite, \
-               args.info
+               args.info, args.prepro_filename
 
 
 def check(inputs):

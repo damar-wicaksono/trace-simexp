@@ -6,7 +6,7 @@ import numpy as np
 __author__ = "Damar Wicaksono"
 
 
-def get_input(info_filename: str=None) -> dict:
+def get_input() -> dict:
     """Get all the inputs for pre-processing phase
 
     Sources of inputs are: command line arguments, list of parameters file,
@@ -23,7 +23,7 @@ def get_input(info_filename: str=None) -> dict:
     # Read the command line arguments
     samples, base_dirname, \
         tracin_base_file, dm_file, params_list_file, \
-        overwrite, info = cmdln_args.prepro.get()
+        overwrite, info, prepro_filename = cmdln_args.prepro.get()
     
     # Get the names of directory and files
     base_name = base_dirname.split("/")[-1]
@@ -58,13 +58,11 @@ def get_input(info_filename: str=None) -> dict:
         inputs["samples"] = list(range(1, num_samples+1))
 
     # Write to a file the summary of pre-processing
-    if info_filename is not None:
-        info_file.prepro.write(inputs, info_filename)
-        inputs["info_file"] = info_filename
-    else:
-        info_filename = info_file.common.make_filename(inputs, "prepro")
-        info_file.prepro.write(inputs, info_filename)
-        inputs["info_file"] = info_filename
+    if prepro_filename is None:
+        prepro_filename = info_file.common.make_filename(inputs, "prepro")
+        
+    info_file.prepro.write(inputs, prepro_filename)
+    inputs["info_file"] = prepro_filename
 
     return inputs
 
