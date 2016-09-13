@@ -28,19 +28,19 @@ cc:
 
 A computer experiment is a multiple model runs using different values of the
 model parameters. Its design, in particular the selection of the design points
-at which the model will be evaluated, well as its analysis, in particular the
+at which the model will be evaluated, as well as its analysis, in particular the
 analysis of the output variation in relation to the inputs variation, are
 useful for sensitivity and uncertainty analyses of the model subjected to the
 experimentation.
 
 An important prerequisite of carrying out such experiment is the availability
-of a supporting tool able to handle the related logistical aspects. a
+of a supporting tool able to handle the related logistical aspects. A
 Python3-based scripting utility has been developed to assist in carrying such
 experiments for TRACE code. The scope of the utility is ranging from the
-pre-processing the TRACE input deck amenable for batch parallel execution to
+pre-processing of the TRACE input deck amenable for batch parallel execution to
 the post-treatment of the resulting binary xtv file amenable to subsequent
 sensitivity and uncertainty analyses. This memorandum describes the development
-of the tool, including the description on its usage, implementations, and
+of the tool, including the description of its usage, implementations, and
 assumptions.
 
 # Introduction and Scope of the Utility
@@ -529,18 +529,18 @@ listed in Table 4.
 
 |No.|Name       |Description                                                   |
 |---|-----------|--------------------------------------------------------------|
-|1  |`enum`     |enumeration of specified parameter in the list                |
-|2  |`data_type`|type of the parameters                                        |
-|3  |`var_num`  |parameter ID number, typically a unique TRACE input deck ID   |
-|4  |`var_name` |parameter name                                                |
-|5  |`var_type` |parameter type                                                |
-|6  |`var_mode` |mode of perturbation                                          |
-|7  |`var_card` |**card**, where the specific perturbed parameter is located   |
-|8  |`var_word` |**word**, where the specific perturbed parameter is located   |
-|9  |`var_dist` |Distribution of the perturbation factor (as random variable)  |
-|10 |`var_par1` |the 1st parameter of the distribution                         |
-|11 |`var_par2` |the 2nd parameter of the distribution                         |
-|12 |`str_fmt`  |string formatting of the parameter within the trace input deck|
+|0  |`enum`     |enumeration of specified parameter in the list                |
+|1  |`data_type`|type of the parameters                                        |
+|2  |`var_num`  |parameter ID number, typically a unique TRACE input deck ID   |
+|3  |`var_name` |parameter name                                                |
+|4  |`var_type` |parameter type                                                |
+|5  |`var_mode` |mode of perturbation                                          |
+|6  |`var_card` |**card**, where the specific perturbed parameter is located   |
+|7  |`var_word` |**word**, where the specific perturbed parameter is located   |
+|8  |`var_dist` |Distribution of the perturbation factor (as random variable)  |
+|9  |`var_par1` |the 1st parameter of the distribution                         |
+|10 |`var_par2` |the 2nd parameter of the distribution                         |
+|11 |`str_fmt`  |string formatting of the parameter within the trace input deck|
 
 ### data_type
 
@@ -634,18 +634,18 @@ can be seen in Table 7.
 
 |No.|Name       |Description                            | Value                                                               |
 |---|-----------|---------------------------------------|---------------------------------------------------------------------|
-|1  |`enum`     |enumeration in the list                |integer                                                              |
-|2  |`data_type`|type of parameters                     |`spacer`                                                             |
-|3  |`var_num`  |Spacer grid type identifier number     |integer                                                              |
-|4  |`var_name` |name of the variable                   |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
-|5  |`var_type` |type of variable                       |`scalar`                                                             |
-|6  |`var_mode` |mode of perturbation                   |(see Table 5)                                                        |
-|7  |`var_card` |**card** number of the variable        |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
-|8  |`var_word` |**word** number of the variable        |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
-|9  |`var_dist` |distribution of the perturbation factor|(see Table 6)                                                        |
-|10 |`var_par1` |the 1st parameter of the distribution  |(see Table 6)                                                        |
-|11 |`var_par2` |the 2nd parameter of the distribution  |(see Table 6)                                                        |
-|12 |`str_fmt`  |string formatting of the parameter     | `14d` if `var_num == spmatid`, otherwise `14.4f`                    |
+|0  |`enum`     |enumeration in the list                |integer                                                              |
+|1  |`data_type`|type of parameters                     |`spacer`                                                             |
+|2  |`var_num`  |Spacer grid type identifier number     |integer                                                              |
+|3  |`var_name` |name of the variable                   |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
+|4  |`var_type` |type of variable                       |`scalar`                                                             |
+|5  |`var_mode` |mode of perturbation                   |(see Table 5)                                                        |
+|6  |`var_card` |**card** number of the variable        |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
+|7  |`var_word` |**word** number of the variable        |see TRACE User's Manual, Vol. 1, Ch. 6, Subsection "Spacer Grid Data"|
+|8  |`var_dist` |distribution of the perturbation factor|(see Table 6)                                                        |
+|9  |`var_par1` |the 1st parameter of the distribution  |(see Table 6)                                                        |
+|10 |`var_par2` |the 2nd parameter of the distribution  |(see Table 6)                                                        |
+|11 |`str_fmt`  |string formatting of the parameter     | `14d` if `var_num == spmatid`, otherwise `14.4f`                    |
 
 **Example**
 
@@ -673,18 +673,18 @@ The required inputs are given in Table 8 below.
 
 |No.|Name       |Description                            | Value        |
 |---|-----------|---------------------------------------|--------------|
-|1  |`enum`     |enumeration in the list                |integer       |
-|2  |`data_type`|type of parameters                     |`matprop`     |
-|3  |`var_num`  |unique user-defined material identifier|integer       |
-|4  |`var_name` |name of the variable keyword           |(see Table 9) |
-|5  |`var_type` |type of variable keyword               |`table`       |                                                             |
-|6  |`var_mode` |mode of perturbation                   |(see Table 5) |
-|7  |`var_card` |**not used**                           |`-`           |
-|8  |`var_word` |**not used**                           |`-`           |
-|9  |`var_dist` |distribution of the perturbation factor|(see Table 6) |
-|10 |`var_par1` |the 1st parameter of the distribution  |(see Table 6) |
-|11 |`var_par2` |the 2nd parameter of the distribution  |(see Table 6) |
-|12 |`str_fmt`  |string formatting of the parameter     |`14.4f`       |
+|0  |`enum`     |enumeration in the list                |integer       |
+|1  |`data_type`|type of parameters                     |`matprop`     |
+|2  |`var_num`  |unique user-defined material identifier|integer       |
+|3  |`var_name` |name of the variable keyword           |(see Table 9) |
+|4  |`var_type` |type of variable keyword               |`table`       |                                                             |
+|5  |`var_mode` |mode of perturbation                   |(see Table 5) |
+|6  |`var_card` |**not used**                           |`-`           |
+|7  |`var_word` |**not used**                           |`-`           |
+|8  |`var_dist` |distribution of the perturbation factor|(see Table 6) |
+|9  |`var_par1` |the 1st parameter of the distribution  |(see Table 6) |
+|10 |`var_par2` |the 2nd parameter of the distribution  |(see Table 6) |
+|11 |`str_fmt`  |string formatting of the parameter     |`14.4f`       |
 
 The `var_name` is the actual material properties that can be perturbed and 
 Table 9 provide the keyword to be input.
@@ -723,6 +723,8 @@ coefficient or interfacial drag) and made available to the user via the
 input deck. As such, the term is a misnomer and it is always written in this 
 document in italic.
 
+%PG41: Don't understand the need for exeternalization if accessible from the input deck; maybe don't need to be in that document%
+
 An example of how *sensitivity coefficient* is defined in the input deck is 
 shown below,
 
@@ -747,8 +749,8 @@ shown below,
     ......
 
 The *sensitivity coefficients* inside the input deck requires three variables:
-`id`, a unique integer number identifying the coefficient (see table); 
-`mode`, the mode of perturbation (see table); `value`, the actual value of 
+`id`, a unique integer number identifying the coefficient (see table %PG41: Which Table?%); 
+`mode`, the mode of perturbation (see table %PG41: Which Table?%); `value`, the actual value of 
 perturbation factor.
 
 Table 10 gives all the required information to specify the 
@@ -760,18 +762,18 @@ the list file.
 
 |No.|Name       |Description                            | Value        |
 |---|-----------|---------------------------------------|--------------|
-|1  |`enum`     |enumeration in the list                |integer       |
-|2  |`data_type`|type of parameters                     |`senscoef`    |
-|3  |`var_num`  |unique 4-digit integer ID              |(see Table 11)|
-|4  |`var_name` |**not used**                           |`-`           |
-|5  |`var_type` |type of variable                       |`scalar`      |
-|6  |`var_mode` |mode of perturbation                   |(see Table 5) |
-|7  |`var_card` |**not used**                           | `-`          |
-|8  |`var_word` |**not used**                           | `-`          |
-|9  |`var_dist` |distribution of the perturbation factor|(see Table 6) |
-|10 |`var_par1` |the 1st parameter of the distribution  |(see Table 6) |
-|11 |`var_par2` |the 2nd parameter of the distribution  |(see Table 6) |
-|12 |`str_fmt`  |string formatting of the parameter     | `14.4f`      |
+|0  |`enum`     |enumeration in the list                |integer       |
+|1  |`data_type`|type of parameters                     |`senscoef`    |
+|2  |`var_num`  |unique 4-digit integer ID              |(see Table 11)|
+|3  |`var_name` |**not used**                           |`-`           |
+|4  |`var_type` |type of variable                       |`scalar`      |
+|5  |`var_mode` |mode of perturbation                   |(see Table 5) |
+|6  |`var_card` |**not used**                           | `-`          |
+|7  |`var_word` |**not used**                           | `-`          |
+|8  |`var_dist` |distribution of the perturbation factor|(see Table 6) |
+|9  |`var_par1` |the 1st parameter of the distribution  |(see Table 6) |
+|10 |`var_par2` |the 2nd parameter of the distribution  |(see Table 6) |
+|11 |`str_fmt`  |string formatting of the parameter     | `14.4f`      |
 
 Table 11 below lists the currently available sensitivity coefficients 
 implemented in the modified version of `trace_v5.0p3.uq` (cite PREMIUM). This 
@@ -855,18 +857,18 @@ is given in Table 12.
 
 |No.|Name       |Description                                           | Value                                                       |
 |---|-----------|------------------------------------------------------|-------------------------------------------------------------|
-|1  |`enum`     |enumeration in the list                               |integer                                                      |
-|2  |`data_type`|type of parameters                                    |`(pipe, vessel, power, fill, or break)`                      |
-|3  |`var_num`  |unique TRACE component ID                             |model specific                                               |
-|4  |`var_name` |name of the variable                                  |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
-|5  |`var_type` |type of variable                                      |`scalar or table`, explanation below                         |
-|6  |`var_mode` |mode of perturbation                                  |(see Table 5)                                                |
-|7  |`var_card` |the table column number where the parameter is located|see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
-|8  |`var_word` |the number on entry in table                          |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
-|9  |`var_dist` |distribution of the perturbation factor               |(see Table 6)                                                |
-|10 |`var_par1` |the 1st parameter of the distribution                 |(see Table 6)                                                |
-|11 |`var_par2` |the 2nd parameter of the distribution                 |(see Table 6)                                                |
-|12 |`str_fmt`  |string formatting of the parameter                    |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
+|0  |`enum`     |enumeration in the list                               |integer                                                      |
+|1  |`data_type`|type of parameters                                    |`(pipe, vessel, power, fill, or break)`                      |
+|2  |`var_num`  |unique TRACE component ID                             |model specific                                               |
+|3  |`var_name` |name of the variable                                  |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
+|4  |`var_type` |type of variable                                      |`scalar or table`, explanation below                         |
+|5  |`var_mode` |mode of perturbation                                  |(see Table 5)                                                |
+|6  |`var_card` |the table column number where the parameter is located|see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
+|7  |`var_word` |the number on entry in table                          |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
+|8  |`var_dist` |distribution of the perturbation factor               |(see Table 6)                                                |
+|9  |`var_par1` |the 1st parameter of the distribution                 |(see Table 6)                                                |
+|10 |`var_par2` |the 2nd parameter of the distribution                 |(see Table 6)                                                |
+|11 |`str_fmt`  |string formatting of the parameter                    |see corresponding entry in TRACE User's Manual, Vol. 1, Ch. 6|
 
 Parameters associated with the TRACE components are classified into two 
 different types. The `scalar` type is a single value parameter, while the 
@@ -906,7 +908,7 @@ of parameters file is shown below,
 
 The example above showed the perturbation of the fill table (`vmtbm`) using 
 multiplication factor drawn from uniform distribution with value between 
-`0.9 - 1.0`. The perturbed parameter is located in the 2nd column of the table 
+`0.9 - 1.1`. The perturbed parameter is located in the 2nd column of the table 
 (`var_card == 2`) and there are 16 entries in the table (`var_word == 16`).
 
 The entry below is an example of a scalar type component-related parameter,
@@ -919,7 +921,7 @@ The example gives a specification for perturbation of vessel component no. 1
 roughness parameter (`var_name == epsw`). The parameter is specified in the 
 input deck of vessel component at card number 6 (`var_card == 6`) and word 
 number 2 (`var_word == 2`). The perturbation is done using substitutive factor 
-(`var_mode == 1`) with uniform distribution between `6.1e-7 - 2.55e-6` [m].
+(`var_mode == 1`) with uniform distribution between `6.1e-7 - 2.44e-6` [m].
 
 ## Design matrix file (`design_matrix` file)
 
