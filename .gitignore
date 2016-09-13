@@ -3,6 +3,10 @@ test_simulation
 simulation/febaTrans216
 simulation/febaTrans214
 logfiles/
+# Pycharm Project file
+.idea/
+# Egg package
+*.egg-info/
 *.info
 *.log
 *.__*

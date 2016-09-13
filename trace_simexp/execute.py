@@ -26,7 +26,7 @@ def get_input(info_filename: str=None) -> dict:
     # Check if samples is within the available samples
     if isinstance(samples, bool) and samples:
         samples = avail_samples
-    elif set(samples) < set(avail_samples):
+    elif set(samples) <= set(avail_samples):
         samples = samples
     else:
         raise ValueError("Requested samples is not part of the available ones")
