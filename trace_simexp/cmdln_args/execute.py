@@ -114,7 +114,7 @@ def get():
             parser.error(
                 "Number of samples with -ns has to be strictly positive!")
         else:
-                return args.num_samples, args.info_file, args.num_processors, \
+                return args.num_samples, args.prepro_file, args.num_processors, \
                        args.scratch_directory, args.trace_executable, \
                        args.xtv2dmx_executable
 
@@ -127,12 +127,12 @@ def get():
                          "and the first is smaller than the second")
         else:
             samples = list(range(args.num_range[0], args.num_range[1]+1))
-            return samples, args.info_file, args.num_processors, \
+            return samples, args.prepro_file, args.num_processors, \
                    args.scratch_directory, args.trace_executable, \
                    args.xtv2dmx_executable
 
     # Select all samples
     elif args.all_samples is not None:
-        return args.all_samples, args.info_file, args.num_processors, \
+        return args.all_samples, args.prepro_file, args.num_processors, \
                args.scratch_directory, args.trace_executable, \
                args.xtv2dmx_executable
