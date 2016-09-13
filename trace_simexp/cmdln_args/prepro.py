@@ -61,7 +61,7 @@ def get():
     # The base tracin filename
     parser.add_argument(
         "-tracin", "--base_tracin",
-        type=str,
+        type=argparse.FileType("rt"),
         help="The base tracin filename",
         required=True
     )
@@ -69,7 +69,7 @@ def get():
     # The base design matrix filename
     parser.add_argument(
         "-dm", "--design_matrix",
-        type=str,
+        type=argparse.FileType("rt"),
         help="The design matrix filename",
         required=True
     )
@@ -77,7 +77,7 @@ def get():
     # The list of parameter filename
     parser.add_argument(
         "-parlist", "--params_list",
-        type=str,
+        type=argparse.FileType("rt"),
         help="The list of parameters filename",
         required=True
     )
@@ -154,31 +154,18 @@ def check(inputs):
     import os
     import numpy as np
 
-    # Check if the base tracin exists
-    if not os.path.exists(inputs["tracin_base_file"]):
-        raise ValueError("The base tracin file does not exist!")
-    else:
-        pass
-
-    # Check if design matrix file exist
-    if os.path.exists(inputs["dm_file"]):
-        num_params_dm = util.parse_csv(inputs["dm_file"]).shape[1]
-        num_samples = util.parse_csv(inputs["dm_file"]).shape[0]
-    else:
-        raise ValueError("The design matrix file does not exists!")
+    # Get the number 
+    num_samples = util.parse_csv(inputs["dm_file"]).shape[0]
+    num_params_dm = util.parse_csv(inputs["dm_file"]).shape[1]
 
     # Check if list of parameters file exist
-    if os.path.exists(inputs["params_list_file"]):
-        with open(inputs["params_list_file"], "rt") as params_list_file:
-            params_list_line = params_list_file.readlines()
-        num_params_list_file = 0
-        for i in params_list_line:
-            if not i.startswith("#"):
-                num_params_list_file += 1
-    else:
-        raise ValueError("The list of parameters file does not exist!")
+    params_list_line = inputs["params_list_file"].readlines()
+    num_params_list_file = 0
+    for i in params_list_line:
+        if not i.startswith("#"):
+            num_params_list_file += 1
 
-    # Check the number of parameters in the design matrix and list of parameters
+    # Check the number of parameters in the dm file and list of parameters file
     if num_params_list_file != num_params_dm:
         raise ValueError("The number of parameters is inconsistent\n"
                          "{:10d} in {} and {:10d} in {}"

@@ -42,7 +42,7 @@ def create(template_lines, params_dict, norm_pert_factors):
     return tracin
 
 
-def get_nominal_values(tracin_file: str, params_dict: list):
+def get_nominal_values(tracin_file, params_dict: list):
     r"""Procedure to read base tracin and get nominal parameter values
 
     The procedure will update the param_dict with new key: ["nom_vals"].
@@ -58,8 +58,8 @@ def get_nominal_values(tracin_file: str, params_dict: list):
     from .template import tracin_comp
 
     # Read file and put the lines into python list (and strip them directly)
-    with open(tracin_file, "rt") as tracin:
-        tracin_lines = tracin.read().splitlines()
+    tracin_file.seek(0) # Reset file back to the first line
+    tracin_lines = tracin_file.read().splitlines()
 
     # Loop over all parameters specified in params_dict
     for num, param in enumerate(params_dict):
@@ -92,7 +92,7 @@ def get_nominal_values(tracin_file: str, params_dict: list):
             raise TypeError("Not a recognized data type")
 
 
-def create_template(params_dict: list, tracin_file: str):
+def create_template(params_dict: list, tracin_file):
     r"""Procedure to create tracin template string
 
     The string contains `keys` to be substituted with values based on the
@@ -111,8 +111,8 @@ def create_template(params_dict: list, tracin_file: str):
     from .template import tracin_matprop
 
     # Read tracin base case file
-    with open(tracin_file, "rt") as tracin:
-        tracin_lines = tracin.read().splitlines()
+    tracin_file.seek(0)     # Reset file back to the first line
+    tracin_lines = tracin_file.read().splitlines()
 
     tracin_tmp_lines = tracin_lines
     # Do something here to make the template
