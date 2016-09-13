@@ -1,6 +1,7 @@
 """Module to parse command line arguments in pre-processing phase
 """
 from .. import util
+from ..__init__ import __version__
 
 __author__ = "Damar Wicaksono"
 
@@ -19,7 +20,7 @@ def get():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="trace_simexp Preprocessor - Create tracin and dirtree"
+        description="%(prog)s - Pre-processing: create tracin and dirtree"
     )
 
     # Select which samples to run
@@ -106,6 +107,13 @@ def get():
         help="The pre-process info filename (will be created by default)",
         required=False,
         default=None
+    )
+
+    # Print version
+    parser.add_argument(
+        "-V", "--version",
+        action="version",
+        version="%(prog)s (version {})" .format(__version__)
     )
 
     # Get the command line arguments
