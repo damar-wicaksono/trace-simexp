@@ -723,8 +723,6 @@ coefficient or interfacial drag) and made available to the user via the
 input deck. As such, the term is a misnomer and it is always written in this 
 document in italic.
 
-%PG41: Don't understand the need for exeternalization if accessible from the input deck; maybe don't need to be in that document%
-
 An example of how *sensitivity coefficient* is defined in the input deck is 
 shown below,
 
@@ -749,13 +747,13 @@ shown below,
     ......
 
 The *sensitivity coefficients* inside the input deck requires three variables:
-`id`, a unique integer number identifying the coefficient (see table %PG41: Which Table?%); 
-`mode`, the mode of perturbation (see table %PG41: Which Table?%); `value`, the actual value of 
-perturbation factor.
+`id`, a unique integer number identifying the coefficient (see Table 11); 
+`mode`, the mode of perturbation (see Table 11 for the supported mode associated with a parameter 
+and Table 5 for the meaning); `value`, the actual value of perturbation factor.
 
 Table 10 gives all the required information to specify the 
 *sensitivity coefficient* in the list of parameters file. Note the if a 
-variable is not used it has to be specify with `-` (i.e., dash symbol) inside 
+variable is not used it has to be specified with `-` (i.e., dash symbol) inside 
 the list file.
 
 <!--Table 10: Specification for TRACE *sensitivity coefficient* in `param_list` file-->
