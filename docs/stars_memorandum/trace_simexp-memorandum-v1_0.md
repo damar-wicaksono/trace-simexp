@@ -14,15 +14,18 @@ Email: damar.wicaksono@psi.ch
 
 To:
 
- 1. STARS / O. Zerkak
+ 1. STARS / I. Clifford
  2. STARS / Y. Aounallah
  3. ERP / G. Perret
 
 cc:
 
  1. STARS / STARS_TRACE
- 2. STARS / M. Krack
- 3. STARS / H. Ferroukhi
+ 2. STARS / H. Ferroukhi
+ 3. STARS / A. Vasiliev
+ 4. STARS / M. Krack
+ 5. NES / O. Zerkak
+
 
 # Abstract
 
@@ -72,7 +75,7 @@ The csv files are ready to be further post-processed for
 sensitivity/uncertainty analysis. The tools required to carry out such an
 analysis is also outside the scope of `trace-simexp`.
 
-![Figure 1: Workflow trace-simexp including the required input files at a glance](figures/flowchart.png)
+![Figure 1: Workflow trace-simexp including the required input files at a glance](../figures/flowchart.png)
 
 
 In the subsequent sections, the usage information as well as the notes on the
