@@ -40,15 +40,15 @@ def write(inputs: dict, info_filename: str):
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[2], "->", inputs["case_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
-                        .format(header[3], "->", inputs["tracin_base_file"]))
+                        .format(header[3], "->", inputs["tracin_base_fullname"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[4], "->", inputs["params_list_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
-                        .format(header[5], "->", inputs["params_list_file"]))
+                        .format(header[5], "->", inputs["params_list_fullname"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[6], "->", inputs["dm_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
-                        .format(header[7], "->", inputs["dm_file"]))
+                        .format(header[7], "->", inputs["dm_fullname"]))
         file.writelines("{:<30s}{:3s}{:<30}\n"
                         .format(header[9], "->", inputs["overwrite"]))
         file.writelines("{:<30s}{:3s}\n" .format(header[8], "->"))

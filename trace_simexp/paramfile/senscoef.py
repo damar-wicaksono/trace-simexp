@@ -10,6 +10,8 @@ def parse(line) -> dict:
     :param line: (list of str) a line read from list of parameters file
     :returns: (dict) the parsed input parameter with pre-specified key
     """
+    from .common import parse_var_params
+
     senscoef_data = line.split()
 
     senscoef_dict = {
@@ -18,13 +20,12 @@ def parse(line) -> dict:
         "var_num": int(senscoef_data[2]),
         "var_name": None,
         "var_type": senscoef_data[4].lower(),
-        "var_mode": int(senscoef_data[5]),
         "var_card": None,
         "var_word": None,
+        "var_mode": int(senscoef_data[7]),
         "var_dist": senscoef_data[8].lower(),
-        "var_par1": float(senscoef_data[9]),
-        "var_par2": float(senscoef_data[10]),
-        "str_fmt": senscoef_data[11]
+        "var_pars": parse_var_params(line),
+        "str_fmt": senscoef_data[-1]
     }
 
     # Check the validity
@@ -36,7 +37,7 @@ def parse(line) -> dict:
     return senscoef_dict
 
 
-def check_senscoef(senscoef_dict):
+def check_senscoef(senscoef_dict: dict):
     r"""Check the validity of the sensitivity coefficient data
 
     :param senscoef_data: (list of str) list of sensivitivity coefficient data
@@ -52,6 +53,7 @@ def create_msg(senscoef_dict: dict) -> str:
     :param senscoef_dict: (dict) the parsed sensitivity coefficient parameters
     """
     from .common import var_type_str
+    from .common import print_var_params
 
     str_msg = list()
 
@@ -62,11 +64,9 @@ def create_msg(senscoef_dict: dict) -> str:
     str_msg.append("Parameter perturbation mode: {} ({})"
                    .format(senscoef_dict["var_mode"],
                            var_type_str(senscoef_dict["var_mode"])))
-    str_msg.append("Parameter distribution: {}"
+    str_msg.append("Perturbation factor probability distribution:")
+    str_msg.append(" - distribution: *{}*"
                    .format(senscoef_dict["var_dist"]))
-    str_msg.append("1st distribution parameter: {:.3f}"
-                   .format(senscoef_dict["var_par1"]))
-    str_msg.append("2nd distribution parameter: {:.3f}\n"
-                   .format(senscoef_dict["var_par2"]))
+    str_msg.append("{}\n" .format(print_var_params(senscoef_dict["var_pars"])))
 
     return "\n".join(str_msg)

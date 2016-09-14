@@ -20,20 +20,26 @@ def rescale_perturb(param_dict, norm_value):
     # Create rescale values according to the specified distribution
     if param_dict["var_dist"] == "unif":
         value = rescale.uniform(norm_value,
-                                param_dict["var_par1"],
-                                param_dict["var_par2"])
+                                param_dict["var_pars"]["min"],
+                                param_dict["var_pars"]["max"])
     elif param_dict["var_dist"] == "logunif":
         value = rescale.loguniform(norm_value,
-                                   param_dict["var_par1"],
-                                   param_dict["var_par2"])
+                                   param_dict["var_pars"]["min"],
+                                   param_dict["var_pars"]["max"])
 
     elif param_dict["var_dist"] == "normal":
-        value = rescale.normal(norm_value,
-                               param_dict["var_par1"],
-                               param_dict["var_par2"])
+        if "truncation" in param_dict["var_pars"].keys():
+            value = rescale.normal(norm_value,
+                                   param_dict["var_pars"]["mu"],
+                                   param_dict["var_pars"]["sigma"],
+                                   param_dict["var_pars"]["truncation"])
+        else:
+            value = rescale.normal(norm_value,
+                                   param_dict["var_pars"]["mu"],
+                                   param_dict["var_pars"]["sigma"])
 
-    elif param_dict["var_dist"] == "discunif":
-        value = rescale.discunif(norm_value, param_dict["var_par1"])
+    elif param_dict["var_dist"] == "discrete":
+        value = rescale.discrete(norm_value, param_dict["var_pars"])
 
     else:
         raise TypeError("Distribution is not supported!")

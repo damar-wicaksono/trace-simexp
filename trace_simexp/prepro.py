@@ -6,7 +6,7 @@ import numpy as np
 __author__ = "Damar Wicaksono"
 
 
-def get_input(info_filename: str=None) -> dict:
+def get_input() -> dict:
     """Get all the inputs for pre-processing phase
 
     Sources of inputs are: command line arguments, list of parameters file,
@@ -22,24 +22,28 @@ def get_input(info_filename: str=None) -> dict:
 
     # Read the command line arguments
     samples, base_dirname, \
-        tracin_base_fullname, dm_fullname, params_list_fullname, \
-        overwrite, info = cmdln_args.prepro.get()
-
+        tracin_base_file, dm_file, params_list_file, \
+        overwrite, info, prepro_filename = cmdln_args.prepro.get()
+    
+    # Get the names of directory and files
     base_name = base_dirname.split("/")[-1]
-    case_name = tracin_base_fullname.split("/")[-1].split(".")[0]
-    dm_name = dm_fullname.split("/")[-1].split(".")[0]
-    params_list_name = params_list_fullname.split("/")[-1].split(".")[0]
+    case_name = tracin_base_file.name.split("/")[-1].split(".")[0]
+    dm_name = dm_file.name.split("/")[-1].split(".")[0]
+    params_list_name = params_list_file.name.split("/")[-1].split(".")[0]
 
     # Construct the dictionary
     inputs = {
         "samples": samples,
         "base_dir": base_dirname,
         "base_name": base_name,
-        "tracin_base_file": tracin_base_fullname,
+        "tracin_base_file": tracin_base_file,
+        "tracin_base_fullname": tracin_base_file.name,
         "case_name": case_name,
-        "dm_file": dm_fullname,
+        "dm_file": dm_file,
+        "dm_fullname": dm_file.name,
         "dm_name": dm_name,
-        "params_list_file": params_list_fullname,
+        "params_list_file": params_list_file,
+        "params_list_fullname": params_list_file.name,
         "params_list_name": params_list_name,
         "overwrite": overwrite,
         "info": info
@@ -54,18 +58,16 @@ def get_input(info_filename: str=None) -> dict:
         inputs["samples"] = list(range(1, num_samples+1))
 
     # Write to a file the summary of pre-processing
-    if info_filename is not None:
-        info_file.prepro.write(inputs, info_filename)
-        inputs["info_file"] = info_filename
-    else:
-        info_filename = info_file.common.make_filename(inputs, "prepro")
-        info_file.prepro.write(inputs, info_filename)
-        inputs["info_file"] = info_filename
+    if prepro_filename is None:
+        prepro_filename = info_file.common.make_filename(inputs, "prepro")
+        
+    info_file.prepro.write(inputs, prepro_filename)
+    inputs["info_file"] = prepro_filename
 
     return inputs
 
 
-def read_params(param_list_file: str,
+def read_params(params_list_file,
                 info_filename: str,
                 tracin_filename:str,
                 comment_char: str="#") -> dict:
@@ -73,7 +75,7 @@ def read_params(param_list_file: str,
 
     The nominal parameter values are read from the base tracin file
 
-    :param param_list_file: (str) the fullname of list of parameters file
+    :param param_list_file: (file) list of parameters file
     :param info_filename: (str) the filename string for info_file
     :param tracin_filename: (str) the filename string for base tracin file
     :param comment_char: (str) the character signifying comment line in the file
@@ -87,6 +89,9 @@ def read_params(param_list_file: str,
     from .paramfile import comp
     from . import tracin
 
+    # Reset file back to the first line
+    params_list_file.seek(0)
+
     # the list of supported component type
     COMPONENTS = ["pipe", "vessel", "power", "fill", "break"]
 
@@ -94,32 +99,32 @@ def read_params(param_list_file: str,
     params_dict = list()
 
     # Open and read list of parameters file
-    with open(param_list_file, "rt") as params_file:
-        for line in params_file.readlines():
-            if not line.startswith(comment_char):
-                line = line.strip()
-                # the keyword for data type is the second entry in each line
-                keyword = line.split()[1].lower()
+    #with open(param_list_file, "rt") as params_file:
+    for line in params_list_file.readlines():
+        if not line.startswith(comment_char):
+            line = line.strip()
+            # the keyword for data type is the second entry in each line
+            keyword = line.split()[1].lower()
 
-                if keyword == "spacer":
-                    # spacer grid data is specified, update params_dict
-                    params_dict.append(spacer.parse(line))
+            if keyword == "spacer":
+                # spacer grid data is specified, update params_dict
+                params_dict.append(spacer.parse(line))
 
-                elif keyword == "matprop":
-                    # material properties data is specified, update params_dict
-                    params_dict.append(matprop.parse(line))
+            elif keyword == "matprop":
+                # material properties data is specified, update params_dict
+                params_dict.append(matprop.parse(line))
 
-                elif keyword == "senscoef":
-                    # sensitivity coefficient is specified, update params_dict
-                    params_dict.append(senscoef.parse(line))
+            elif keyword == "senscoef":
+                # sensitivity coefficient is specified, update params_dict
+                params_dict.append(senscoef.parse(line))
 
-                elif keyword in COMPONENTS:
-                    # component parameter is specified, update params_dict
-                    params_dict.append(comp.parse(line))
+            elif keyword in COMPONENTS:
+                # component parameter is specified, update params_dict
+                params_dict.append(comp.parse(line))
 
-                else:
-                    raise NameError("*{}* data type is not supported!"
-                                    .format(keyword))
+            else:
+                raise NameError("*{}* data type is not supported!"
+                                .format(keyword))
 
     # Append the prepro.info
     common.append_info(params_dict, info_filename)
