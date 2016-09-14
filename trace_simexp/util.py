@@ -142,8 +142,6 @@ def parse_csv(csv_file) -> np.ndarray:
     """
     #import csv
     import re
-
-    csv_file.seek(0)
     
     output = list()
 
@@ -155,3 +153,4 @@ def parse_csv(csv_file) -> np.ndarray:
     output = np.array(output).astype(np.float)
     
     return output
+

@@ -132,7 +132,18 @@ def get():
     else:
         pass
 
-    # Sample has to be specified
+    # Read file argument contents
+    tracin_base_fullname = args.base_tracin.name
+    with args.base_tracin as tracin:
+        tracin_base_contents = tracin.read().splitlines()
+    design_matrix_fullname = args.design_matrix.name
+    with args.design_matrix as dm_file:
+        design_matrix_contents = util.parse_csv(dm_file)
+    params_list_fullname = args.params_list.name
+    with args.params_list as params_file:
+        params_list_contents = params_file.read().splitlines()
+
+    # Sample has to be specified, check the way it was specified
     # Select individual samples
     if args.num_samples is not None:
         # Sample number has to be positive
@@ -140,9 +151,7 @@ def get():
             parser.error(
                 "Number of samples with -ns has to be strictly positive!")
         else:
-            return args.num_samples, args.base_name, args.base_tracin,\
-                   args.design_matrix, args.params_list, args.overwrite, \
-                   args.info, args.prepro_filename
+            samples = args.num_samples
     # Use range of samples
     elif args.num_range is not None:
         # Sample range number has to be positive
@@ -152,14 +161,15 @@ def get():
                          "and the first is smaller than the second")
         else:
             samples = list(range(args.num_range[0], args.num_range[1]+1))
-            return samples, args.base_name, args.base_tracin,\
-                   args.design_matrix, args.params_list, args.overwrite, \
-                   args.info, args.prepro_filename
     # Select all samples
     elif args.all_samples is not None:
-        return args.all_samples, args.base_name, args.base_tracin,\
-               args.design_matrix, args.params_list, args.overwrite, \
-               args.info, args.prepro_filename
+    	samples = args.all_samples
+
+    return samples, args.base_name, \
+           tracin_base_fullname, tracin_base_contents, \
+           design_matrix_fullname, design_matrix_contents, \
+	   params_list_fullname, params_list_contents, \
+	   args.overwrite, args.info, args.prepro_filename
 
 
 def check(inputs):
@@ -172,13 +182,12 @@ def check(inputs):
     import numpy as np
 
     # Get the number 
-    num_samples = util.parse_csv(inputs["dm_file"]).shape[0]
-    num_params_dm = util.parse_csv(inputs["dm_file"]).shape[1]
+    num_samples = inputs["dm_contents"].shape[0]
+    num_params_dm = inputs["dm_contents"].shape[1]
 
-    # Check if list of parameters file exist
-    params_list_line = inputs["params_list_file"].readlines()
+    # Check the number of parameters listed in the params_list_file
     num_params_list_file = 0
-    for i in params_list_line:
+    for i in inputs["params_list_contents"]:
         if not i.startswith("#"):
             num_params_list_file += 1
 
@@ -203,3 +212,4 @@ def check(inputs):
                                  inputs["dm_name"]))
     else:
         pass
+
