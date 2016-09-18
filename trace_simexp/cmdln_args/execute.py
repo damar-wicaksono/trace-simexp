@@ -120,6 +120,13 @@ def get():
     with args.prepro_info as prepro_info:
         prepro_info_contents = prepro_info.read().splitlines()
 
+    # Guard against possible user input of directory closed with "/"
+    # Otherwise there would be an error for directory creation due to "//"
+    scratch_directory = args.scratch_directory.split("/")
+    if scratch_directory[-1] == "":
+        scratch_directory.pop()
+    scratch_directory = "/".join(scratch_directory)
+
     # Sample has to be specified
     # Select individual samples
     if args.num_samples is not None:
@@ -146,5 +153,5 @@ def get():
 
     # Return all the command line arguments
     return samples, prepro_info_fullname, prepro_info_contents, \
-           args.num_processors, args.scratch_directory, \
+           args.num_processors, scratch_directory, \
            args.trace_executable, args.xtv2dmx_executable
