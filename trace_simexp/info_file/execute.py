@@ -58,7 +58,8 @@ def write(inputs: dict, info_filename: str):
 
         # prepro.info filename
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[0], "->", inputs["prepro_info"]))
+                             .format(header[0], "->",
+                                     inputs["prepro_info_fullname"]))
 
         # TRACE Executable
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"

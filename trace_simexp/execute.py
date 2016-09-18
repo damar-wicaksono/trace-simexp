@@ -16,12 +16,12 @@ def get_input(info_filename: str=None) -> dict:
     from . import util
 
     # Read the command line arguments
-    samples, prepro_infofile, num_procs, scratch_dir, trace_exec, \
-        xtv2dmx_exec = cmdln_args.execute.get()
+    samples, prepro_info_fullname, prepro_info_contents, num_procs, \
+        scratch_dir, trace_exec, xtv2dmx_exec = cmdln_args.execute.get()
 
     # Read the pre-processing phase info file
     base_dir, case_name, params_list_name, dm_name, avail_samples = \
-        info_file.prepro.read(prepro_infofile)
+        info_file.prepro.read(prepro_info_contents)
 
     # Check if samples is within the available samples
     if isinstance(samples, bool) and samples:
@@ -36,7 +36,8 @@ def get_input(info_filename: str=None) -> dict:
 
     # Construct the dictionary
     exec_inputs = {
-        "prepro_info": prepro_infofile,
+        "prepro_info_fullname": prepro_info_fullname,
+        "prepro_info_contents": prepro_info_contents,
         "num_procs": num_procs,
         "scratch_dir": scratch_dir,
         "trace_exec": trace_exec,

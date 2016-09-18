@@ -26,8 +26,8 @@ def get():
 
     # The fullname of info_file from the pre-processing phase
     parser.add_argument(
-        "-prepro", "--prepro_file",
-        type=str,
+        "-prepro", "--prepro_info",
+        type=argparse.FileType("rt"),
         help="The pre-processing phase info file",
         required=True
     )
@@ -115,6 +115,11 @@ def get():
     else:
         pass
 
+    # Read file argument contents
+    prepro_info_fullname = args.prepro_info.name
+    with args.prepro_info as prepro_info:
+        prepro_info_contents = prepro_info.read().splitlines()
+
     # Sample has to be specified
     # Select individual samples
     if args.num_samples is not None:
@@ -123,9 +128,7 @@ def get():
             parser.error(
                 "Number of samples with -ns has to be strictly positive!")
         else:
-                return args.num_samples, args.prepro_file, args.num_processors, \
-                       args.scratch_directory, args.trace_executable, \
-                       args.xtv2dmx_executable
+            samples = args.num_samples
 
     # Use range of samples
     elif args.num_range is not None:
@@ -136,12 +139,12 @@ def get():
                          "and the first is smaller than the second")
         else:
             samples = list(range(args.num_range[0], args.num_range[1]+1))
-            return samples, args.prepro_file, args.num_processors, \
-                   args.scratch_directory, args.trace_executable, \
-                   args.xtv2dmx_executable
 
     # Select all samples
     elif args.all_samples is not None:
-        return args.all_samples, args.prepro_file, args.num_processors, \
-               args.scratch_directory, args.trace_executable, \
-               args.xtv2dmx_executable
+        samples = args.all_samples
+
+    # Return all the command line arguments
+    return samples, prepro_info_fullname, prepro_info_contents, \
+           args.num_processors, args.scratch_directory, \
+           args.trace_executable, args.xtv2dmx_executable
