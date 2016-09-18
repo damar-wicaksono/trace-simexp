@@ -168,3 +168,19 @@ def cmd_exists(cmd: str):
     """
     return subprocess.call("type " + cmd, shell=True, stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE) == 0
+
+
+def link_exec(exec: str, dir: str):
+    """Create a symbolic link between an executable in a designated directory
+
+    :param exec: the path to executable, either relative or absolute
+    :param dir: the directory to create the symbolic link
+    """
+    import os
+
+    # Get the absolute path
+    abs_exec = os.path.abspath(exec)
+    abs_dir = os.path.abspath(dir)
+
+    # Create symbolic link
+    subprocess.call(["ln", "-s", abs_exec, abs_dir])

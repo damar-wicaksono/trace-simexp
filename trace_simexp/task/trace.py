@@ -50,8 +50,8 @@ def run(trace_commands: list, log_files: list,
             
             # Make some description in the log file
             log_file.write("###\n")
-            log_file.write("Executing: {}\n" 
-                .format(subprocess.list2cmdline(process.args)))
+            log_file.write("Executing: {}\n"
+                           .format(subprocess.list2cmdline(process.args)))
         
         # Loop over process and wait them to finish    
         for process in processes:
@@ -66,7 +66,7 @@ def run(trace_commands: list, log_files: list,
                     info_file.writelines("Execution Failed: {}\n"
                               .format(subprocess.list2cmdline(process.args)))
                 else:
-                    info_file.writelines("Execution Successfull: {}\n"
+                    info_file.writelines("Execution Successful: {}\n"
                               .format(subprocess.list2cmdline(process.args)))
                 log_file.close()
                 processes.remove(process)
@@ -80,7 +80,7 @@ def run(trace_commands: list, log_files: list,
     info_file.close()
 
 
-def make_commands(exec_inputs: dict, tracin_filenames: list) -> list:
+def make_commands(trace_executable: str, tracin_filenames: list) -> list:
     """Create a list of shell command to run trace on the supplied set of tracin
 
     :param exec_inputs: the dictionary with parameters for execute phase
@@ -90,7 +90,7 @@ def make_commands(exec_inputs: dict, tracin_filenames: list) -> list:
     trace_commands = []
 
     for tracin_filename in tracin_filenames:
-        trace_command = [exec_inputs["trace_exec"], "-p", tracin_filename]
+        trace_command = [trace_executable, "-p", tracin_filename]
         trace_commands.append(trace_command)
 
     return trace_commands
