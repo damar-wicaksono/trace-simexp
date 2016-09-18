@@ -20,7 +20,7 @@ def get():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="%(prog)s - Pre-processing: create tracin and dirtree"
+        description="%(prog)s - trace-simexp, Preprocess: Generate TRACE inputs"
     )
 
     # Select which samples to run
@@ -113,7 +113,7 @@ def get():
     parser.add_argument(
         "-V", "--version",
         action="version",
-        version="%(prog)s (version {})" .format(__version__)
+        version="%(prog)s (trace-simexp version {})" .format(__version__)
     )
 
     # Get the command line arguments
