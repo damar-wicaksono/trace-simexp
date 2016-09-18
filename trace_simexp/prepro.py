@@ -23,8 +23,8 @@ def get_input() -> dict:
     # Read the command line arguments
     samples, base_dirname, \
         tracin_base_fullname, tracin_base_contents, \
-	dm_fullname, dm_contents, \
-	params_list_fullname, params_list_contents, \
+        dm_fullname, dm_contents, \
+        params_list_fullname, params_list_contents, \
         overwrite, info, prepro_filename = cmdln_args.prepro.get()
     
     # Get the names of directory and files
