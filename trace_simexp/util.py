@@ -2,6 +2,7 @@
 """
 
 import itertools
+import subprocess
 import numpy as np
 
 __author__ = "Damar Wicaksono"
@@ -154,3 +155,16 @@ def parse_csv(csv_file) -> np.ndarray:
     
     return output
 
+
+def cmd_exists(cmd: str):
+    """Check if a command is available in the path
+
+    **Reference:**
+    (1) Answer by `hasen`
+       stackoverflow.com/questions/377017/test-if-executable-exists-in-python
+
+    :param cmd: the command string
+    :return: (bool) True if it is in the path, False otherwise
+    """
+    return subprocess.call("type " + cmd, shell=True, stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE) == 0

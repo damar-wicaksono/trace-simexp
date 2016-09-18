@@ -1,7 +1,7 @@
 """Module to parse command line arguments in the execute phase
 """
+from .. import util
 from ..__init__ import __version__
-
 
 __author__ = "Damar Wicaksono"
 
@@ -18,7 +18,9 @@ def get():
         (str) the trace executable fullname, if not in the path
         (str) the xtv2dmx executable fullname, if not in the path
     """
+    import subprocess
     import argparse
+    import os
 
     parser = argparse.ArgumentParser(
         description="%(prog)s - trace-simexp, Execute: Run all TRACE inputs"
@@ -119,6 +121,20 @@ def get():
     prepro_info_fullname = args.prepro_info.name
     with args.prepro_info as prepro_info:
         prepro_info_contents = prepro_info.read().splitlines()
+
+    # Check if the executables exist
+    if len(args.trace_executable.split("/")) > 1:
+        if not os.path.isfile(args.trace_executable):
+            raise ValueError("TRACE executable not found!")
+    else:
+        if not util.cmd_exists(args.trace_executable):
+            raise ValueError("TRACE executable not found!")
+    if len(args.xtv2dmx_executable.split("/")) > 1:
+        if not os.path.isfile(args.xtv2dmx_executable):
+            raise ValueError("XTV2DMX executable not found!")
+    else:
+        if not util.cmd_exists(args.xtv2dmx_executable):
+            raise ValueError("XTV2DMX executable not found!")
 
     # Guard against possible user input of directory closed with "/"
     # Otherwise there would be an error for directory creation due to "//"
