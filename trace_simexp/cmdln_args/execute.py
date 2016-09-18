@@ -19,7 +19,7 @@ def get():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="trace_simexp Execute - Run the preprocessed trace inputs"
+        description="%(prog)s - trace-simexp Execution: Run all TRACE inputs"
     )
 
     # The fullname of info_file from the pre-processing phase
