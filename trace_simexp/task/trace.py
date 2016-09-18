@@ -83,7 +83,7 @@ def run(trace_commands: list, log_files: list,
 def make_commands(trace_executable: str, tracin_filenames: list) -> list:
     """Create a list of shell command to run trace on the supplied set of tracin
 
-    :param exec_inputs: the dictionary with parameters for execute phase
+    :param trace_executable: the name of trace executable
     :param tracin_filenames: the list of trace input file to be simulated
     :return: a list of trace shell command to be executed
     """
@@ -123,4 +123,3 @@ def link_xtv(scratch_dirnames: list, run_xtvs: list, scratch_xtvs: list):
             subprocess.call(["rm", "-f", run_xtv])
             
         subprocess.call(["ln", "-s", scratch_xtv, run_xtv])
-
