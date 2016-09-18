@@ -124,17 +124,21 @@ def get():
 
     # Check if the executables exist
     if len(args.trace_executable.split("/")) > 1:
+        # Given full path of TRACE exec
         if not os.path.isfile(args.trace_executable):
-            raise ValueError("TRACE executable not found!")
+            raise ValueError("The specified TRACE executable not found!")
     else:
+        # Assumed TRACE exec in path
         if not util.cmd_exists(args.trace_executable):
-            raise ValueError("TRACE executable not found!")
+            raise ValueError("The specified TRACE executable not found!")
     if len(args.xtv2dmx_executable.split("/")) > 1:
+        # Given full path of XTV2DMX exec
         if not os.path.isfile(args.xtv2dmx_executable):
-            raise ValueError("XTV2DMX executable not found!")
+            raise ValueError("The specified XTV2DMX executable not found!")
     else:
+        # Assumed XTV2DMX exec in path
         if not util.cmd_exists(args.xtv2dmx_executable):
-            raise ValueError("XTV2DMX executable not found!")
+            raise ValueError("The specified XTV2DMX executable not found!")
 
     # Guard against possible user input of directory closed with "/"
     # Otherwise there would be an error for directory creation due to "//"
