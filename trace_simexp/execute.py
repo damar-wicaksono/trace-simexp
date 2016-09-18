@@ -91,10 +91,12 @@ def run_batches(exec_inputs: dict):
     # Check if the trace_executable and xtv2dmx_executable are in the path
     if len(exec_inputs["trace_exec"].split("/")) > 1:
         trace_is_in_path = False
+        trace_exec_name = exec_inputs["trace_exec"].split("/")[-1]
     else:
         trace_is_in_path = True
     if len(exec_inputs["xtv2dmx_exec"].split("/")) > 1:
         xtv2dmx_is_in_path = False
+        xtv2dmx_exec_name = exec_inputs["xtv2dmx_exec"].split("/")[-1]
     else:
         xtv2dmx_is_in_path = True
 
@@ -136,14 +138,13 @@ def run_batches(exec_inputs: dict):
         # Create a bunch of trace input deck to be passed to the exec (no ext)
         inp_filenames = make_auxfilenames(list_iter, case_name, "")
 
-        # If TRACE executable not in the path, create a symbolic link in rundir
+        # If TRACE executable not in the path, create a symbolic link in run dir
         if trace_is_in_path:
             trace_exec = exec_inputs["trace_exec"]
         else:
             for run_dirname in run_dirnames:
                 link_exec(exec_inputs["trace_exec"], run_dirname)
-            trace_exec = "./{}" \
-                .format(exec_inputs["trace_exec"].split("/")[-1])
+            trace_exec = "./{}" .format(trace_exec_name)
 
         # Create a bunch of trace commands
         trace_commands = trace.make_commands(trace_exec, inp_filenames)
@@ -166,8 +167,16 @@ def run_batches(exec_inputs: dict):
         # Link the dmx in the scratch to the one in run directory
         xtv2dmx.link_dmx(dmx_fullnames, scratch_dmx_fullnames)
 
+        # If XTV2DMX exec. not in the path, create a symbolic link in run dir
+        if xtv2dmx_is_in_path:
+            xtv2dmx_exec = exec_inputs["trace_exec"]
+        else:
+            for run_dirname in run_dirnames:
+                link_exec(exec_inputs["xtv2dmx_exec"], run_dirname)
+            xtv2dmx_exec = "./{}" .format(xtv2dmx_exec_name)
+
         # Create bunch of xtv2dmx commands
-        xtv2dmx_commands = xtv2dmx.make_commands(exec_inputs,
+        xtv2dmx_commands = xtv2dmx.make_commands(xtv2dmx_exec,
                                                  xtv_filenames,
                                                  dmx_filenames)
 
@@ -214,10 +223,13 @@ def run_batches(exec_inputs: dict):
 
         # Collect all the symbolic link of executables (if exists)
         if not trace_is_in_path:
-            trace_links = ["{}/{}" .format(a,
-                                           exec_inputs["trace_exec"].split("/")[-1])
-                           for a in run_dirnames]
+            trace_links = ["{}/{}" .format(run_dirname, trace_exec_name)
+                           for run_dirname in run_dirnames]
             aux_files_list.append(trace_links)
+        if not xtv2dmx_is_in_path:
+            xtv2dmx_links = ["{}/{}" .format(run_dirname, xtv2dmx_exec_name)
+                             for run_dirname in run_dirnames]
+            aux_files_list.append(xtv2dmx_links)
 
         # Clean up TRACE directories
         for aux_files in aux_files_list:
