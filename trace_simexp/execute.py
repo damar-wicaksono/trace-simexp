@@ -89,10 +89,14 @@ def run_batches(exec_inputs: dict):
     from .util import make_auxfilenames
 
     # Check if the trace_executable and xtv2dmx_executable are in the path
-    if len(exec_inputs["trace_executable"].split("/")) > 1:
+    if len(exec_inputs["trace_exec"].split("/")) > 1:
         trace_is_in_path = False
-    if len(exec_inputs["xtv2dmx_executable"].split("/")) > 1:
+    else:
+        trace_is_in_path = True
+    if len(exec_inputs["xtv2dmx_exec"].split("/")) > 1:
         xtv2dmx_is_in_path = False
+    else:
+        trace_is_in_path = True
 
     num_samples = len(exec_inputs["samples"])
     case_name = exec_inputs["case_name"]
