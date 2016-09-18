@@ -96,7 +96,7 @@ def run_batches(exec_inputs: dict):
     if len(exec_inputs["xtv2dmx_exec"].split("/")) > 1:
         xtv2dmx_is_in_path = False
     else:
-        trace_is_in_path = True
+        xtv2dmx_is_in_path = True
 
     num_samples = len(exec_inputs["samples"])
     case_name = exec_inputs["case_name"]
@@ -137,13 +137,13 @@ def run_batches(exec_inputs: dict):
         inp_filenames = make_auxfilenames(list_iter, case_name, "")
 
         # If TRACE executable not in the path, create a symbolic link in rundir
-        if not trace_is_in_path:
+        if trace_is_in_path:
+            trace_exec = exec_inputs["trace_exec"]
+        else:
             for run_dirname in run_dirnames:
                 link_exec(exec_inputs["trace_exec"], run_dirname)
             trace_exec = "./{}" \
                 .format(exec_inputs["trace_exec"].split("/")[-1])
-        else:
-            trace_exec = exec_inputs["trace_exec"]
 
         # Create a bunch of trace commands
         trace_commands = trace.make_commands(trace_exec, inp_filenames)
