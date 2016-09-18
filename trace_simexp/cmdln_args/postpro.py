@@ -55,7 +55,7 @@ def get():
     parser.add_argument(
         "-V", "--version",
         action="version",
-        version="%(prog)s (trace-simexp version{})" .format(__version__)
+        version="%(prog)s (trace-simexp version {})" .format(__version__)
     )
 
     # Get the command line arguments
