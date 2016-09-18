@@ -1,5 +1,7 @@
 """Module to parse command line arguments in the execute phase
 """
+from ..__init__ import __version__
+
 
 __author__ = "Damar Wicaksono"
 
@@ -19,7 +21,7 @@ def get():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="%(prog)s - trace-simexp Execution: Run all TRACE inputs"
+        description="%(prog)s - trace-simexp, Execute: Run all TRACE inputs"
     )
 
     # The fullname of info_file from the pre-processing phase
@@ -88,6 +90,13 @@ def get():
         type=str,
         help="The xtv2dmx executable",
         required=True
+    )
+
+    # Print the version
+    parser.add_argument(
+        "-V", "--version",
+        action="version",
+        version="%(prog)s (trace-simexp version {})" .format(__version__)
     )
 
     # Get the command line arguments
