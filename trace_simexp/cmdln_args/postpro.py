@@ -1,5 +1,6 @@
 """Module to parse command line arguments in post-processing phase
 """
+from ..__init__ import __version__
 
 __author__ = "Damar Wicaksono"
 
@@ -14,7 +15,7 @@ def get():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="trace_simexp postpro - Postprocess the TRACE xtv/dmx"
+        description="%(prog)s - trace-simexp Postpro: Postprocess the TRACE dmx"
     )
 
     # The fullname of info_file from the
@@ -48,6 +49,13 @@ def get():
         help="The number of available processors",
         default=1,
         required=False
+    )
+
+    # Print version
+    parser.add_argument(
+        "-V", "--version",
+        action="version",
+        version="%(prog)s (trace-simexp version{})" .format(__version__)
     )
 
     # Get the command line arguments
