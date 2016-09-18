@@ -23,8 +23,6 @@ def create_iter(num_samples: int, num_processors: int) -> itertools.islice:
         of batch
     :returns: (iterator) an iterator in batch size
     """
-    import itertools
-
     iterable = range(0, num_samples)
     source_iter = iter(iterable)
     while True:
@@ -87,8 +85,6 @@ def get_hostname() -> str:
 
     :return: (str) of the hostname
     """
-    import subprocess
-
     p = subprocess.Popen(["hostname"], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
 
@@ -129,6 +125,7 @@ def query_yes_no(question, default="yes"):
             sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
 
+
 def parse_csv(csv_file) -> np.ndarray:
     """Parse a csv file, sniff the actual delimiter of the file
 
@@ -141,12 +138,10 @@ def parse_csv(csv_file) -> np.ndarray:
     :param csv_file: the file of the csv file in string
     :return: a numpy array
     """
-    #import csv
     import re
     
     output = list()
 
-    #with open(csv_filename, "r") as csv_file:
     lines = csv_file.readlines()
     for line in lines:
         output.append(re.split("\t|,| |;", line))
