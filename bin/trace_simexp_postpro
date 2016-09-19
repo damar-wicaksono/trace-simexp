@@ -16,9 +16,6 @@ def main():
     # Commence the conversion
     postpro.dmx2csv(postpro_inputs)
 
-    # Revert back to execute phase state
-    postpro.reset(postpro_inputs)
-
 
 if __name__ == "__main__":
     main()
