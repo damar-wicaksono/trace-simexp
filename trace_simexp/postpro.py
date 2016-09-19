@@ -134,7 +134,7 @@ def reset(postpro_inputs: dict):
     for i, run_dirname in enumerate(run_dirnames):
         csv_filename = "{}-run_{}-{}.csv" .format(postpro_inputs["case_name"],
                                                   postpro_inputs["samples"][i],
-                                                  postpro_inputs["xtv_vars_name"])
+                                                  postpro_inputs["trace_variables_name"])
         csv_fullname = "{}/{}" .format(run_dirname, csv_filename)
         csv_fullnames.append(csv_fullname)
 

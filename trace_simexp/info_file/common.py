@@ -32,7 +32,7 @@ def make_filename(inputs: dict, flag: str) -> str:
 
     # if postpro.info, additional id for list of graphic variable names
     if flag == "postpro":
-        info_file = "{}-{}.info" .format(info_file, inputs["xtv_vars_name"])
+        info_file = "{}-{}.info" .format(info_file, inputs["trace_variables_name"])
     else:
         info_file = "{}.info" .format(info_file)
 

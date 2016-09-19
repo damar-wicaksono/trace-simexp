@@ -90,7 +90,7 @@ def write(inputs: dict, info_filename: str):
         # List of Graphic Variables Files
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
                              .format(header[4], "->",
-                                     inputs["xtv_vars_fullname"]))
+                                     inputs["trace_variables_fullname"]))
 
         # List of Graphic Variables
         info_file.writelines("{:<30s}{:3s}\n" .format(header[5], "->"))

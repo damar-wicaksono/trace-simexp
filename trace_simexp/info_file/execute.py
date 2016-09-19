@@ -21,9 +21,9 @@ def read(exec_info_contents: list):
             samples = []
             i = num_line + 1
             while True:
-                if "***" in info_lines[i]:
+                if "***" in exec_info_contents[i]:
                     break
-                samples.extend([int(_) for _ in info_lines[i].split()])
+                samples.extend([int(_) for _ in exec_info_contents[i].split()])
                 i += 1
 
     return prepro_info, samples

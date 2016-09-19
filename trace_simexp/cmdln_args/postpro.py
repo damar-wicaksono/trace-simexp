@@ -64,11 +64,11 @@ def get():
     # Read the files content into list
     exec_info_fullname = args.exec_info.name
     with args.exec_info as exec_info:
-        exec_info_contents = exec_info().read().splitlines()
+        exec_info_contents = exec_info.read().splitlines()
     trace_variables_fullname = args.trace_variables.name
     with args.trace_variables as trace_variables:
         trace_variables_contents = trace_variables.read().splitlines()
 
     return exec_info_fullname, exec_info_contents, \
-           trace_variables_fullname, trace_variables_fullname, \
+           trace_variables_fullname, trace_variables_contents, \
            args.aptplot_executable, args.num_processors
