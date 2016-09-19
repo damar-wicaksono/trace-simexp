@@ -21,7 +21,7 @@ def get():
     # The fullname of info_file from the
     parser.add_argument(
         "-exec", "--exec_info",
-        type=str,
+        type=argparse.FileType("rt"),
         help="The execution phase info file",
         required=True
     )
@@ -29,7 +29,7 @@ def get():
     # The list of trace variables to be extraced
     parser.add_argument(
         "-vars", "--trace_variables",
-        type=str,
+        type=argparse.FileType("rt"),
         help="The list of TRACE variables file",
         required=True
     )
@@ -61,5 +61,14 @@ def get():
     # Get the command line arguments
     args = parser.parse_args()
 
-    return args.exec_info, args.trace_variables, args.aptplot_executable, \
-        args.num_processors
+    # Read the files content into list
+    exec_info_fullname = args.exec_info.name
+    with args.exec_info as exec_info:
+        exec_info_contents = exec_info().read().splitlines()
+    trace_variables_fullname = args.trace_variables.name
+    with args.trace_variables as trace_variables:
+        trace_variables_contents = trace_variables.read().splitlines()
+
+    return exec_info_fullname, exec_info_contents, \
+           trace_variables_fullname, trace_variables_fullname, \
+           args.aptplot_executable, args.num_processors

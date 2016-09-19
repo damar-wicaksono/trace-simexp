@@ -4,17 +4,14 @@
 __author__ = "Damar Wicaksono"
 
 
-def read(info_filename: str):
-    """Read the exec.info file produced in the execution phase
+def read(exec_info_contents: list):
+    """Read the exec info file produced in the execution phase
 
-    :param info_filename: (str) the fullname of the exec.info file
+    :param exec_info_contents: (str) the fullname of the exec.info file
+    :return: (str) the fullname of prepro info file
+        (int) the number of samples in the exec info file
     """
-
-    # Read file
-    with open(info_filename, "rt") as info_file:
-        info_lines = info_file.read().splitlines()
-
-    for num_line, line in enumerate(info_lines):
+    for num_line, line in enumerate(exec_info_contents):
 
         if "prepro.info Filename" in line:
             prepro_info = line.split("-> ")[-1].strip()

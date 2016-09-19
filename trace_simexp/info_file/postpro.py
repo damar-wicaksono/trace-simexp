@@ -69,11 +69,13 @@ def write(inputs: dict, info_filename: str):
 
         # prepro.info filename
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[0], "->", inputs["prepro_info"]))
+                             .format(header[0], "->",
+                                     inputs["prepro_info_fullname"]))
 
         # exec.info filename
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[1], "->", inputs["exec_info"]))
+                             .format(header[1], "->",
+                                     inputs["exec_info_fullname"]))
 
         # APTPlot Executable
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
@@ -81,13 +83,14 @@ def write(inputs: dict, info_filename: str):
 
         # Number of Processors and hostname
         info_file.writelines("{:<30s}{:3s}{:<3d}({})\n"
-                             .format(header[3], "->", inputs["num_procs"],
+                             .format(header[3], "->",
+                                     inputs["num_procs"],
                                      inputs["hostname"]))
 
         # List of Graphic Variables Files
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
                              .format(header[4], "->",
-                                     inputs["xtv_vars_file"]))
+                                     inputs["xtv_vars_fullname"]))
 
         # List of Graphic Variables
         info_file.writelines("{:<30s}{:3s}\n" .format(header[5], "->"))
