@@ -19,7 +19,7 @@ def get_input():
 
     # Get command line arguments
     exec_info_fullname, exec_info_contents, \
-    trace_variables_fullname, trace_variables_contents,\
+    xtv_vars_fullname, xtv_vars_contents,\
     aptplot_exec, num_procs, postpro_filename = cmdln_args.postpro.get()
 
     # Read exec.info file
@@ -34,10 +34,10 @@ def get_input():
         info_file.prepro.read(prepro_info_contents)
 
     # Read the list of TRACE variables name
-    xtv_vars = aptscript.read(trace_variables_contents)
+    xtv_vars = aptscript.read(xtv_vars_contents)
 
     # Extract the name of the list of xtv variables file
-    trace_variables_name = trace_variables_fullname.split("/")[-1].split(".")[0]
+    xtv_vars_name = xtv_vars_fullname.split("/")[-1].split(".")[0]
 
     # Get the host name
     hostname = util.get_hostname()
@@ -45,8 +45,8 @@ def get_input():
     # Combine all parameters in a python dictionary
     postpro_inputs = {"exec_info_fullname": exec_info_fullname,
                       "exec_info_contents": exec_info_contents,
-                      "trace_variables_fullname": trace_variables_fullname,
-                      "trace_variables_name": trace_variables_name,
+                      "xtv_vars_fullname": xtv_vars_fullname,
+                      "xtv_vars_name": xtv_vars_name,
                       "xtv_vars": xtv_vars,
                       "aptplot_exec": aptplot_exec,
                       "num_procs": num_procs,
@@ -105,7 +105,7 @@ def dmx2csv(postpro_inputs: dict):
         # Execute the dmx commands
         dmx2csv.run(postpro_inputs["aptplot_exec"],
                     postpro_inputs["xtv_vars"],
-                    postpro_inputs["trace_variables_name"],
+                    postpro_inputs["xtv_vars_name"],
                     run_names, run_dirnames, 
                     postpro_inputs["postpro_info"])
 
@@ -129,9 +129,10 @@ def reset(postpro_inputs: dict):
                                  False)
 
     for i, run_dirname in enumerate(run_dirnames):
-        csv_filename = "{}-run_{}-{}.csv" .format(postpro_inputs["case_name"],
-                                                  postpro_inputs["samples"][i],
-                                                  postpro_inputs["trace_variables_name"])
+        csv_filename = "{}-run_{}-{}.csv" \
+            .format(postpro_inputs["case_name"],
+                    postpro_inputs["samples"][i],
+                    postpro_inputs["xtv_vars_name"])
         csv_fullname = "{}/{}" .format(run_dirname, csv_filename)
         csv_fullnames.append(csv_fullname)
 

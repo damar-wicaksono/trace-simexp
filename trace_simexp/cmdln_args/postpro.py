@@ -28,7 +28,7 @@ def get():
 
     # The list of trace variables to be extraced
     parser.add_argument(
-        "-vars", "--trace_variables",
+        "-vars", "--xtv_variables",
         type=argparse.FileType("rt"),
         help="The list of TRACE variables file",
         required=True
@@ -75,14 +75,14 @@ def get():
     exec_info_fullname = args.exec_file.name
     with args.exec_file as exec_file:
         exec_info_contents = exec_file.read().splitlines()
-    trace_variables_fullname = args.trace_variables.name
-    with args.trace_variables as trace_variables:
-        trace_variables_contents = trace_variables.read().splitlines()
+    xtv_vars_fullname = args.xtv_variables.name
+    with args.xtv_variables as xtv_vars_file:
+        xtv_vars_contents = xtv_vars_file.read().splitlines()
 
     # Check the validity of the number of processors
     if args.num_processors <= 0:
         raise ValueError("The number of processors must be > 0")
 
     return exec_info_fullname, exec_info_contents, \
-           trace_variables_fullname, trace_variables_contents, \
+           xtv_vars_fullname, xtv_vars_contents, \
            args.aptplot_executable, args.num_processors, args.postpro_file
