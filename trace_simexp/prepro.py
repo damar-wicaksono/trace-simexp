@@ -12,7 +12,6 @@ def get_input() -> dict:
     Sources of inputs are: command line arguments, list of parameters file,
     trace base input, and design matrix file
 
-    :param info_filename: the string of prepro.info file
     :return: All the inputs required for pre-processing phase in a dictionary
     """
     import numpy as np
@@ -22,28 +21,30 @@ def get_input() -> dict:
 
     # Read the command line arguments
     samples, base_dirname, \
-        tracin_base_file, dm_file, params_list_file, \
+        tracin_base_fullname, tracin_base_contents, \
+        dm_fullname, dm_contents, \
+        params_list_fullname, params_list_contents, \
         overwrite, info, prepro_filename = cmdln_args.prepro.get()
     
     # Get the names of directory and files
     base_name = base_dirname.split("/")[-1]
-    case_name = tracin_base_file.name.split("/")[-1].split(".")[0]
-    dm_name = dm_file.name.split("/")[-1].split(".")[0]
-    params_list_name = params_list_file.name.split("/")[-1].split(".")[0]
+    case_name = tracin_base_fullname.split("/")[-1].split(".")[0]
+    dm_name = dm_fullname.split("/")[-1].split(".")[0]
+    params_list_name = params_list_fullname.split("/")[-1].split(".")[0]
 
     # Construct the dictionary
     inputs = {
         "samples": samples,
         "base_dir": base_dirname,
         "base_name": base_name,
-        "tracin_base_file": tracin_base_file,
-        "tracin_base_fullname": tracin_base_file.name,
+        "tracin_base_contents": tracin_base_contents,
+        "tracin_base_fullname": tracin_base_fullname,
         "case_name": case_name,
-        "dm_file": dm_file,
-        "dm_fullname": dm_file.name,
+        "dm_contents": dm_contents,
+        "dm_fullname": dm_fullname,
         "dm_name": dm_name,
-        "params_list_file": params_list_file,
-        "params_list_fullname": params_list_file.name,
+        "params_list_contents": params_list_contents,
+        "params_list_fullname": params_list_fullname,
         "params_list_name": params_list_name,
         "overwrite": overwrite,
         "info": info
@@ -54,7 +55,7 @@ def get_input() -> dict:
 
     # Update samples if all samples are asked
     if isinstance(inputs["samples"], bool) and inputs["samples"]:
-        num_samples = util.parse_csv(inputs["dm_file"]).shape[0]
+        num_samples = inputs["dm_contents"].shape[0]
         inputs["samples"] = list(range(1, num_samples+1))
 
     # Write to a file the summary of pre-processing
@@ -67,15 +68,15 @@ def get_input() -> dict:
     return inputs
 
 
-def read_params(params_list_file,
+def read_params(params_list_contents: list,
                 info_filename: str,
-                tracin_filename:str,
+                tracin_base_contents: list,
                 comment_char: str="#") -> dict:
     """Read list of parameters file and create a python dictionary out of it
 
     The nominal parameter values are read from the base tracin file
 
-    :param param_list_file: (file) list of parameters file
+    :param param_list_file: (list) the contenst of list of parameters file
     :param info_filename: (str) the filename string for info_file
     :param tracin_filename: (str) the filename string for base tracin file
     :param comment_char: (str) the character signifying comment line in the file
@@ -89,18 +90,14 @@ def read_params(params_list_file,
     from .paramfile import comp
     from . import tracin
 
-    # Reset file back to the first line
-    params_list_file.seek(0)
-
     # the list of supported component type
     COMPONENTS = ["pipe", "vessel", "power", "fill", "break"]
 
     # the list of dictionary of parameters list
     params_dict = list()
 
-    # Open and read list of parameters file
-    #with open(param_list_file, "rt") as params_file:
-    for line in params_list_file.readlines():
+    # Loop over the list elements
+    for line in params_list_contents:
         if not line.startswith(comment_char):
             line = line.strip()
             # the keyword for data type is the second entry in each line
@@ -130,15 +127,14 @@ def read_params(params_list_file,
     common.append_info(params_dict, info_filename)
 
     # Get the nominal values of parameter from tracin and update params_dict
-    tracin.get_nominal_values(tracin_filename, params_dict)
+    tracin.get_nominal_values(tracin_base_contents, params_dict)
 
     return params_dict
 
 
 def create_dirtree(prepro_inputs: dict,
                    params_dict: dict,
-                   tracin_template: str,
-                   dm_array: np.ndarray):
+                   tracin_template: str):
     """Create a directory structure for the simulation campaign
 
     :param params_dict: (list of dict) the list of parameters
@@ -166,6 +162,8 @@ def create_dirtree(prepro_inputs: dict,
     base_name = prepro_inputs["base_name"]
     # the overwrite directive
     overwrite = prepro_inputs["overwrite"]
+    # the design matrix array
+    dm_array = prepro_inputs["dm_contents"]
 
     # Create directory path name
     case_name_dir = "./{}/{}" .format(base_name, case_name)
