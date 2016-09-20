@@ -18,9 +18,8 @@ def get():
         (str) the trace executable fullname, if not in the path
         (str) the xtv2dmx executable fullname, if not in the path
     """
-    import subprocess
-    import argparse
     import os
+    import argparse
 
     parser = argparse.ArgumentParser(
         description="%(prog)s - trace-simexp, Execute: Run all TRACE inputs"
