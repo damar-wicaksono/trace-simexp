@@ -82,9 +82,9 @@ def dmx2csv(postpro_inputs: dict):
     from .task import dmx2csv
 
     # Check if the aptplot_exec is in the path
-    if len(exec_inputs["aptplot_exec"].split("/") > 1):
+    if len(postpro_inputs["aptplot_exec"].split("/")) > 1:
         aptplot_is_in_path = False
-        aptplot_exec_name = exec_inputs["aptplot_exec"].split("/")[-1]
+        aptplot_exec_name = postpro_inputs["aptplot_exec"].split("/")[-1]
     else:
         aptplot_is_in_path = True
 
@@ -113,11 +113,11 @@ def dmx2csv(postpro_inputs: dict):
 
         # If AptPlot executable not in path, create a symbolic link in run dir
         if aptplot_is_in_path:
-            aptplot_exec = exec_inputs["aptplot_exec"]
+            aptplot_exec = postpro_inputs["aptplot_exec"]
         else:
             for run_dirname in run_dirnames:
-                link_exec(exec_inputs["aptplot_exec"], run_dirname)
-            aptplot_exec = "./" .format(aptplot_exec_name)
+                link_exec(postpro_inputs["aptplot_exec"], run_dirname)
+            aptplot_exec = "./{}" .format(aptplot_exec_name)
 
         # Execute the dmx commands
         dmx2csv.run(aptplot_exec,
