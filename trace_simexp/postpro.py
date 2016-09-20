@@ -61,9 +61,10 @@ def get_input():
 
     # Write to a file the summary of execution phase parameters
     if postpro_filename is None:
-        postpro_filename = info_file.common.make_filename(inputs, "postpro")
+        postpro_filename = info_file.common.make_filename(postpro_inputs, 
+                                                          "postpro")
 
-    info_file.postpro.write(postpro_inputs, info_filename)
+    info_file.postpro.write(postpro_inputs, postpro_filename)
     postpro_inputs["info_file"] = postpro_filename
 
     return postpro_inputs
@@ -86,7 +87,7 @@ def dmx2csv(postpro_inputs: dict):
     for batch_iter in create_iter(num_samples, postpro_inputs["num_procs"]):
 
         # Append the exec.info
-        info_file = open(postpro_inputs["postpro_info"], "a")
+        info_file = open(postpro_inputs["info_file"], "a")
         info_file.writelines("*** Batch Execution - {:5d} ***\n"
                              .format(batch_int))
         info_file.close()
@@ -107,7 +108,7 @@ def dmx2csv(postpro_inputs: dict):
                     postpro_inputs["xtv_vars"],
                     postpro_inputs["xtv_vars_name"],
                     run_names, run_dirnames, 
-                    postpro_inputs["postpro_info"])
+                    postpro_inputs["info_file"])
 
 
 def reset(postpro_inputs: dict):
@@ -140,7 +141,7 @@ def reset(postpro_inputs: dict):
     if query_yes_no("Delete all CSV files?", default="no"):
 
         # Append the info file
-        with open(postpro_inputs["postpro_info"], "a") as info_file:
+        with open(postpro_inputs["info_file"], "a") as info_file:
             info_file.writelines("***Removing csv files***\n")
             for csv_file in csv_fullnames:
                 if os.path.isfile(csv_file):
