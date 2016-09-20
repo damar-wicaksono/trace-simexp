@@ -12,7 +12,6 @@ def get_input() -> dict:
     Sources of inputs are: command line arguments, list of parameters file,
     trace base input, and design matrix file
 
-    :param info_filename: the string of prepro.info file
     :return: All the inputs required for pre-processing phase in a dictionary
     """
     import numpy as np
