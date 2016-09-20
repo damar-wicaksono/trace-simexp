@@ -10,3 +10,5 @@ logfiles/
 *.info
 *.log
 *.__*
+# Sphinx Build Folder
+docs/build
