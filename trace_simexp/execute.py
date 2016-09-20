@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def get_input(info_filename: str=None) -> dict:
+def get_input() -> dict:
     """Get the command line arguments, read the info file, and construct dict()
 
     The source of inputs are: command line arguments and prepro.info file
@@ -16,8 +16,10 @@ def get_input(info_filename: str=None) -> dict:
     from . import util
 
     # Read the command line arguments
-    samples, prepro_info_fullname, prepro_info_contents, num_procs, \
-        scratch_dir, trace_exec, xtv2dmx_exec = cmdln_args.execute.get()
+    samples, \
+    prepro_info_fullname, prepro_info_contents, \
+    num_procs, scratch_dir, \
+    trace_exec, xtv2dmx_exec, exec_filename = cmdln_args.execute.get()
 
     # Read the pre-processing phase info file
     base_dir, case_name, params_list_name, dm_name, avail_samples = \
@@ -50,16 +52,12 @@ def get_input(info_filename: str=None) -> dict:
         "hostname": hostname
     }
 
-    # todo: Check the validity of the inputs
-
     # Write to a file the summary of execution phase parameters
-    if info_filename is not None:
-        info_file.execute.write(exec_inputs, info_filename)
-        exec_inputs["exec_info"] = info_filename
-    else:
-        info_filename = info_file.common.make_filename(exec_inputs, "exec")
-        info_file.execute.write(exec_inputs, info_filename)
-        exec_inputs["exec_info"] = info_filename
+    if exec_filename is None:
+        exec_filename = info_file.common.make_filename(exec_inputs, "exec")
+
+    info_file.execute.write(exec_inputs, exec_filename)
+    exec_inputs["info_file"] = info_filename
 
     return exec_inputs
 
@@ -106,7 +104,7 @@ def run_batches(exec_inputs: dict):
     for batch_iter in create_iter(num_samples, exec_inputs["num_procs"]):
 
         # Append the exec.info
-        info_file = open(exec_inputs["exec_info"], "a")
+        info_file = open(exec_inputs["info_file"], "a")
         info_file.writelines("*** Batch Execution - {:5d} ***\n"
                              .format(batch_int))
         info_file.close()
@@ -154,7 +152,7 @@ def run_batches(exec_inputs: dict):
 
         # Execute TRACE commands
         trace.run(trace_commands, log_fullnames,
-                  run_dirnames, exec_inputs["exec_info"])
+                  run_dirnames, exec_inputs["info_file"])
 
         # Create bunch of dmx files
         dmx_filenames = make_auxfilenames(list_iter, case_name, ".dmx")
@@ -182,7 +180,7 @@ def run_batches(exec_inputs: dict):
 
         # Execute xtv2dmx commands
         xtv2dmx.run(xtv2dmx_commands, log_fullnames,
-                    run_dirnames, exec_inputs["exec_info"])
+                    run_dirnames, exec_inputs["info_file"])
 
         # Start to clean up things
         aux_files_list = []
@@ -267,11 +265,12 @@ def reset(exec_inputs: dict):
     if query_yes_no("Revert back to pre-pro state?", default="no"):
 
         # Append the info file
-        with open(exec_inputs["exec_info"], "a") as info_file:
+        with open(exec_inputs["info_file"], "a") as info_file:
             info_file.writelines("***Reverting back to Pre-pro***\n")
             for i, dmx_fullname in enumerate(dmx_fullnames):
                 if os.path.islink(dmx_fullname):
-                    info_file.writelines("Reverting: {}\n" .format(run_dirnames[i]))
+                    info_file.writelines("Reverting: {}\n"
+                                         .format(run_dirnames[i]))
 
         # Clean scratch dirs
         clean.rm_files(scratch_dirnames)

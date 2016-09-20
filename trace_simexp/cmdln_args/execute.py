@@ -93,6 +93,15 @@ def get():
         required=True
     )
 
+    # The info filename
+    parser.add_argument(
+        "-exec_info", "--exec_filename",
+        type=str,
+        help="The execute info filename",
+        required=False,
+        default=None
+    )
+
     # Print the version
     parser.add_argument(
         "-V", "--version",
@@ -173,4 +182,4 @@ def get():
     # Return all the command line arguments
     return samples, prepro_info_fullname, prepro_info_contents, \
            args.num_processors, scratch_directory, \
-           args.trace_executable, args.xtv2dmx_executable
+           args.trace_executable, args.xtv2dmx_executable, args.exec_filename
