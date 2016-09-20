@@ -125,6 +125,11 @@ def run_batches(exec_inputs: dict):
         log_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                log_filenames)]
 
+        # Create bunch of xtv files
+        xtv_filenames = make_auxfilenames(list_iter, case_name, ".xtv")
+        xtv_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
+                                                               xtv_filenames)]
+
         if exec_inputs["scratch_dir"] is not None:
             # If scratch directory specified make the symbolic links
             # Create bunch of scratch directory names
@@ -135,11 +140,6 @@ def run_batches(exec_inputs: dict):
             # Link the xtv in the scratch
             trace.link_xtv(scratch_dirnames, xtv_fullnames,
                            scratch_xtv_fullnames)
-
-        # Create bunch of xtv files
-        xtv_filenames = make_auxfilenames(list_iter, case_name, ".xtv")
-        xtv_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
-                                                               xtv_filenames)]
 
         # Create a bunch of trace input deck to be passed to the exec (no ext)
         inp_filenames = make_auxfilenames(list_iter, case_name, "")

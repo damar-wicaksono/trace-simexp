@@ -150,10 +150,13 @@ def get():
 
     # Guard against possible user input of directory closed with "/"
     # Otherwise there would be an error for directory creation due to "//"
-    scratch_directory = args.scratch_directory.split("/")
-    if scratch_directory[-1] == "":
-        scratch_directory.pop()
-    scratch_directory = "/".join(scratch_directory)
+    if args.scratch_directory is not None:
+        scratch_directory = args.scratch_directory.split("/")
+        if scratch_directory[-1] == "":
+            scratch_directory.pop()
+        scratch_directory = "/".join(scratch_directory)
+    else:
+        scratch_directory = None
 
     # Sample has to be specified
     # Select individual samples

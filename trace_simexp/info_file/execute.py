@@ -67,8 +67,10 @@ def write(inputs: dict, info_filename: str):
                              .format(header[2], "->", inputs["xtv2dmx_exec"]))
 
         # Scratch Directory Name
-        info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[3], "->", inputs["scratch_dir"]))
+        if inputs["scratch_dir"] is not None:
+            info_file.writelines("{:<30s}{:3s}{:<30s}\n"
+                                 .format(header[3], "->", 
+                                         inputs["scratch_dir"]))
 
         # Number of Processors and hostname
         info_file.writelines("{:<30s}{:3s}{:<3d}({})\n"
