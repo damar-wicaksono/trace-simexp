@@ -72,7 +72,7 @@ def write(inputs: dict, info_filename: str):
 def read(prepro_info_contents: list):
     """Read the info file produced in the pre-processing phase
 
-    :param info_fullname: (list) the contents of the pre-pro info file
+    :param prepro_info_contents: (list) the contents of the prepro info file
     :return: (str) the base directory name
         (str) the base case name
         (str) the list of parameters filename, without extension, without path
