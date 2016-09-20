@@ -69,6 +69,10 @@ def get():
     with args.trace_variables as trace_variables:
         trace_variables_contents = trace_variables.read().splitlines()
 
+    # Check the validity of the number of processors
+    if args.num_processors <= 0:
+        raise ValueError("The number of processors must be > 0")
+
     return exec_info_fullname, exec_info_contents, \
            trace_variables_fullname, trace_variables_contents, \
            args.aptplot_executable, args.num_processors
