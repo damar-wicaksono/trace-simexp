@@ -1,5 +1,7 @@
 """Module to parse command line arguments in post-processing phase
 """
+from .. import util
+from ..__init__ import __version__
 
 __author__ = "Damar Wicaksono"
 
@@ -11,24 +13,25 @@ def get():
         (str) the list of TRACE variables file, fullname
         (str) the aptplot executable, fullname if not in the path
     """
+    import os
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="trace_simexp postpro - Postprocess the TRACE xtv/dmx"
+        description="%(prog)s - trace-simexp Postpro: Postprocess the TRACE dmx"
     )
 
     # The fullname of info_file from the
     parser.add_argument(
-        "-exec", "--exec_info",
-        type=str,
+        "-exec", "--exec_file",
+        type=argparse.FileType("rt"),
         help="The execution phase info file",
         required=True
     )
 
     # The list of trace variables to be extraced
     parser.add_argument(
-        "-vars", "--trace_variables",
-        type=str,
+        "-vars", "--xtv_variables",
+        type=argparse.FileType("rt"),
         help="The list of TRACE variables file",
         required=True
     )
@@ -50,8 +53,48 @@ def get():
         required=False
     )
 
+    # The info filename
+    parser.add_argument(
+        "-postpro", "--postpro_file",
+        type=str,
+        help="The post-process info filename "
+             "(by default, will be created in the current working directory)",
+        required=False,
+        default=None
+    )
+
+    # Print version
+    parser.add_argument(
+        "-V", "--version",
+        action="version",
+        version="%(prog)s (trace-simexp version {})" .format(__version__)
+    )
+
     # Get the command line arguments
     args = parser.parse_args()
 
-    return args.exec_info, args.trace_variables, args.aptplot_executable, \
-        args.num_processors
+    # Read the files content into list
+    exec_info_fullname = args.exec_file.name
+    with args.exec_file as exec_file:
+        exec_info_contents = exec_file.read().splitlines()
+    xtv_vars_fullname = args.xtv_variables.name
+    with args.xtv_variables as xtv_vars_file:
+        xtv_vars_contents = xtv_vars_file.read().splitlines()
+
+    # Check if the executable for aptplot exist and valid
+    if len(args.aptplot_executable.split("/")) > 1:
+        # Given full path of AptPlot exec
+        if not os.path.isfile(args.aptplot_executable):
+            raise ValueError("The specified AptPlot executable not found!")
+    else:
+        # Assumed Aptplot exec in path
+        if not util.cmd_exists(args.aptplot_executable):
+            raise ValueError("The specified AptPlot executable not found!")
+
+    # Check the validity of the number of processors
+    if args.num_processors <= 0:
+        raise ValueError("The number of processors must be > 0")
+
+    return exec_info_fullname, exec_info_contents, \
+           xtv_vars_fullname, xtv_vars_contents, \
+           args.aptplot_executable, args.num_processors, args.postpro_file
