@@ -57,7 +57,7 @@ def get_input() -> dict:
         exec_filename = info_file.common.make_filename(exec_inputs, "exec")
 
     info_file.execute.write(exec_inputs, exec_filename)
-    exec_inputs["info_file"] = info_filename
+    exec_inputs["info_file"] = exec_filename
 
     return exec_inputs
 
