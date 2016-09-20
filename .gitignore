@@ -4,7 +4,7 @@ simulation/febaTrans216
 simulation/febaTrans214
 logfiles/
 # Pycharm Project file
-.idea/
+.idea/workspace.xml
 # Egg package
 *.egg-info/
 *.info
