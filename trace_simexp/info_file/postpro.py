@@ -47,8 +47,8 @@ def write(inputs: dict, info_filename: str):
 
     header = ["prepro.info Name", "exec.info Name",
               "APTPlot Executable", "Number of Processors (Host)",
-              "List of XTV Variables Files", "List of XTV Variables",
-              "Samples to Post-processed"]
+              "List of XTV Variables Name", "List of XTV Variables File", 
+              "List of XTV Variables", "Samples to Post-processed"]
 
     with open(info_filename, "wt") as info_file:
 
@@ -79,13 +79,18 @@ def write(inputs: dict, info_filename: str):
                                      inputs["num_procs"],
                                      inputs["hostname"]))
 
-        # List of Graphic Variables Files
+        # List of Graphic Variables Name
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
                              .format(header[4], "->",
+                                     inputs["xtv_vars_name"]))
+
+        # List of Graphic Variables File
+        info_file.writelines("{:<30s}{:3s}{:<30s}\n"
+                             .format(header[5], "->",
                                      inputs["xtv_vars_fullname"]))
 
         # List of Graphic Variables
-        info_file.writelines("{:<30s}{:3s}\n" .format(header[5], "->"))
+        info_file.writelines("{:<30s}{:3s}\n" .format(header[6], "->"))
 
         for i in range(int(len(inputs["xtv_vars"])/3)):
             offset1 = i*3
@@ -105,7 +110,7 @@ def write(inputs: dict, info_filename: str):
             info_file.writelines("\n")
 
         # Samples to Run
-        info_file.writelines("{:<30s}{:3s}\n" .format(header[6], "->"))
+        info_file.writelines("{:<30s}{:3s}\n" .format(header[7], "->"))
 
         for i in range(int(len(inputs["samples"])/10)):
             offset1 = i*10
