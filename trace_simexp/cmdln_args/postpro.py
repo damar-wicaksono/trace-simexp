@@ -53,7 +53,7 @@ def get():
 
     # The info filename
     parser.add_argument(
-        "-postpro_info", "--postpro_filename",
+        "-postpro", "--postpro_file",
         type=str,
         help="The post-process info filename "
              "(by default, will be created in the current working directory)",
@@ -85,4 +85,4 @@ def get():
 
     return exec_info_fullname, exec_info_contents, \
            trace_variables_fullname, trace_variables_contents, \
-           args.aptplot_executable, args.num_processors, args.postpro_filename
+           args.aptplot_executable, args.num_processors, args.postpro_file
