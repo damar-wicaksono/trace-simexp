@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def get_input(info_filename: str=None):
+def get_input():
     """Get all the inputs for post-processing phase of the simulation experiment
 
     The source of inputs are: command line arguments, exec.info file,
@@ -20,7 +20,7 @@ def get_input(info_filename: str=None):
     # Get command line arguments
     exec_info_fullname, exec_info_contents, \
     trace_variables_fullname, trace_variables_contents,\
-    aptplot_exec, num_procs = cmdln_args.postpro.get()
+    aptplot_exec, num_procs, postpro_filename = cmdln_args.postpro.get()
 
     # Read exec.info file
     prepro_info_fullname, samples = info_file.execute.read(exec_info_contents)
@@ -60,14 +60,11 @@ def get_input(info_filename: str=None):
                       }
 
     # Write to a file the summary of execution phase parameters
-    if info_filename is not None:
-        info_file.postpro.write(postpro_inputs, info_filename)
-        postpro_inputs["postpro_info"] = info_filename
-    else:
-        info_filename = info_file.common.make_filename(postpro_inputs,
-                                                       "postpro")
-        info_file.postpro.write(postpro_inputs, info_filename)
-        postpro_inputs["postpro_info"] = info_filename
+    if postpro_filename is None:
+        postpro_filename = info_file.common.make_filename(inputs, "postpro")
+
+    info_file.postpro.write(postpro_inputs, info_filename)
+    postpro_inputs["info_file"] = postpro_filename
 
     return postpro_inputs
 
