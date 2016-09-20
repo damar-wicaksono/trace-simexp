@@ -80,6 +80,7 @@ def dmx2csv(postpro_inputs: dict):
     from .util import make_dirnames
     from .util import make_auxfilenames
     from .task import dmx2csv
+    from .task import clean
 
     # Check if the aptplot_exec is in the path
     if len(postpro_inputs["aptplot_exec"].split("/")) > 1:
