@@ -20,7 +20,7 @@ def get():
 
     # The fullname of info_file from the
     parser.add_argument(
-        "-exec", "--exec_info",
+        "-exec", "--exec_file",
         type=argparse.FileType("rt"),
         help="The execution phase info file",
         required=True
@@ -72,9 +72,9 @@ def get():
     args = parser.parse_args()
 
     # Read the files content into list
-    exec_info_fullname = args.exec_info.name
-    with args.exec_info as exec_info:
-        exec_info_contents = exec_info.read().splitlines()
+    exec_info_fullname = args.exec_file.name
+    with args.exec_file as exec_file:
+        exec_info_contents = exec_file.read().splitlines()
     trace_variables_fullname = args.trace_variables.name
     with args.trace_variables as trace_variables:
         trace_variables_contents = trace_variables.read().splitlines()
