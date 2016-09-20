@@ -55,7 +55,7 @@ def get_input() -> dict:
 
     # Update samples if all samples are asked
     if isinstance(inputs["samples"], bool) and inputs["samples"]:
-        num_samples = util.parse_csv(inputs["dm_file"]).shape[0]
+        num_samples = inputs["dm_contents"].shape[0]
         inputs["samples"] = list(range(1, num_samples+1))
 
     # Write to a file the summary of pre-processing
