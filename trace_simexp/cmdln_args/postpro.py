@@ -1,5 +1,6 @@
 """Module to parse command line arguments in post-processing phase
 """
+from .. import util
 from ..__init__ import __version__
 
 __author__ = "Damar Wicaksono"
@@ -12,6 +13,7 @@ def get():
         (str) the list of TRACE variables file, fullname
         (str) the aptplot executable, fullname if not in the path
     """
+    import os
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -78,6 +80,16 @@ def get():
     xtv_vars_fullname = args.xtv_variables.name
     with args.xtv_variables as xtv_vars_file:
         xtv_vars_contents = xtv_vars_file.read().splitlines()
+
+    # Check if the executable for aptplot exist and valid
+    if len(args.aptplot_executable.split("/")) > 1:
+        # Given full path of AptPlot exec
+        if not os.path.isfile(args.aptplot_executable):
+            raise ValueError("The specified AptPlot executable not found!")
+    else:
+        # Assumed Aptplot exec in path
+        if not util.cmd_exists(args.aptplot_executable):
+            raise ValueError("The specified AptPlot executable not found!")
 
     # Check the validity of the number of processors
     if args.num_processors <= 0:

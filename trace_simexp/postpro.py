@@ -75,10 +75,18 @@ def dmx2csv(postpro_inputs: dict):
 
     :param postpro_inputs: (dict) the input parameters for post-processing phase
     """
+    from .util import link_exec
     from .util import create_iter
     from .util import make_dirnames
     from .util import make_auxfilenames
     from .task import dmx2csv
+
+    # Check if the aptplot_exec is in the path
+    if len(exec_inputs["aptplot_exec"].split("/") > 1):
+        aptplot_is_in_path = False
+        aptplot_exec_name = exec_inputs["aptplot_exec"].split("/")[-1]
+    else:
+        aptplot_is_in_path = True
 
     num_samples = len(postpro_inputs["samples"])
     case_name = postpro_inputs["case_name"]
@@ -103,8 +111,16 @@ def dmx2csv(postpro_inputs: dict):
         # Create bunch of run names
         run_names = make_auxfilenames(list_iter, case_name, "")
 
+        # If AptPlot executable not in path, create a symbolic link in run dir
+        if aptplot_is_in_path:
+            aptplot_exec = exec_inputs["aptplot_exec"]
+        else:
+            for run_dirname in run_dirnames:
+                link_exec(exec_inputs["aptplot_exec"], run_dirname)
+            aptplot_exec = "./" .format(aptplot_exec_name)
+
         # Execute the dmx commands
-        dmx2csv.run(postpro_inputs["aptplot_exec"],
+        dmx2csv.run(aptplot_exec,
                     postpro_inputs["xtv_vars"],
                     postpro_inputs["xtv_vars_name"],
                     run_names, run_dirnames, 
