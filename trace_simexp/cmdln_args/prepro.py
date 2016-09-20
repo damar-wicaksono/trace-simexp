@@ -104,7 +104,8 @@ def get():
     parser.add_argument(
         "-prepro_info", "--prepro_filename",
         type=str,
-        help="The pre-process info filename (will be created by default)",
+        help="The pre-process info filename "
+             "(by default, will be created in the current working directory)",
         required=False,
         default=None
     )
