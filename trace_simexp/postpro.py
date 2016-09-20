@@ -126,6 +126,12 @@ def dmx2csv(postpro_inputs: dict):
                     run_names, run_dirnames, 
                     postpro_inputs["info_file"])
 
+        # Clean up run directories from symbolic link
+        if not aptplot_is_in_path:
+            aptplot_links = ["{}/{}" .format(run_dirname, aptplot_exec_name)
+                             for run_dirname in run_dirnames]
+            clean.rm_files(aptplot_links)
+
 
 def reset(postpro_inputs: dict):
     """Reset the directory structures to the execute phase state
