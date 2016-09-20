@@ -19,9 +19,9 @@ def get_input():
 
     # Get command line arguments
     exec_info_fullname, exec_info_contents, \
-    prepro_info_fullname, prepro_info_contents, \
-    xtv_vars_fullname, xtv_vars_contents,\
-    aptplot_exec, num_procs, postpro_filename = cmdln_args.postpro.get()
+        prepro_info_fullname, prepro_info_contents, \
+        xtv_vars_fullname, xtv_vars_contents,\
+        aptplot_exec, num_procs, postpro_filename = cmdln_args.postpro.get()
 
     # Extract the name of the exec.info file
     exec_info_name = exec_info_fullname.split("/")[-1]
