@@ -33,12 +33,15 @@ def get_input() -> dict:
     else:
         raise ValueError("Requested samples is not part of the available ones")
 
+    # Get the name of the prepro info file
+    prepro_info_name = prepro_info_fullname.split("/")[-1]
+
     # Get the name of the machine (hostname)
     hostname = util.get_hostname()
 
     # Construct the dictionary
     exec_inputs = {
-        "prepro_info_fullname": prepro_info_fullname,
+        "prepro_info_name": prepro_info_name,
         "prepro_info_contents": prepro_info_contents,
         "num_procs": num_procs,
         "scratch_dir": scratch_dir,

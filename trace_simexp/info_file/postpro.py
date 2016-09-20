@@ -20,9 +20,13 @@ def read(info_fullname: str):
     # Loop over lines to obtain the parameters
     for num_line, line in enumerate(info_lines):
         
-        # Pre-pro Info File 
-        if "prepro.info Filename" in line:
+        # Prepro Info File 
+        if "prepro.info Name" in line:
             prepro_info = line.split("-> ")[-1].strip()
+
+        # Execute Info File
+        if "exec.info Name" in line:
+            exec_info = line.split("-> ")[-1].strip()
             
         # The name of aptplot script
         if "List of XTV Variables Files" in line:
@@ -30,19 +34,7 @@ def read(info_fullname: str):
             apt_name = apt_name.split("/")[-1]
             apt_name = apt_name.split(".")[0]
    
-    # Read the prepro info file
-    base_dir, case_name, params_list_name, dm_name, \
-        samples = prepro.read(prepro_info)
-    
-    # Construct campaign name
-    campaign_name = "{}-{}-{}" .format(case_name, params_list_name,
-                                       dm_name)
-                                       
-    # Construct the run directory name of the campaign
-    run_dirname = "{}/{}/{}-{}" .format(base_dir, case_name, 
-                                        params_list_name, dm_name)
-    
-    return campaign_name, run_dirname, apt_name
+    return prepro_info, exec_info, apt_name
     
     
 def write(inputs: dict, info_filename: str):
@@ -53,7 +45,7 @@ def write(inputs: dict, info_filename: str):
     """
     from datetime import datetime
 
-    header = ["prepro.info Filename", "exec.info Filename",
+    header = ["prepro.info Name", "exec.info Name",
               "APTPlot Executable", "Number of Processors (Host)",
               "List of XTV Variables Files", "List of XTV Variables",
               "Samples to Post-processed"]
@@ -70,12 +62,12 @@ def write(inputs: dict, info_filename: str):
         # prepro.info filename
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
                              .format(header[0], "->",
-                                     inputs["prepro_info_fullname"]))
+                                     inputs["prepro_info_name"]))
 
         # exec.info filename
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
                              .format(header[1], "->",
-                                     inputs["exec_info_fullname"]))
+                                     inputs["exec_info_name"]))
 
         # APTPlot Executable
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"

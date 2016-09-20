@@ -20,11 +20,19 @@ def get():
         description="%(prog)s - trace-simexp Postpro: Postprocess the TRACE dmx"
     )
 
-    # The fullname of info_file from the
+    # The fullname of info_file from the execution phase
     parser.add_argument(
         "-exec", "--exec_file",
         type=argparse.FileType("rt"),
         help="The execution phase info file",
+        required=True
+    )
+
+    # The fullname of info_file from the pre-processing phase
+    parser.add_argument(
+        "-prepro", "--prepro_file",
+        type=argparse.FileType("rt"),
+        help="The pre-processing phase info file",
         required=True
     )
 
@@ -77,6 +85,9 @@ def get():
     exec_info_fullname = args.exec_file.name
     with args.exec_file as exec_file:
         exec_info_contents = exec_file.read().splitlines()
+    prepro_info_fullname = args.prepro_file.name
+    with args.prepro_file as prepro_file:
+        prepro_info_contents = prepro_file.read().splitlines()
     xtv_vars_fullname = args.xtv_variables.name
     with args.xtv_variables as xtv_vars_file:
         xtv_vars_contents = xtv_vars_file.read().splitlines()
@@ -96,5 +107,6 @@ def get():
         raise ValueError("The number of processors must be > 0")
 
     return exec_info_fullname, exec_info_contents, \
+           prepro_info_fullname, prepro_info_contents, \
            xtv_vars_fullname, xtv_vars_contents, \
            args.aptplot_executable, args.num_processors, args.postpro_file

@@ -13,7 +13,7 @@ def read(exec_info_contents: list):
     """
     for num_line, line in enumerate(exec_info_contents):
 
-        if "prepro.info Filename" in line:
+        if "prepro.info Name" in line:
             prepro_info = line.split("-> ")[-1].strip()
 
         # Samples to run
@@ -42,7 +42,7 @@ def write(inputs: dict, info_filename: str):
     """
     from datetime import datetime
 
-    header = ["prepro.info Filename", "TRACE Executable", "XTV2DMX Executable",
+    header = ["prepro.info Name", "TRACE Executable", "XTV2DMX Executable",
               "Scratch Directory Name", "Number of Processors",
               "Samples to Run"]
 
@@ -56,7 +56,7 @@ def write(inputs: dict, info_filename: str):
         # prepro.info filename
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
                              .format(header[0], "->",
-                                     inputs["prepro_info_fullname"]))
+                                     inputs["prepro_info_name"]))
 
         # TRACE Executable
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"

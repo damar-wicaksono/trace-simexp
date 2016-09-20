@@ -19,31 +19,44 @@ def get_input():
 
     # Get command line arguments
     exec_info_fullname, exec_info_contents, \
+    prepro_info_fullname, prepro_info_contents, \
     xtv_vars_fullname, xtv_vars_contents,\
     aptplot_exec, num_procs, postpro_filename = cmdln_args.postpro.get()
 
-    # Read exec.info file
-    prepro_info_fullname, samples = info_file.execute.read(exec_info_contents)
+    # Extract the name of the exec.info file
+    exec_info_name = exec_info_fullname.split("/")[-1]
 
-    # Read the prepro info file
-    with open(prepro_info_fullname, "rt") as prepro_info:
-        prepro_info_contents = prepro_info.read().splitlines()
+    # Extract the name of the prepro.info file
+    prepro_info_name = prepro_info_fullname.split("/")[-1]
 
-    # Read prepro.info file
+    # Extract the name of the list of xtv variables file
+    xtv_vars_name = xtv_vars_fullname.split("/")[-1].split(".")[0]
+
+    # Parse exec.info file
+    prepro_info_from_exec, samples = info_file.execute.read(exec_info_contents)
+
+    # Check if the prepro.info from exec.info is the same as passed by user
+    if prepro_info_from_exec != prepro_info_name:
+        raise ValueError("The passed repro.info name does not agree with the" \
+                         "one specified in the exec.info!\n"\
+                         "{:<16s}: {}\n"   
+                         "{:<16s}: {}" .format("-prepro argument", 
+                                               prepro_info_name,
+                                               "exec.info",
+                                               prepro_info_from_exec))
+
+    # Parse prepro.info file
     base_dir, case_name, params_list_name, dm_name, avail_samples = \
         info_file.prepro.read(prepro_info_contents)
 
     # Read the list of TRACE variables name
     xtv_vars = aptscript.read(xtv_vars_contents)
 
-    # Extract the name of the list of xtv variables file
-    xtv_vars_name = xtv_vars_fullname.split("/")[-1].split(".")[0]
-
     # Get the host name
     hostname = util.get_hostname()
 
     # Combine all parameters in a python dictionary
-    postpro_inputs = {"exec_info_fullname": exec_info_fullname,
+    postpro_inputs = {"exec_info_name": exec_info_name,
                       "exec_info_contents": exec_info_contents,
                       "xtv_vars_fullname": xtv_vars_fullname,
                       "xtv_vars_name": xtv_vars_name,
@@ -51,7 +64,7 @@ def get_input():
                       "aptplot_exec": aptplot_exec,
                       "num_procs": num_procs,
                       "samples": samples,
-                      "prepro_info_fullname": prepro_info_fullname,
+                      "prepro_info_name": prepro_info_name,
                       "base_dir": base_dir,
                       "case_name": case_name,
                       "params_list_name": params_list_name,
