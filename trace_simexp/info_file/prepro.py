@@ -32,7 +32,7 @@ def write(inputs: dict, info_filename: str):
         file.writelines("TRACE Simulation Experiment - Date: {}\n"
                         .format(str(datetime.now())))
         file.writelines("{}\n" .format(inputs["info"]))
-        file.writelines("***Preprocessing Phase Info***\n")
+        file.writelines("***Pre-process Phase Info***\n")
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[0], "->", inputs["base_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
