@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def get_input(info_filename: str=None) -> dict:
+def get_input() -> dict:
     """Get the command line arguments, read the info file, and construct dict()
 
     The source of inputs are: command line arguments and prepro.info file
@@ -16,12 +16,14 @@ def get_input(info_filename: str=None) -> dict:
     from . import util
 
     # Read the command line arguments
-    samples, prepro_infofile, num_procs, scratch_dir, trace_exec, \
-        xtv2dmx_exec = cmdln_args.execute.get()
+    samples, \
+        prepro_info_fullname, prepro_info_contents, \
+        num_procs, scratch_dir, \
+        trace_exec, xtv2dmx_exec, exec_filename = cmdln_args.execute.get()
 
     # Read the pre-processing phase info file
     base_dir, case_name, params_list_name, dm_name, avail_samples = \
-        info_file.prepro.read(prepro_infofile)
+        info_file.prepro.read(prepro_info_contents)
 
     # Check if samples is within the available samples
     if isinstance(samples, bool) and samples:
@@ -31,12 +33,16 @@ def get_input(info_filename: str=None) -> dict:
     else:
         raise ValueError("Requested samples is not part of the available ones")
 
+    # Get the name of the prepro info file
+    prepro_info_name = prepro_info_fullname.split("/")[-1]
+
     # Get the name of the machine (hostname)
     hostname = util.get_hostname()
 
     # Construct the dictionary
     exec_inputs = {
-        "prepro_info": prepro_infofile,
+        "prepro_info_name": prepro_info_name,
+        "prepro_info_contents": prepro_info_contents,
         "num_procs": num_procs,
         "scratch_dir": scratch_dir,
         "trace_exec": trace_exec,
@@ -49,22 +55,18 @@ def get_input(info_filename: str=None) -> dict:
         "hostname": hostname
     }
 
-    # todo: Check the validity of the inputs
-
     # Write to a file the summary of execution phase parameters
-    if info_filename is not None:
-        info_file.execute.write(exec_inputs, info_filename)
-        exec_inputs["exec_info"] = info_filename
-    else:
-        info_filename = info_file.common.make_filename(exec_inputs, "exec")
-        info_file.execute.write(exec_inputs, info_filename)
-        exec_inputs["exec_info"] = info_filename
+    if exec_filename is None:
+        exec_filename = info_file.common.make_filename(exec_inputs, "exec")
+
+    info_file.execute.write(exec_inputs, exec_filename)
+    exec_inputs["info_file"] = exec_filename
 
     return exec_inputs
 
 
 def run_batches(exec_inputs: dict):
-    """Driver function to prepare run directory and execute trace in batches
+    """Driver function to prepare run directory and execute TRACE in batches
 
     1. The directories are prepared by making a link between dummy xtv in the
        run directory and its corresponding scratch directory.
@@ -82,9 +84,22 @@ def run_batches(exec_inputs: dict):
     from .task import trace
     from .task import xtv2dmx
     from .task import clean
+    from .util import link_exec
     from .util import create_iter
     from .util import make_dirnames
     from .util import make_auxfilenames
+
+    # Check if the trace_executable and xtv2dmx_executable are in the path
+    if len(exec_inputs["trace_exec"].split("/")) > 1:
+        trace_is_in_path = False
+        trace_exec_name = exec_inputs["trace_exec"].split("/")[-1]
+    else:
+        trace_is_in_path = True
+    if len(exec_inputs["xtv2dmx_exec"].split("/")) > 1:
+        xtv2dmx_is_in_path = False
+        xtv2dmx_exec_name = exec_inputs["xtv2dmx_exec"].split("/")[-1]
+    else:
+        xtv2dmx_is_in_path = True
 
     num_samples = len(exec_inputs["samples"])
     case_name = exec_inputs["case_name"]
@@ -92,7 +107,7 @@ def run_batches(exec_inputs: dict):
     for batch_iter in create_iter(num_samples, exec_inputs["num_procs"]):
 
         # Append the exec.info
-        info_file = open(exec_inputs["exec_info"], "a")
+        info_file = open(exec_inputs["info_file"], "a")
         info_file.writelines("*** Batch Execution - {:5d} ***\n"
                              .format(batch_int))
         info_file.close()
@@ -110,47 +125,70 @@ def run_batches(exec_inputs: dict):
         log_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                log_filenames)]
 
-        # Create bunch of scratch directory names
-        scratch_dirnames = make_dirnames(list_iter, exec_inputs, True)
-
         # Create bunch of xtv files
         xtv_filenames = make_auxfilenames(list_iter, case_name, ".xtv")
         xtv_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                xtv_filenames)]
-        scratch_xtv_fullnames = [
-            "{}/{}" .format(a, b) for a, b in zip(scratch_dirnames,
-                                                  xtv_filenames)]
 
-        # Create bunch of trace commands
+        if exec_inputs["scratch_dir"] is not None:
+            # If scratch directory specified make the symbolic links
+            # Create bunch of scratch directory names
+            scratch_dirnames = make_dirnames(list_iter, exec_inputs, True)
+            scratch_xtv_fullnames = [
+                "{}/{}".format(a, b) for a, b in zip(scratch_dirnames,
+                                                     xtv_filenames)]
+            # Link the xtv in the scratch
+            trace.link_xtv(scratch_dirnames, xtv_fullnames,
+                           scratch_xtv_fullnames)
+
+        # Create a bunch of trace input deck to be passed to the exec (no ext)
         inp_filenames = make_auxfilenames(list_iter, case_name, "")
-        trace_commands = trace.make_commands(exec_inputs, inp_filenames)
 
-        # Link the xtv in the scratch
-        trace.link_xtv(scratch_dirnames, xtv_fullnames, scratch_xtv_fullnames)
+        # If TRACE executable not in the path, create a symbolic link in run dir
+        if trace_is_in_path:
+            trace_exec = exec_inputs["trace_exec"]
+        else:
+            for run_dirname in run_dirnames:
+                link_exec(exec_inputs["trace_exec"], run_dirname)
+            trace_exec = "./{}" .format(trace_exec_name)
+
+        # Create a bunch of trace commands
+        trace_commands = trace.make_commands(trace_exec, inp_filenames)
 
         # Execute TRACE commands
         trace.run(trace_commands, log_fullnames,
-                  run_dirnames, exec_inputs["exec_info"])
+                  run_dirnames, exec_inputs["info_file"])
 
         # Create bunch of dmx files
         dmx_filenames = make_auxfilenames(list_iter, case_name, ".dmx")
         dmx_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                dmx_filenames)]
-        scratch_dmx_fullnames = [
-            "{}/{}" .format(a, b) for a, b in zip(scratch_dirnames,
-                                                  dmx_filenames)]
 
-        # Link the dmx in the scratch to the one in run directory
-        xtv2dmx.link_dmx(dmx_fullnames, scratch_dmx_fullnames)
+        if exec_inputs["scratch_dir"] is not None:
+            # If scratch directory specified make the symbolic links
+            scratch_dmx_fullnames = [
+                "{}/{}" .format(a, b) for a, b in zip(scratch_dirnames,
+                                                      dmx_filenames)]
+
+            # Link the dmx in the scratch to the one in run directory
+            xtv2dmx.link_dmx(dmx_fullnames, scratch_dmx_fullnames)
+
+        # If XTV2DMX exec. not in the path, create a symbolic link in run dir
+        if xtv2dmx_is_in_path:
+            xtv2dmx_exec = exec_inputs["trace_exec"]
+        else:
+            for run_dirname in run_dirnames:
+                link_exec(exec_inputs["xtv2dmx_exec"], run_dirname)
+            xtv2dmx_exec = "./{}" .format(xtv2dmx_exec_name)
 
         # Create bunch of xtv2dmx commands
-        xtv2dmx_commands = xtv2dmx.make_commands(exec_inputs,
+        xtv2dmx_commands = xtv2dmx.make_commands(xtv2dmx_exec,
                                                  xtv_filenames,
                                                  dmx_filenames)
 
         # Execute xtv2dmx commands
         xtv2dmx.run(xtv2dmx_commands, log_fullnames,
-                    run_dirnames, exec_inputs["exec_info"])
+                    run_dirnames, exec_inputs["info_file"])
 
         # Start to clean up things
         aux_files_list = []
@@ -187,7 +225,18 @@ def run_batches(exec_inputs: dict):
 
         # Collect the xtv files
         aux_files_list.append(xtv_fullnames)
-        aux_files_list.append(scratch_xtv_fullnames)
+        if exec_inputs["scratch_dir"] is not None:
+            aux_files_list.append(scratch_xtv_fullnames)
+
+        # Collect all the symbolic link of executables (if exists)
+        if not trace_is_in_path:
+            trace_links = ["{}/{}" .format(run_dirname, trace_exec_name)
+                           for run_dirname in run_dirnames]
+            aux_files_list.append(trace_links)
+        if not xtv2dmx_is_in_path:
+            xtv2dmx_links = ["{}/{}" .format(run_dirname, xtv2dmx_exec_name)
+                             for run_dirname in run_dirnames]
+            aux_files_list.append(xtv2dmx_links)
 
         # Clean up TRACE directories
         for aux_files in aux_files_list:
@@ -225,11 +274,12 @@ def reset(exec_inputs: dict):
     if query_yes_no("Revert back to pre-pro state?", default="no"):
 
         # Append the info file
-        with open(exec_inputs["exec_info"], "a") as info_file:
+        with open(exec_inputs["info_file"], "a") as info_file:
             info_file.writelines("***Reverting back to Pre-pro***\n")
             for i, dmx_fullname in enumerate(dmx_fullnames):
                 if os.path.islink(dmx_fullname):
-                    info_file.writelines("Reverting: {}\n" .format(run_dirnames[i]))
+                    info_file.writelines("Reverting: {}\n"
+                                         .format(run_dirnames[i]))
 
         # Clean scratch dirs
         clean.rm_files(scratch_dirnames)

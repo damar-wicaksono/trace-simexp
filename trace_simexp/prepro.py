@@ -12,7 +12,6 @@ def get_input() -> dict:
     Sources of inputs are: command line arguments, list of parameters file,
     trace base input, and design matrix file
 
-    :param info_filename: the string of prepro.info file
     :return: All the inputs required for pre-processing phase in a dictionary
     """
     import numpy as np
@@ -23,8 +22,8 @@ def get_input() -> dict:
     # Read the command line arguments
     samples, base_dirname, \
         tracin_base_fullname, tracin_base_contents, \
-	dm_fullname, dm_contents, \
-	params_list_fullname, params_list_contents, \
+        dm_fullname, dm_contents, \
+        params_list_fullname, params_list_contents, \
         overwrite, info, prepro_filename = cmdln_args.prepro.get()
     
     # Get the names of directory and files
@@ -56,7 +55,7 @@ def get_input() -> dict:
 
     # Update samples if all samples are asked
     if isinstance(inputs["samples"], bool) and inputs["samples"]:
-        num_samples = util.parse_csv(inputs["dm_file"]).shape[0]
+        num_samples = inputs["dm_contents"].shape[0]
         inputs["samples"] = list(range(1, num_samples+1))
 
     # Write to a file the summary of pre-processing

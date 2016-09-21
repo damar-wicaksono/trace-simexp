@@ -4,19 +4,16 @@
 __author__ = "Damar Wicaksono"
 
 
-def read(info_filename: str):
-    """Read the exec.info file produced in the execution phase
+def read(exec_info_contents: list):
+    """Read the exec info file produced in the execution phase
 
-    :param info_filename: (str) the fullname of the exec.info file
+    :param exec_info_contents: (str) the fullname of the exec.info file
+    :return: (str) the fullname of prepro info file
+        (int) the number of samples in the exec info file
     """
+    for num_line, line in enumerate(exec_info_contents):
 
-    # Read file
-    with open(info_filename, "rt") as info_file:
-        info_lines = info_file.read().splitlines()
-
-    for num_line, line in enumerate(info_lines):
-
-        if "prepro.info Filename" in line:
+        if "prepro.info Name" in line:
             prepro_info = line.split("-> ")[-1].strip()
 
         # Samples to run
@@ -24,9 +21,9 @@ def read(info_filename: str):
             samples = []
             i = num_line + 1
             while True:
-                if "***" in info_lines[i]:
+                if "***" in exec_info_contents[i]:
                     break
-                samples.extend([int(_) for _ in info_lines[i].split()])
+                samples.extend([int(_) for _ in exec_info_contents[i].split()])
                 i += 1
 
     return prepro_info, samples
@@ -45,7 +42,7 @@ def write(inputs: dict, info_filename: str):
     """
     from datetime import datetime
 
-    header = ["prepro.info Filename", "TRACE Executable", "XTV2DMX Executable",
+    header = ["prepro.info Name", "TRACE Executable", "XTV2DMX Executable",
               "Scratch Directory Name", "Number of Processors",
               "Samples to Run"]
 
@@ -58,7 +55,8 @@ def write(inputs: dict, info_filename: str):
 
         # prepro.info filename
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[0], "->", inputs["prepro_info"]))
+                             .format(header[0], "->",
+                                     inputs["prepro_info_name"]))
 
         # TRACE Executable
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
@@ -69,8 +67,10 @@ def write(inputs: dict, info_filename: str):
                              .format(header[2], "->", inputs["xtv2dmx_exec"]))
 
         # Scratch Directory Name
-        info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[3], "->", inputs["scratch_dir"]))
+        if inputs["scratch_dir"] is not None:
+            info_file.writelines("{:<30s}{:3s}{:<30s}\n"
+                                 .format(header[3], "->", 
+                                         inputs["scratch_dir"]))
 
         # Number of Processors and hostname
         info_file.writelines("{:<30s}{:3s}{:<3d}({})\n"
