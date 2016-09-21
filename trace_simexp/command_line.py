@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    command_line.py: Module with collections of command line interfaces for
-    trace-simexp
+command_line.py: Module with collections of command line interfaces for
+trace-simexp
 """
 
 
@@ -58,4 +58,3 @@ def postpro():
 
     # Commence the conversion
     postpro.dmx2csv(postpro_inputs)
-
