@@ -12,3 +12,5 @@ logfiles/
 *.__*
 # Sphinx Build Folder
 docs/build
+# Ad Hoc
+temporary/
