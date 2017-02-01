@@ -13,6 +13,7 @@ def prepro():
 
     from trace_simexp import prepro
     from trace_simexp import tracin
+    from trace_simexp import info_file
 
     # Construct a dictionary of required inputs from command line arguments, etc
     inputs = prepro.get_input()
@@ -20,9 +21,12 @@ def prepro():
     # Check if info file already exists
     if os.path.exists(inputs["info_file"]):
         if inputs["overwrite"]:
-            pass
+            info_file.prepro.write(inputs)
         else:
             sys.exit("Prepro info file exist, no overwrite option, exiting...")
+    # Otherwise write new one
+    else:
+        info_file.prepro.write(inputs)
 
     # Read list of parameters file and create a dictionary from it
     params_dict = prepro.read_params(inputs["params_list_contents"],

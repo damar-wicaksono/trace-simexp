@@ -60,10 +60,8 @@ def get_input() -> dict:
 
     # Write to a file the summary of pre-processing
     if prepro_filename is None:
-        prepro_filename = info_file.common.make_filename(inputs, "prepro")
+        inputs["info_file"] = info_file.common.make_filename(inputs, "prepro")
         
-    info_file.prepro.write(inputs, prepro_filename)
-    inputs["info_file"] = prepro_filename
 
     return inputs
 
