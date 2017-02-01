@@ -71,7 +71,7 @@ def postpro():
     postpro_inputs = postpro.get_input()
 
     # Write the execute phase info file
-    info_file.postpro.write(postpro_inputs, postpro_filename)
+    info_file.postpro.write(postpro_inputs)
 
     # Commence the conversion
     postpro.dmx2csv(postpro_inputs)
