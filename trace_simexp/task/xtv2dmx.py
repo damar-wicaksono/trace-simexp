@@ -121,7 +121,7 @@ def link_dmx(run_dmxs: list, scratch_dmxs: list):
     for run_dmx, scratch_dmx in zip(run_dmxs, scratch_dmxs):
         
         # Delete file and link if they exist
-        if os.path.isfile(run_dmx):
+        if os.path.islink(run_dmx):
             subprocess.call(["rm", "-f", run_dmx])
         if os.path.isfile(scratch_dmx):
             subprocess.call(["rm", "-f", scratch_dmx])
