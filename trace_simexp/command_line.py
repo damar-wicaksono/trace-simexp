@@ -13,6 +13,8 @@ def prepro():
 
     from trace_simexp import prepro
     from trace_simexp import tracin
+    from trace_simexp import info_file
+    from trace_simexp import paramfile
 
     # Construct a dictionary of required inputs from command line arguments, etc
     inputs = prepro.get_input()
@@ -20,21 +22,27 @@ def prepro():
     # Check if info file already exists
     if os.path.exists(inputs["info_file"]):
         if inputs["overwrite"]:
-            pass
+            info_file.prepro.write(inputs)
         else:
             sys.exit("Prepro info file exist, no overwrite option, exiting...")
+    # Otherwise write new one
+    else:
+        info_file.prepro.write(inputs)
 
     # Read list of parameters file and create a dictionary from it
     params_dict = prepro.read_params(inputs["params_list_contents"],
                                      inputs["info_file"],
                                      inputs["tracin_base_contents"])
 
+    # Update the info file with information of list of parameters file
+    paramfile.common.append_info(params_dict, inputs["info_file"])
+
     # Create a string template
     tracin_template = tracin.create_template(params_dict,
                                              inputs["tracin_base_contents"])
 
     # Create a directory structure based on the specified input
-    tracin.create_dirtree(inputs, params_dict, tracin_template)
+    prepro.create_dirtree(inputs, params_dict, tracin_template)
 
 
 def execute():
@@ -58,3 +66,4 @@ def postpro():
 
     # Commence the conversion
     postpro.dmx2csv(postpro_inputs)
+

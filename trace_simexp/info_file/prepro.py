@@ -4,7 +4,7 @@
 __author__ = "Damar Wicaksono"
 
 
-def write(inputs: dict, info_filename: str):
+def write(inputs: dict):
     r"""Write a summary of the pre-processing phase
 
     The summary serves a log file for the command line arguments used in the
@@ -12,7 +12,6 @@ def write(inputs: dict, info_filename: str):
     redundancy.
 
     :param inputs: (dict) the command line arguments as dictionary
-    :param info_filename: (str) the filename of the info_file
     :return: the info_file with the specified filename
     """
     from datetime import datetime
@@ -28,7 +27,7 @@ def write(inputs: dict, info_filename: str):
               "Samples to Run",
               "Overwrite Directory"]
 
-    with open(info_filename, "wt") as file:
+    with open(inputs["info_file"], "wt") as file:
         file.writelines("TRACE Simulation Experiment - Date: {}\n"
                         .format(str(datetime.now())))
         file.writelines("{}\n" .format(inputs["info"]))
