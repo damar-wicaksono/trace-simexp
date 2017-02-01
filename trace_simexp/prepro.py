@@ -60,7 +60,9 @@ def get_input() -> dict:
 
     # Create the filename for the info file of the prepro phase
     if prepro_filename is None:
-        inputs["info_file"] = info_file.common.make_filename(inputs, "prepro")
+        prepro_filename = info_file.common.make_filename(inputs, "prepro")
+    
+    inputs["info_file"] = prepro_filename
 
     return inputs
 
