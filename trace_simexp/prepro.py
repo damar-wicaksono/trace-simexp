@@ -58,7 +58,7 @@ def get_input() -> dict:
         num_samples = inputs["dm_contents"].shape[0]
         inputs["samples"] = list(range(1, num_samples+1))
 
-    # Write to a file the summary of pre-processing
+    # Create the filename for the info file of the prepro phase
     if prepro_filename is None:
         inputs["info_file"] = info_file.common.make_filename(inputs, "prepro")
 
