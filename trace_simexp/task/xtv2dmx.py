@@ -70,7 +70,7 @@ def run(xtv2dmx_commands: list, log_files: list,
                     info_file.writelines("Execution Failed: {}\n"
                         .format(subprocess.list2cmdline(process.args)))
                 else:
-                    info_file.writelines("Execution Successfull: {}\n"
+                    info_file.writelines("Execution Successful: {}\n"
                         .format(subprocess.list2cmdline(process.args)))
 
                 log_file.close()
@@ -85,14 +85,14 @@ def run(xtv2dmx_commands: list, log_files: list,
     info_file.close()
     
 
-def make_commands(exec_inputs: dict, 
+def make_commands(xtv2dmx_executable: str,
                   xtv_filenames: list,
                   dmx_filenames: list) -> list:
     """Create list of shell command to convert xtv files into dmx files
     
     The conversion includes compression to reduce space requirements
 
-    :param exec_inputs: the dictionary with parameters for execute phase
+    :param xtv2dmx_executable: the name of the xtv2dmx executable
     :param xtv_fullnames: the list of xtv filenames to be converted
     :param xtv2dmx_cmds: the list of dmx filenames as target output
     :return: a list of xtv2dmx shell command to be executed
@@ -100,7 +100,7 @@ def make_commands(exec_inputs: dict,
     xtv2dmx_commands = []
     
     for xtv_filename, dmx_filename in zip(xtv_filenames, dmx_filenames):
-        xtv2dmx_command = [exec_inputs["xtv2dmx_exec"], 
+        xtv2dmx_command = [xtv2dmx_executable,
                            "-r", xtv_filename, 
                            "-d", dmx_filename]
         xtv2dmx_commands.append(xtv2dmx_command)
