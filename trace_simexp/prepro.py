@@ -61,7 +61,6 @@ def get_input() -> dict:
     # Write to a file the summary of pre-processing
     if prepro_filename is None:
         inputs["info_file"] = info_file.common.make_filename(inputs, "prepro")
-        
 
     return inputs
 
@@ -120,9 +119,6 @@ def read_params(params_list_contents: list,
             else:
                 raise NameError("*{}* data type is not supported!"
                                 .format(keyword))
-
-    # Append the prepro.info
-    common.append_info(params_dict, info_filename)
 
     # Get the nominal values of parameter from tracin and update params_dict
     tracin.get_nominal_values(tracin_base_contents, params_dict)
