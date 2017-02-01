@@ -34,7 +34,7 @@ def prepro():
                                              inputs["tracin_base_contents"])
 
     # Create a directory structure based on the specified input
-    tracin.create_dirtree(inputs, params_dict, tracin_template)
+    prepro.create_dirtree(inputs, params_dict, tracin_template)
 
 
 def execute():
