@@ -49,10 +49,15 @@ def execute():
     """trace-simexp execution step command line interface"""
 
     from trace_simexp import execute
+    from trace_simexp import info_file
+
     # Consolidate all the required inputs for post-processing phase
     exec_inputs = execute.get_input()
 
-    # Commence the conversion
+    # Write the execute phase info file
+    info_file.execute.write(exec_inputs)
+
+    # Commence the calculation in batches
     execute.run_batches(exec_inputs)
 
 
