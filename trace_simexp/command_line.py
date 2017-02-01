@@ -65,9 +65,13 @@ def postpro():
     """trace-simexp post-processing step command line interface"""
 
     from trace_simexp import postpro
+    from trace_simexp import info_file
 
     # Consolidate all the required inputs for post-processing phase
     postpro_inputs = postpro.get_input()
+
+    # Write the execute phase info file
+    info_file.postpro.write(postpro_inputs)
 
     # Commence the conversion
     postpro.dmx2csv(postpro_inputs)

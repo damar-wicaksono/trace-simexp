@@ -55,14 +55,11 @@ def get_input() -> dict:
         "hostname": hostname
     }
 
-    # Write to a file the summary of execution phase parameters
     # Create an infofile filename if not provided
     if exec_filename is None:
-        exec_inputs["info_file"] = info_file.common.make_filename(exec_inputs, 
-                                                                  "exec")
+        exec_filename = info_file.common.make_filename(exec_inputs, "exec")
 
-#    info_file.execute.write(exec_inputs, exec_filename)
-#    exec_inputs["info_file"] = exec_filename
+    exec_inputs["info_file"] = exec_filename
 
     return exec_inputs
 
