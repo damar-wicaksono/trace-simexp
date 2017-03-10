@@ -58,11 +58,10 @@ def get_input() -> dict:
         num_samples = inputs["dm_contents"].shape[0]
         inputs["samples"] = list(range(1, num_samples+1))
 
-    # Write to a file the summary of pre-processing
+    # Create the filename for the info file of the prepro phase
     if prepro_filename is None:
         prepro_filename = info_file.common.make_filename(inputs, "prepro")
-        
-    info_file.prepro.write(inputs, prepro_filename)
+    
     inputs["info_file"] = prepro_filename
 
     return inputs
@@ -122,9 +121,6 @@ def read_params(params_list_contents: list,
             else:
                 raise NameError("*{}* data type is not supported!"
                                 .format(keyword))
-
-    # Append the prepro.info
-    common.append_info(params_dict, info_filename)
 
     # Get the nominal values of parameter from tracin and update params_dict
     tracin.get_nominal_values(tracin_base_contents, params_dict)

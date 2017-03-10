@@ -72,12 +72,11 @@ def get_input():
                       "hostname": hostname
                       }
 
-    # Write to a file the summary of execution phase parameters
+    # Create a filename for the info file of the postpro phase
     if postpro_filename is None:
         postpro_filename = info_file.common.make_filename(postpro_inputs, 
                                                           "postpro")
 
-    info_file.postpro.write(postpro_inputs, postpro_filename)
     postpro_inputs["info_file"] = postpro_filename
 
     return postpro_inputs
