@@ -2,7 +2,8 @@
 """
 
 import itertools
-
+import subprocess
+import numpy as np
 
 __author__ = "Damar Wicaksono"
 
@@ -22,8 +23,6 @@ def create_iter(num_samples: int, num_processors: int) -> itertools.islice:
         of batch
     :returns: (iterator) an iterator in batch size
     """
-    import itertools
-
     iterable = range(0, num_samples)
     source_iter = iter(iterable)
     while True:
@@ -86,8 +85,6 @@ def get_hostname() -> str:
 
     :return: (str) of the hostname
     """
-    import subprocess
-
     p = subprocess.Popen(["hostname"], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
 
@@ -128,3 +125,57 @@ def query_yes_no(question, default="yes"):
             sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
 
+
+def parse_csv(csv_file) -> np.ndarray:
+    """Parse a csv file, sniff the actual delimiter of the file
+
+    This is used to load a generic csv file without specifying the actual
+    delimiter
+
+    **References:**
+    stackoverflow.com/questions/16312104/python-import-csv-file-delimiter-or
+
+    :param csv_file: the file of the csv file in string
+    :return: a numpy array
+    """
+    import re
+    
+    output = list()
+
+    lines = csv_file.readlines()
+    for line in lines:
+        output.append(re.split("\t|,| |;", line))
+
+    output = np.array(output).astype(np.float)
+    
+    return output
+
+
+def cmd_exists(cmd: str):
+    """Check if a command is available in the path
+
+    **Reference:**
+    (1) Answer by `hasen`
+       stackoverflow.com/questions/377017/test-if-executable-exists-in-python
+
+    :param cmd: the command string
+    :return: (bool) True if it is in the path, False otherwise
+    """
+    return subprocess.call("type " + cmd, shell=True, stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE) == 0
+
+
+def link_exec(exec: str, dir: str):
+    """Create a symbolic link between an executable in a designated directory
+
+    :param exec: the path to executable, either relative or absolute
+    :param dir: the directory to create the symbolic link
+    """
+    import os
+
+    # Get the absolute path
+    abs_exec = os.path.abspath(exec)
+    abs_dir = os.path.abspath(dir)
+
+    # Create symbolic link
+    subprocess.call(["ln", "-s", abs_exec, abs_dir])

@@ -1755,7 +1755,7 @@ end
 * Timestep Data *
 *****************
 *        dtmin         dtmax          tend         rtwfp
-       1.0E-20           0.1         600.0          10.0
+       1.0E-20           0.1          50.0          10.0
 *        edint         gfint        dmpint        sedint
          100.0           0.1         100.0           1.0
 *
