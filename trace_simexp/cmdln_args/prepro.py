@@ -8,21 +8,20 @@
 from .. import util
 from .._version import __version__
 
-
 __author__ = "Damar Wicaksono"
 
 
 def get() -> tuple:
     r"""Parse input arguments required for pre-processing phase
 
-    :return: tuple of the following values:
+    :return: tuple with the following values:
         (int or string) the specified samples, individual, range, or all
         (str) the base directory name of the simulation campaign
-        (str) the base tracin fullname
-        (str) the design matrix fullname
-        (str) the list of parameters fullname
+        (str) the base TRACE input deck fullname (path + filename)
+        (str) the design matrix fullname (path + filename)
+        (str) the list of parameters fullname (path + filename)
         (bool) the flag whether to overwrite directory structure
-        (str) the oneline info of the simulation experiment campaign
+        (str) a oneline info of the simulation experiment campaign
     """
     import argparse
 
@@ -52,7 +51,7 @@ def get() -> tuple:
     parser.add_argument(
         "-as", "--all_samples",
         action="store_true",
-        help="Run all samples",
+        help="Run all samples (default)",
         default=False,
         required=False
     )
@@ -121,26 +120,24 @@ def get() -> tuple:
     parser.add_argument(
         "-V", "--version",
         action="version",
-        version="%(prog)s (trace-simexp version {})" .format(__version__)
+        version="%(prog)s (trace-simexp version {})".format(__version__)
     )
 
     # Get the command line arguments
     args = parser.parse_args()
 
     # Check if any sample is specified and each are mutually exclusive
-    if args.num_samples is None and args.num_range is None \
-            and not args.all_samples:
-        parser.error("Either -ns, -nr, or -as has to be present!")
+    if args.num_samples is not None and args.num_range is not None \
+            and args.all_samples:
+        parser.error("Ambiguous, -ns, -nr, and -as cannot all be present!")
     elif args.num_samples is not None and args.num_range is not None:
-        parser.error("-ns or -nr cannot both be present!")
+        parser.error("Ambiguous, -ns or -nr cannot both be present!")
     elif args.num_samples is not None and args.all_samples:
-        parser.error("-ns or -as cannot both be present!")
+        parser.error("Ambiguous, -ns or -as cannot both be present!")
     elif args.num_range is not None and args.all_samples:
-        parser.error("-nr or -as cannot both be present!")
-    else:
-        pass
+        parser.error("Ambiguous, -nr or -as cannot both be present!")
 
-    # Read file argument contents
+    # Read files argument contents
     tracin_base_fullname = args.base_tracin.name
     with args.base_tracin as tracin:
         tracin_base_contents = tracin.read().splitlines()
@@ -151,73 +148,91 @@ def get() -> tuple:
     with args.params_list as params_file:
         params_list_contents = params_file.read().splitlines()
 
-    # Sample has to be specified, check the way it was specified
+    # Available samples from the design matrix
+    num_samples = design_matrix_contents.shape[0]
+    num_dimension = design_matrix_contents.shape[1]
+
+    # Sample has to be specified, check the way it was specified and get them
     # Select individual samples
     if args.num_samples is not None:
-        # Sample number has to be positive
-        if True in [_ < 0 for _ in args.num_samples]:
-            parser.error(
-                "Number of samples with -ns has to be strictly positive!")
-        else:
-            samples = args.num_samples
+        samples = get_sample_from_select(args.num_samples, num_samples)
     # Use range of samples
     elif args.num_range is not None:
-        # Sample range number has to be positive
-        if (args.num_range[0] <= 0 or args.num_range[1] <= 0) and \
-                (args.num_range[0] > args.num_range[1]):
-            parser.error("Sample range with -nr has to be strictly positive!"
-                         "and the first is smaller than the second")
-        else:
-            samples = list(range(args.num_range[0], args.num_range[1]+1))
-    # Select all samples
-    elif args.all_samples is not None:
-    	samples = args.all_samples
+        samples = get_sample_from_range(args.num_range, num_samples)
+    # Select all samples, by default
+    else:
+        samples = list(range(1, num_samples + 1))
 
-    return samples, args.base_name, \
-           tracin_base_fullname, tracin_base_contents, \
-           design_matrix_fullname, design_matrix_contents, \
-	   params_list_fullname, params_list_contents, \
-	   args.overwrite, args.info, args.prepro_filename
+    # Check the validity of the design matrix dimension and list of params file
+    check_dimension(params_list_contents, num_dimension)
+
+    return (samples, args.base_name,
+            tracin_base_fullname, tracin_base_contents,
+            design_matrix_fullname, design_matrix_contents,
+            params_list_fullname, params_list_contents,
+            args.overwrite, args.info, args.prepro_filename)
 
 
-def check(inputs):
-    r"""Check the validity of the command line arguments
+def get_sample_from_range(ranges: list, num_samples: int) -> list:
+    r"""Get while checking the validity of the requested sample range
 
-    :param inputs: (dict) the command line arguments as dictionary
-    :return: ValueError if exception raised
+    :param ranges: The range of selected samples
+    :param num_samples: The list of all selected samples based on the range
+    :return: The selected samples, verified
     """
-    import os
-    import numpy as np
+    samples = list(range(ranges[0], ranges[1] + 1))
+    all_samples = list(range(1, num_samples + 1))
 
-    # Get the number 
-    num_samples = inputs["dm_contents"].shape[0]
-    num_params_dm = inputs["dm_contents"].shape[1]
+    # Check the validity of the sample range
+    if (ranges[0] <= 0 or ranges[1] <= 0) and (ranges[0] > ranges[1]):
+        raise ValueError(
+            "Sample range with -nr has to be strictly positive, "
+            "with the first is smaller than the second!")
+    elif False in [_ in all_samples for _ in samples]:
+        raise ValueError(
+            "Some or all selected samples within range are not in the design!")
 
+    return samples
+
+
+def get_sample_from_select(samples: list, num_samples: int) -> list:
+    r"""Get while checking the validity of the requested samples
+
+    :param samples: The selected samples
+    :param num_samples: The number of available samples
+    :return: The selected samples, verified
+    """
+    all_samples = list(range(1, num_samples + 1))
+
+    # Sample number has to be positive
+    if True in [_ < 0 for _ in samples]:
+        raise ValueError(
+            "Number of samples with -ns has to be strictly positive!")
+    # Sample number has to be within the available sample
+    elif False in [_ in all_samples for _ in samples]:
+        raise ValueError(
+            "Some or all selected samples are not available in the design")
+
+    return samples
+
+
+def check_dimension(params_list_contents: list, num_dimension: int):
+    r"""Check the validity of the list of parameters file size
+
+    :param params_list_contents: the contents of the file
+    :param num_dimension: the dimension of the design matrix file
+    """
     # Check the number of parameters listed in the params_list_file
-    num_params_list_file = 0
-    for i in inputs["params_list_contents"]:
-        if not i.startswith("#"):
-            num_params_list_file += 1
+    num_params = 0
+    for line in params_list_contents:
+        if not line.startswith("#"):
+            num_params += 1
 
     # Check the number of parameters in the dm file and list of parameters file
-    if num_params_list_file != num_params_dm:
+    if num_params != num_dimension:
         raise ValueError("The number of parameters is inconsistent\n"
-                         "{:10d} in {} and {:10d} in {}"
-                         .format(num_params_list_file,
-                                 inputs["params_list_name"],
-                                 num_params_dm,
-                                 inputs["dm_name"]))
+                         "{:10d} in list of parameters file and {:10d} in "
+                         "the design matrix file"
+                         .format(num_params, num_dimension))
     else:
         pass
-
-    # Check if the sample number asked is available
-    if not isinstance(inputs["samples"], bool):
-        if max(inputs["samples"]) > num_samples:
-            raise ValueError("The sample asked is beyond the available "
-                             "samples\n {:10d} asked and {:10d} in {}"
-                         .format(max(inputs["samples"]),
-                                 num_samples,
-                                 inputs["dm_name"]))
-    else:
-        pass
-

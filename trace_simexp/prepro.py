@@ -63,7 +63,7 @@ def get_input() -> dict:
     | info                 | (str) A short message for the simulation         |
     |                      | experiment                                       |
     +----------------------+--------------------------------------------------+
-    | infofile             | (str) The filename of the preprocessing step info|
+    | info_file            | (str) The filename of the preprocessing step info|
     +----------------------+--------------------------------------------------+
     """
     from . import cmdln_args
@@ -100,18 +100,10 @@ def get_input() -> dict:
         "info": info
     }
 
-    # Check the validity of the inputs
-    cmdln_args.prepro.check(inputs)
-
-    # Update samples if all samples are asked
-    if isinstance(inputs["samples"], bool) and inputs["samples"]:
-        num_samples = inputs["dm_contents"].shape[0]
-        inputs["samples"] = list(range(1, num_samples+1))
-
     # Create the filename for the info file of the prepro phase
     if prepro_filename is None:
         prepro_filename = info_file.common.make_filename(inputs, "prepro")
-    
+    # Add new entry to the dictionary
     inputs["info_file"] = prepro_filename
 
     return inputs
