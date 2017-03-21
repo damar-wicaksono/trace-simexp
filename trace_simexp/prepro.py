@@ -221,63 +221,7 @@ def create_dirtree(prepro_inputs: dict,
                 with open(tracin_fullname, "wt") as tracin_file:
                     tracin_file.write(str_tracin)
             else:
-                print("{} exist - no overwrite option" .format(tracin_fullname))
+                print("{} exist-no overwrite option" .format(tracin_fullname))
         else:
             with open(tracin_fullname, "wt") as tracin_file:
                     tracin_file.write(str_tracin)
-
-
-def reset(prepro_inputs: dict):
-    """Delete the created directory structures according to the parameters
-
-    :param prepro_inputs: (dict) the input parameters for pre-processing phase
-    """
-    return None
-
-
-def check_dirtree(case_name, param_list_name, dm_name, base_name, samples):
-    """
-
-    :param case_name:
-    :param dm_name:
-    :param samples:
-    :return:
-    """
-    import os
-
-    # Create directory path name
-    case_name_dir = "./{}/{}" .format(base_name, case_name)
-    dm_name_dir = "{}/{}" .format(case_name_dir, dm_name)
-
-    print("********************************")
-    print("Checking Directory Structures...")
-    print("********************************")
-
-    if os.path.exists(dm_name_dir):
-        print("Simulation Case directory: {} exists"
-              .format(dm_name_dir))
-        print("\n")
-    else:
-        print("Simulation Case directory: {} does not exist"
-              .format(dm_name_dir))
-        print("\n")
-
-    print("************************")
-    print("Checking input files...")
-
-    for i in samples:
-        num_runs = i
-        run_dir_name = "{}/{}_run_{}" .format(dm_name_dir, case_name, num_runs)
-
-        if os.path.exists(run_dir_name):
-
-            print("*********")
-            print("Case Name - {} Design Matrix - {}.inp"
-                  .format(case_name, dm_name))
-
-            tracin_filename = "{}_run_{}.inp" .format(case_name, num_runs)
-            tracin_fullname = "{}/{}" .format(run_dir_name, tracin_filename)
-
-            if os.path.isfile(tracin_fullname):
-                print("Sample - {}. Full path - {}" .format(num_runs,
-                                                            tracin_fullname))
