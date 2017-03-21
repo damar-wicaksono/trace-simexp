@@ -31,9 +31,8 @@ def prepro():
     else:
         info_file.prepro.write(inputs)
 
-    # Read list of parameters file and create a dictionary from it
+    # Read list of parameters file, get nominal value, and create a dictionary
     params_dict = prepro.read_params(inputs["params_list_contents"],
-                                     inputs["info_file"],
                                      inputs["tracin_base_contents"])
 
     # Update the info file with information of list of parameters file
