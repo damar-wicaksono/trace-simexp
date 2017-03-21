@@ -35,8 +35,13 @@ trace-simexp Documentation
   developer_guide
   about
 
-trace-simexp Modules reference documentation
-============================================
+``trace-simexp`` Modules reference documentation
+================================================
+
+.. toctree::
+  :maxdepth: 1
+
+  modules/cmdln_args
 
 Indices and tables
 ==================
