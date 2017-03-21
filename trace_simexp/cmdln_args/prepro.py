@@ -21,7 +21,7 @@ def get() -> tuple:
         (str) the design matrix fullname (path + filename)
         (str) the list of parameters fullname (path + filename)
         (bool) the flag whether to overwrite directory structure
-        (str) a oneline info of the simulation experiment campaign
+        (str) a one line info of the simulation experiment campaign
     """
     import argparse
 
