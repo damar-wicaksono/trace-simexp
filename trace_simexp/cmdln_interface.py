@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-command_line.py: Module with collections of command line interfaces for
-trace-simexp
+    trace_simexp.cmdln_interface
+    ****************************
+
+    Module with collections of command line interfaces for trace-simexp package
+    to conduct simulation experiment using TRACE
 """
 
 
 def prepro():
-    """trace-simexp pre-processing step command line interface"""
-
+    """Command line interface for trace-simexp pre-processing step"""
     import sys
     import os
 
@@ -16,7 +18,7 @@ def prepro():
     from trace_simexp import info_file
     from trace_simexp import paramfile
 
-    # Construct a dictionary of required inputs from command line arguments, etc
+    # Construct a dictionary of required inputs from command line arguments,etc
     inputs = prepro.get_input()
 
     # Check if info file already exists
