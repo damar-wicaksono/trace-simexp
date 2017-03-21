@@ -1,4 +1,10 @@
-"""Module to generate key used in the trace input deck template"""
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.tracin_util.keygen
+    *******************************
+
+    Module to generate key used in the trace input deck template
+"""
 
 
 __author__ = "Damar Wicaksono"
@@ -6,17 +12,21 @@ __author__ = "Damar Wicaksono"
 
 def create(param_dict: dict, template: bool=False, index: int=None) -> str:
     r"""Create a key based on a given dictionary of perturbed parameter
+
+    Note that when key is created for Python template it has to be added with
+    symbol "$"
     
     :param param_dict: the dictionary of perturbed parameter
-    :template: boolean flag to decide whether to add $ character or not
-    :index: integer for multiple values in table or array type variable
+    :param template: boolean flag to decide whether to add $ character or not
+    :param index: integer for multiple values in table or array type variable
     :return: string of key used in the template
     """
-    if index != None:
+    if index is not None:
         # Multiple perturbed parameters
         key = "par_{:03d}_{:03d}" .format(param_dict["enum"], index)
         if template:
-            key = "{{{}}}" .format(key) # Curly bracket to accomodate cont. sym
+            # Curly bracket to accommodate continuation symbol at the end, "s"
+            key = "{{{}}}" .format(key)
     else:
         key = "par_{:03d}" .format(param_dict["enum"])
 

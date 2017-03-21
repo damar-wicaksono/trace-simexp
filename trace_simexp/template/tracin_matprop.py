@@ -1,4 +1,10 @@
-"""Module with functionalities to parse tracin base for material property
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.template.tracin_matprop
+    ************************************
+
+    Module with functions to parse the TRACE input deck for parameters related
+    to material property (``matprop``)
 """
 
 __author__ = "Damar Wicaksono"
@@ -19,7 +25,7 @@ def get_col_num(param_dict: dict) -> int:
     *  prptb         temp         rho          cp        cond        emis
     *  prptb*      273.15      8300.0       432.0        12.5         1.0s
     
-    :param param_dict: the dictionary of the matprop parameter
+    :param param_dict: specification of the matprop parameter
     :return: the integer signifying column number, zero-indexed
     """
     if param_dict["var_name"] == "rho":
@@ -30,18 +36,20 @@ def get_col_num(param_dict: dict) -> int:
         col_var = 5
     elif param_dict["var_name"] == "emis":
         col_var = 6
+    else:
+        raise ValueError("Material property is not supported!")
     
     return col_var
 
 
-def get_nom_val(tracin_lines, param_dict):
+def get_nom_val(tracin_lines: list, param_dict: dict) -> list:
     r"""Get the nominal value of material property parameter from tracin base
 
-    :param tracin_lines: (list of str) the tracin base as a list
-    :param param_dict: (dict) the dictionary of the matprop parameter
-    :return: (list) the nominal values of the matprop parameter
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the matprop parameter
+    :return: the nominal values of the matprop parameter
     """
-    nom_val = None
+    nom_val = []
 
     if param_dict["var_type"] == "table":
         nom_val = read_table(tracin_lines, param_dict)
@@ -53,12 +61,12 @@ def get_nom_val(tracin_lines, param_dict):
     return nom_val
 
 
-def read_table(tracin_lines, param_dict):
+def read_table(tracin_lines: list, param_dict: dict) -> list:
     r"""Get the nominal value of table-type material property parameter
 
-    :param tracin_lines: (list of str) the tracin base as a list
-    :param param_dict: (dict) the dictionary of the matprop parameter
-    :return: (list) the nominal values of the matprop parameter
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the matprop parameter
+    :return: the nominal values of the matprop parameter specified as table
     """
     nom_val = []
     
@@ -98,23 +106,23 @@ def read_table(tracin_lines, param_dict):
     return nom_val
 
 
-def read_fit(tracin_lines, param_dict):
-    r"""Get the nominal value of fit-type material property parameter
+def read_fit(tracin_lines: list, param_dict: dict) -> list:
+    r"""Get the nominal value of curve fit-type material property parameter
 
-    :param tracin_lines: (list of str) the tracin base as a list
-    :param param_dict: (dict) the dictionary of the matprop parameter
-    :return: (array) the nominal values of the matprop parameter
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the matprop parameter
+    :return: the nominal values of the matprop parameter specified as curve fit
     """
     # TODO: Complete the specification of parsing fit material type
-    return None
+    return []
 
 
-def put_key(tracin_lines, param_dict):
+def put_key(tracin_lines: list, param_dict: dict) -> list:
     r"""Replace the nominal value of matprop parameter with key
 
-    :param tracin_lines: (list of str) the tracin base as a list of string
-    :param param_dict: (dict) the dictionary of the matprop parameter
-    :returns:(list of str) the modified base tracin with key for the parameter
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the matprop parameter
+    :return: the modified base TRACE input deck with key for the parameter
         as specified by param_dict
     """
 
@@ -128,13 +136,13 @@ def put_key(tracin_lines, param_dict):
     return tracin_lines
 
 
-def edit_table(tracin_lines, param_dict):
+def edit_table(tracin_lines: list, param_dict: dict) -> list:
     r"""Replace the table type material property with key to be substituted
 
-    :param tracin_lines: (list of str) the tracin base as a list of string
-    :param param_dict: (dict) the dictionary of the matprop parameter
-    :returns:(list of str) the modified base tracin with key for the matprop
-        parameter as specified by param_dict
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the matprop parameter
+    :return: the modified base TRACE input deck with key for the parameter
+        as specified by param_dict
     """
     from ..tracin_util import keygen
 
@@ -175,15 +183,15 @@ def edit_table(tracin_lines, param_dict):
                         # Replace the whole line with modified line with key                          
                         if col_num != 6:
                             # no continuation, not the last column
-                             tracin_lines[line_num+offset] = \
-                                 "{} {}{:>14s}{:>15s}{:>15s}{:>15s}{:>15s}" \
-                                 .format(*cards)
+                            tracin_lines[line_num+offset] = \
+                                "{} {}{:>14s}{:>15s}{:>15s}{:>15s}{:>15s}" \
+                                .format(*cards)
                         else:
                             # last column has a continuation symbol
                             cards.append(cont)
                             tracin_lines[line_num+offset] = \
                                 "{} {}{:>14s}{:>15s}{:>15s}{:>15s}{:>15s}{}" \
-                                 .format(*cards)
+                                .format(*cards)
                     
                     offset += 1
                     i += 1
@@ -192,13 +200,13 @@ def edit_table(tracin_lines, param_dict):
     return tracin_lines
 
 
-def edit_fit(tracin_lines, param_dict):
-    r"""Get the nominal values of fit-type matprop parameters
+def edit_fit(tracin_lines: list, param_dict: dict) -> list:
+    r"""Get the nominal values of curve fit-type matprop parameters
 
-    :param tracin_lines: (list of str) the tracin base as a list of string
-    :param param_dict: (dict) the dictionary of the matprop parameter
-    :returns:(list of str) the modified base tracin with key for the matprop
-        parameter as specified by param_dict
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the matprop parameter
+    :returns: the modified base TRACE input deck with key for the parameter
+        as specified by param_dict
     """
     # TODO: Complete edit_fit function()
-    return None
+    return []

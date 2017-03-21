@@ -44,11 +44,11 @@ setup(
       # Provide the following executable scripts
       entry_points={
         "console_scripts": [
-              "trace_simexp_prepro=trace_simexp.command_line:prepro",
-              "trace_simexp_execute=trace_simexp.command_line:execute",
-              "trace_simexp_postpro=trace_simexp.command_line:postpro"
+              "trace_simexp_prepro=trace_simexp.cmdln_interface:prepro",
+              "trace_simexp_execute=trace_simexp.cmdln_interface:execute",
+              "trace_simexp_postpro=trace_simexp.cmdln_interface:postpro"
         ]
       },
 
-      zip_safe=False
+      zip_safe=False, install_requires=['numpy', 'scipy']
 )
