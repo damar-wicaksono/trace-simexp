@@ -1,15 +1,22 @@
-"""Module to parse command line arguments in pre-processing phase
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.cmdln_args.prepro
+    ******************************
+
+    Module to parse command line arguments used in the pre-processing step
 """
 from .. import util
 from .._version import __version__
 
+
 __author__ = "Damar Wicaksono"
 
 
-def get():
+def get() -> tuple:
     r"""Parse input arguments required for pre-processing phase
 
-    :return: (int or string) the specified samples, individual, range, or all
+    :return: tuple of the following values:
+        (int or string) the specified samples, individual, range, or all
         (str) the base directory name of the simulation campaign
         (str) the base tracin fullname
         (str) the design matrix fullname

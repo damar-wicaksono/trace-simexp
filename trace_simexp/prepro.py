@@ -1,4 +1,9 @@
-"""Main module for pre-processing activities - Pre-processing Phase
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.prepro
+    *******************
+
+    Main module for pre-processing activities
 """
 import numpy as np
 
