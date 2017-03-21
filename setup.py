@@ -50,5 +50,5 @@ setup(
         ]
       },
 
-      zip_safe=False
+      zip_safe=False, install_requires=['numpy']
 )
