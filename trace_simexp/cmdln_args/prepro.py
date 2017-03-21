@@ -58,10 +58,10 @@ def get() -> tuple:
 
     # The base directory name
     parser.add_argument(
-        "-b", "--base_name",
+        "-b", "--base_dirname",
         type=str,
-        help="The base directory name",
-        default="./simulation",
+        help="The base directory name (Default: current working directory)",
+        default="./",
         required=False
     )
 
@@ -166,7 +166,17 @@ def get() -> tuple:
     # Check the validity of the design matrix dimension and list of params file
     check_dimension(params_list_contents, num_dimension)
 
-    return (samples, args.base_name,
+    # Base Directory Name,  guard against possible input closed with "/"
+    # Otherwise there would be an error for directory creation due to "//"
+    if args.base_dirname is not None:
+        base_dirname = args.base_dirname.split("/")
+        if base_dirname[-1] == "":
+            base_dirname.pop()
+        base_dirname = "/".join(base_dirname)
+    else:
+        base_dirname = args.base_dirname
+
+    return (samples, base_dirname,
             tracin_base_fullname, tracin_base_contents,
             design_matrix_fullname, design_matrix_contents,
             params_list_fullname, params_list_contents,

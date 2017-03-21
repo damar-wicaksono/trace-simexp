@@ -22,7 +22,7 @@ def get_input() -> dict:
     | samples              | (list, int > 0) The samples to be pre-processed, |
     |                      | a list of integer greater than zero              |
     +----------------------+--------------------------------------------------+
-    | base_dir             | (str) The full path base directory for set of    |
+    | base_dirname         | (str) The full path base directory for set of    |
     |                      | input decks to be generated and subsequently     |
     |                      | executed                                         |
     +----------------------+--------------------------------------------------+
@@ -85,7 +85,7 @@ def get_input() -> dict:
     # Construct the dictionary
     inputs = {
         "samples": samples,
-        "base_dir": base_dirname,
+        "base_dirname": base_dirname,
         "base_name": base_name,
         "tracin_base_contents": tracin_base_contents,
         "tracin_base_fullname": tracin_base_fullname,
@@ -197,14 +197,14 @@ def create_dirtree(prepro_inputs: dict,
     # the samples
     samples = prepro_inputs["samples"]
     # the base name
-    base_name = prepro_inputs["base_name"]
+    base_dirname = prepro_inputs["base_dirname"]
     # the overwrite directive
     overwrite = prepro_inputs["overwrite"]
     # the design matrix array
     dm_array = prepro_inputs["dm_contents"]
 
     # Create directory path name
-    case_name_dir = "./{}/{}" .format(base_name, case_name)
+    case_name_dir = "{}/{}" .format(base_dirname, case_name)
     dm_name_dir = "{}/{}-{}" .format(case_name_dir, params_list_name, dm_name)
 
     if not os.path.exists(dm_name_dir):

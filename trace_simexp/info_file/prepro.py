@@ -35,7 +35,7 @@ def write(inputs: dict):
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[0], "->", inputs["base_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
-                        .format(header[1], "->", inputs["base_dir"]))
+                        .format(header[1], "->", inputs["base_dirname"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[2], "->", inputs["case_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
