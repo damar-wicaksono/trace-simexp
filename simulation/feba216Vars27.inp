@@ -40,7 +40,7 @@
 # Wall Drag - DFFB
 25  senscoef  1043        -   scalar    -   -   3   logunif ['min':0.5, 'max':2.0]          14.4f
 # Minimum Temperature for Film Boiling
-#26  senscoef  1044        -   scalar    -   -   2   unif    ['min':-50.0, 'max':50.0]       14.4f
-# Minimum Temperature for Film Boiling
-26  spacer    1     spmatid   scalar    3   3   1   discrete [2:0.1, 6:0.5, 8:0.25, 10:0.15]       14d
+26  senscoef  1044        -   scalar    -   -   2   unif    ['min':-50.0, 'max':50.0]       14.4f
+# Spacer Grid Material
+27  spacer    1     spmatid   scalar    3   3   1   discrete [2:0.1, 6:0.5, 8:0.25, 10:0.15]       14d
 ###############################################################################
