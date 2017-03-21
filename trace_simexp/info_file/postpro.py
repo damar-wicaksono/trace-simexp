@@ -37,11 +37,10 @@ def read(info_fullname: str):
     return prepro_info, exec_info, apt_name
     
     
-def write(inputs: dict, info_filename: str):
+def write(inputs: dict):
     """Write a summary of the post-processing phase (a.k.a postpro.info)
 
     :param inputs: (dict) the required inputs for post-pro phase in a dictionary
-    :param info_filename: (str) the filename of the postpro.info file
     """
     from datetime import datetime
 
@@ -50,7 +49,7 @@ def write(inputs: dict, info_filename: str):
               "List of XTV Variables Name", "List of XTV Variables File", 
               "List of XTV Variables", "Samples to Post-processed"]
 
-    with open(info_filename, "wt") as info_file:
+    with open(inputs["info_file"], "wt") as info_file:
 
         # Print the header
         info_file.writelines("TRACE Simulation Experiment - Date: {}\n"

@@ -29,7 +29,7 @@ def read(exec_info_contents: list):
     return prepro_info, samples
 
 
-def write(inputs: dict, info_filename: str):
+def write(inputs: dict):
     """Write a summary of the execution phase (a.k.a exec.info)
 
     The exec.info serves as a log file for the command line arguments, the
@@ -37,7 +37,6 @@ def write(inputs: dict, info_filename: str):
     link to the next phase
 
     :param inputs: (dict) the required inputs for execute phase in a dictionary
-    :param info_filename: (str) the filename of the exec.info file
     :return: the exec.info file with the specified filename
     """
     from datetime import datetime
@@ -46,7 +45,7 @@ def write(inputs: dict, info_filename: str):
               "Scratch Directory Name", "Number of Processors",
               "Samples to Run"]
 
-    with open(info_filename, "wt") as info_file:
+    with open(inputs["info_file"], "wt") as info_file:
         info_file.writelines("TRACE Simulation Experiment - Date: {}\n"
                              .format(str(datetime.now())))
 

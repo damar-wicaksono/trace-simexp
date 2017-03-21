@@ -55,11 +55,10 @@ def get_input() -> dict:
         "hostname": hostname
     }
 
-    # Write to a file the summary of execution phase parameters
+    # Create an infofile filename if not provided
     if exec_filename is None:
         exec_filename = info_file.common.make_filename(exec_inputs, "exec")
 
-    info_file.execute.write(exec_inputs, exec_filename)
     exec_inputs["info_file"] = exec_filename
 
     return exec_inputs
@@ -175,7 +174,7 @@ def run_batches(exec_inputs: dict):
 
         # If XTV2DMX exec. not in the path, create a symbolic link in run dir
         if xtv2dmx_is_in_path:
-            xtv2dmx_exec = exec_inputs["trace_exec"]
+            xtv2dmx_exec = exec_inputs["xtv2dmx_exec"]
         else:
             for run_dirname in run_dirnames:
                 link_exec(exec_inputs["xtv2dmx_exec"], run_dirname)
