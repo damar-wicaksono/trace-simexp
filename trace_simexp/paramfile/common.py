@@ -1,4 +1,10 @@
-"""Common module for paramfile package
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.paramfile.common
+    *****************************
+
+    Module with common functions to be used across modules within paramfile
+    package
 """
 
 __author__ = "Damar Wicaksono"

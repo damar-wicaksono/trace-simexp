@@ -1,4 +1,10 @@
-"""Module to parse spacer grid data from the list of parameters file
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.paramfile.spacer
+    *****************************
+
+    Module to parse spacer grid related parameter specification from the list
+    of parameters file
 """
 
 __author__ = "Damar Wicaksono"
@@ -7,11 +13,8 @@ __author__ = "Damar Wicaksono"
 def parse(line: str) -> dict:
     r"""Parse spacer grid specification from a list of parameters file
 
-    note that the input argument `params_dict` is mutable and will be modified
-
-    :param line: (list of str) a line read from list of parameters file
-    :param params_dict: (list of dict) the list of parameters in a dictionary
-    :returns: (list of dict) an updated params_dict with spacer specification
+    :param line: a line read from list of parameters file
+    :returns: a dictionary of spacer grid parameter specification
     """
     from .common import parse_var_params
 
@@ -67,25 +70,11 @@ def create_msg(spacer_dict: dict) -> str:
     return "\n".join(str_msg)
 
 
-def check_spacer(spacer_data):
+def check_spacer(spacer_data: list):
     r"""Check the validity of the specified spacer grid data
 
-    :param spacer_data: (list) list of specifications for spacer grid data
+    :param spacer_data: list of specifications for spacer grid parameter
     """
-    # Check the number of parameters in the data
-#    num_params = 12
-#    if spacer_data[3].lower() == "spmatid":
-#        if len(spacer_data) != num_params - 1:
-#            print(spacer_data)
-#            raise TypeError("The amount of information specified does not match."
-#                            "Required {}, supplied {}. check again!"
-#                            .format(num_params-1, len(spacer_data)))
-#    else:
-#        if len(spacer_data) != num_params:
-#            raise TypeError("The amount of information specified does not match."
-#                            "Required {}, supplied {}. check again!"
-#                            .format(num_params, len(spacer_data)))
-
     # Check the variable type
     if spacer_data[4].lower() != "scalar":
         raise TypeError("Only scalar type is supported for spacer grid!")
