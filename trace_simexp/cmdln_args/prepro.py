@@ -27,7 +27,7 @@ def get() -> tuple:
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="%(prog)s - trace-simexp, Preprocess: Generate TRACE inputs"
+        description="%(prog)s - trace-simexp Preprocess: Generate TRACE inputs"
     )
 
     # Select which samples to run
