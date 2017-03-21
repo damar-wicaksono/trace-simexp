@@ -5,9 +5,6 @@
 
     Main module for pre-processing activities
 """
-import numpy as np
-
-
 __author__ = "Damar Wicaksono"
 
 
@@ -18,11 +15,57 @@ def get_input() -> dict:
     trace base input, and design matrix file
 
     :return: All the inputs required for pre-processing phase in a dictionary
+
+    +----------------------+--------------------------------------------------+
+    | Key                  | Value                                            |
+    +======================+==================================================+
+    | samples              | (list, int > 0) The samples to be pre-processed, |
+    |                      | a list of integer greater than zero              |
+    +----------------------+--------------------------------------------------+
+    | base_dir             | (str) The full path base directory for set of    |
+    |                      | input decks to be generated and subsequently     |
+    |                      | executed                                         |
+    +----------------------+--------------------------------------------------+
+    | base_name            | (str) The base run directory name, taken from the|
+    |                      | full path of the base directory)                 |
+    +----------------------+--------------------------------------------------+
+    | tracin_base_contents | (list, str) The contents of the base TRACE input |
+    |                      | deck, line by line                               |
+    +----------------------+--------------------------------------------------+
+    | tracin_base_fullname | (str) The fullname of the base TRACE input deck  |
+    +----------------------+--------------------------------------------------+
+    | case_name            | (str) The case name is taken as the base TRACE   |
+    |                      | input deck filename excluding the extension and  |
+    |                      | the path                                         |
+    +----------------------+--------------------------------------------------+
+    | dm_contents          | (np.ndarray, float) The contents of the design   |
+    |                      | matrix file as a numpy array                     |
+    +----------------------+--------------------------------------------------+
+    | dm_fullname          | (str) The fullname of the design matrix file     |
+    +----------------------+--------------------------------------------------+
+    | dm_name              | (str) The name of the design matrix file taken   |
+    |                      | from the filename excluding the extension and    |
+    |                      | the path                                         |
+    +----------------------+--------------------------------------------------+
+    | params_list_contents | (list, str) The contents of the the list of      |
+    |                      | parameters file as a list of string              |
+    +----------------------+--------------------------------------------------+
+    | params_list_fullname | (str) The fullname of the list of parameters file|
+    +----------------------+--------------------------------------------------+
+    | params_list_name     | (str) The name of the list of parameters file,   |
+    |                      | taken from the filename excluding the extension  |
+    |                      | and the path                                     |
+    +----------------------+--------------------------------------------------+
+    | overwrite            | (bool) The flag to continue the pre-processing   |
+    |                      | step even though info files and directory        |
+    |                      | structures already exist                         |
+    +----------------------+--------------------------------------------------+
+    | info                 | (str) A short message for the simulation         |
+    |                      | experiment                                       |
+    +----------------------+--------------------------------------------------+
     """
-    import numpy as np
     from . import cmdln_args
     from . import info_file
-    from . import util
 
     # Read the command line arguments
     samples, base_dirname, \
