@@ -43,7 +43,7 @@ def get() -> tuple:
         "-nr", "--num_range",
         type=int,
         nargs=2,
-        help="Range of samples to run",
+        help="Range of samples to run, between two values, inclusive",
         required=False
     )
 

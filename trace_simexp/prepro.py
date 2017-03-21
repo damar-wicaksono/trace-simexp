@@ -221,7 +221,7 @@ def create_dirtree(prepro_inputs: dict,
                 with open(tracin_fullname, "wt") as tracin_file:
                     tracin_file.write(str_tracin)
             else:
-                print("{} exist-no overwrite option" .format(tracin_fullname))
+                print("{} exist - no overwrite flag" .format(tracin_fullname))
         else:
             with open(tracin_fullname, "wt") as tracin_file:
                     tracin_file.write(str_tracin)
