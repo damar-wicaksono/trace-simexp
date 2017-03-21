@@ -241,7 +241,7 @@ def check_dimension(params_list_contents: list, num_dimension: int):
     # Check the number of parameters in the dm file and list of parameters file
     if num_params != num_dimension:
         raise ValueError("The number of parameters is inconsistent\n"
-                         "{:10d} in list of parameters file and {:10d} in "
+                         "{:5d} in list of parameters file and {:5d} in "
                          "the design matrix file"
                          .format(num_params, num_dimension))
     else:
