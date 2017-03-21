@@ -63,6 +63,8 @@ def get_input() -> dict:
     | info                 | (str) A short message for the simulation         |
     |                      | experiment                                       |
     +----------------------+--------------------------------------------------+
+    | infofile             | (str) The filename of the preprocessing step info|
+    +----------------------+--------------------------------------------------+
     """
     from . import cmdln_args
     from . import info_file
