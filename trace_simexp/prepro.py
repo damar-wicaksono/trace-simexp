@@ -110,21 +110,17 @@ def get_input() -> dict:
 
 
 def read_params(params_list_contents: list,
-                info_filename: str,
                 tracin_base_contents: list,
                 comment_char: str="#") -> dict:
     """Read list of parameters file and create a python dictionary out of it
 
     The nominal parameter values are read from the base tracin file
 
-    :param param_list_file: (list) the contenst of list of parameters file
-    :param info_filename: (str) the filename string for info_file
-    :param tracin_filename: (str) the filename string for base tracin file
-    :param comment_char: (str) the character signifying comment line in the file
-    :returns: (list of dict) the parameter perturbation specification in a list
-        of dictionary
+    :param params_list_contents: the contents of list of parameters file
+    :param tracin_base_contents: the contents of the base TRACE input deck
+    :param comment_char: the character signifying comment line in the file
+    :returns: the parameter perturbation specification as a list of dictionary
     """
-    from .paramfile import common
     from .paramfile import senscoef
     from .paramfile import matprop
     from .paramfile import spacer
@@ -175,14 +171,10 @@ def create_dirtree(prepro_inputs: dict,
                    tracin_template: str):
     """Create a directory structure for the simulation campaign
 
-    :param params_dict: (list of dict) the list of parameters
-    :param str_template: (str template) the template based on base tracin
-    :param dm: (ndArray) the numpy array
-    :param case_name: (str) the name of the case
-    :param params_list_name: (str) the name of the list of parameters file
-    :param dm_name: (str) the name of the design matrix
-    :param samples: (list) the list of samples to be created
-    :return:
+    :param prepro_inputs: the complete inputs of the prepro step
+    :param params_dict: the list of perturbed parameters
+    :param tracin_template: the TRACE template with keys to be substituted with
+        actual values from the rescaled design matrix
     """
     import os
     from . import tracin
