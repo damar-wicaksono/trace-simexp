@@ -10,12 +10,13 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, "README.rst"), encoding="utf-8") as f:
     long_description = f.read()
 
+exec(open('trace_simexp/_version.py').read())
 setup(
       name="trace-simexp",
 
       # Versions comply with semantic versioning, see
       # http://semver.org/
-      version="0.3.0",
+      version=__version__,
 
       description="Script utility to assist simulation experiment with TRACE",
       long_description=long_description,

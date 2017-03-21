@@ -1,7 +1,7 @@
 """Module to parse command line arguments in pre-processing phase
 """
 from .. import util
-from ..__init__ import __version__
+from .._version import __version__
 
 __author__ = "Damar Wicaksono"
 
