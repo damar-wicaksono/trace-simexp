@@ -1,4 +1,10 @@
-"""Module to parse sensitivity coefficient data from the list of parameters file
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.paramfile.senscoef
+    *******************************
+
+    Module to parse sensitivity coefficient parameter specification from the
+    list of parameters file
 """
 
 __author__ = "Damar Wicaksono"
@@ -38,9 +44,9 @@ def parse(line) -> dict:
 
 
 def check_senscoef(senscoef_dict: dict):
-    r"""Check the validity of the sensitivity coefficient data
+    r"""Check the validity of the sensitivity coefficient parameter spec.
 
-    :param senscoef_data: (list of str) list of sensivitivity coefficient data
+    :param senscoef_dict: sensitivity coefficient parameter specification
     """
     # Check the type
     if senscoef_dict["var_type"] != "scalar":

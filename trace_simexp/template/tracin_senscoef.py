@@ -1,15 +1,21 @@
-"""Module with functionalities to parse tracin base for sensitivity coefficient
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.template.tracin_senscoef
+    *************************************
+
+    Module with functions to parse base TRACE input deck for parameters related
+    to "sensitivity coefficient" (``senscoef``)
 """
 
 __author__ = "Damar Wicaksono"
 
 
-def get_nom_val(tracin_lines, param_dict):
+def get_nom_val(tracin_lines: list, param_dict: dict) -> float:
     r"""Get the nominal value of sensitivity coefficient from tracin base
 
-    :param tracin_lines: (list of str) the tracin base in python list
-    :param param_dict: (dict) the dictionary of senscoef parameter
-    :returns: (float) the nominal value of the sensitivity coefficients
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the senscoef parameter
+    :return: the nominal value of the sensitivity coefficients
     """
 
     nom_val = None
@@ -17,7 +23,7 @@ def get_nom_val(tracin_lines, param_dict):
     # loop over tracin lines
     for line_num, tracin_line in enumerate(tracin_lines):
 
-        var_num = tracin_line.split()[0]            # safer to keep it as string
+        var_num = tracin_line.split()[0]        # safer to keep it as string
         if var_num == str(param_dict["var_num"]):
             # the sensitivity coefficient identifier is the beginning of line
             nom_val = float(tracin_line.split()[2])
@@ -28,22 +34,22 @@ def get_nom_val(tracin_lines, param_dict):
     return nom_val
 
 
-def put_key(tracin_lines, param_dict):
+def put_key(tracin_lines: list, param_dict: dict) -> list:
     r"""Function to replace the nominal value of senscoef parameters with key
 
-    :param tracin_lines: (list of string) the base tracin in a python list
-    :param param_dict: (dict) the dictionary of senscoef parameter
-    :return: (list of str) the base tracin with line(s) modified according to
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the senscoef parameter
+    :return: the base TRACE input deck with line(s) modified according to
         the senscoef parameter key
     """
     from ..tracin_util import keygen
 
-    word = 2 # the parameter values for senscoef is always at the 3rd values
+    word = 2    # the parameter values for senscoef is always at the 3rd values
     
     # loop over tracin lines
     for line_num, tracin_line in enumerate(tracin_lines):
 
-        var_num = tracin_line.split()[0]            # safer to keep it as string
+        var_num = tracin_line.split()[0]        # safer to keep it as string
         if var_num == str(param_dict["var_num"]):
             # the sensitivity coefficient identifier is the beginning of line
             card = tracin_line.split()
