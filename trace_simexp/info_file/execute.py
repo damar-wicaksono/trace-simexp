@@ -98,3 +98,6 @@ def write(inputs: dict):
             for i in range(offset1, offset2):
                 info_file.writelines(" {:5d} " .format(inputs["samples"][i]))
             info_file.writelines("\n")
+
+        # Info file header
+        info_file.writelines("***  End of Samples  ***\n")
