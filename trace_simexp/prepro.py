@@ -66,8 +66,10 @@ def get_input() -> dict:
     | info_file            | (str) The filename of the preprocessing step info|
     +----------------------+--------------------------------------------------+
     """
+    import os
+    import re
     from . import cmdln_args
-    from . import info_file
+    from .info_file.common import make_filename
 
     # Read the command line arguments
     samples, base_dirname, \
@@ -77,10 +79,12 @@ def get_input() -> dict:
         overwrite, info, prepro_filename = cmdln_args.prepro.get()
     
     # Get the names of directory and files
-    base_name = base_dirname.split("/")[-1]
-    case_name = tracin_base_fullname.split("/")[-1].split(".")[0]
-    dm_name = dm_fullname.split("/")[-1].split(".")[0]
-    params_list_name = params_list_fullname.split("/")[-1].split(".")[0]
+    dir_delim = "[/\\\\]"   # Multiple dir. delimiters for WIN compatibility
+    base_name = re.split(dir_delim, base_dirname)[-1]
+    case_name = re.split(dir_delim, tracin_base_fullname)[-1].split(".")[0]
+    dm_name = re.split(dir_delim, dm_fullname)[-1].split(".")[0]
+    params_list_name = re.split(dir_delim,
+                                params_list_fullname)[-1].split(".")[0]
 
     # Construct the dictionary
     inputs = {
@@ -101,8 +105,10 @@ def get_input() -> dict:
     }
 
     # Create the filename for the info file of the prepro phase
-    if prepro_filename is None:
-        prepro_filename = info_file.common.make_filename(inputs, "prepro")
+    if os.path.isdir(prepro_filename):
+        # Append the filename with the full path
+        prepro_filename = os.path.join(prepro_filename,
+                                       make_filename(inputs, "prepro"))
     # Add new entry to the dictionary
     inputs["info_file"] = prepro_filename
 
