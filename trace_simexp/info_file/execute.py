@@ -41,7 +41,8 @@ def write(inputs: dict):
     """
     from datetime import datetime
 
-    header = ["prepro.info Name", "TRACE Executable", "XTV2DMX Executable",
+    header = ["prepro.info Name", "prepro.info Fullname",
+              "TRACE Executable", "XTV2DMX Executable",
               "Scratch Directory Name", "Number of Processors",
               "Samples to Run"]
 
@@ -56,28 +57,32 @@ def write(inputs: dict):
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
                              .format(header[0], "->",
                                      inputs["prepro_info_name"]))
+        # prepro.info fullname
+        info_file.writelines("{:<30s}{:3s}{:<30s}\n"
+                             .format(header[1], "->",
+                                     inputs["prepro_info_fullname"]))
 
         # TRACE Executable
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[1], "->", inputs["trace_exec"]))
+                             .format(header[2], "->", inputs["trace_exec"]))
 
         # XTV2DMX Executable
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[2], "->", inputs["xtv2dmx_exec"]))
+                             .format(header[3], "->", inputs["xtv2dmx_exec"]))
 
         # Scratch Directory Name
         if inputs["scratch_dir"] is not None:
             info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                                 .format(header[3], "->", 
+                                 .format(header[4], "->",
                                          inputs["scratch_dir"]))
 
         # Number of Processors and hostname
         info_file.writelines("{:<30s}{:3s}{:<3d}({})\n"
-                             .format(header[4], "->", inputs["num_procs"],
+                             .format(header[5], "->", inputs["num_procs"],
                                      inputs["hostname"]))
 
         # Samples to Run
-        info_file.writelines("{:<30s}{:3s}\n" .format(header[5], "->"))
+        info_file.writelines("{:<30s}{:3s}\n" .format(header[6], "->"))
 
         for i in range(int(len(inputs["samples"])/10)):
             offset1 = i*10
