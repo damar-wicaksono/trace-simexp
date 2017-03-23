@@ -46,6 +46,8 @@ def make_dirnames(list_iter: list,
         identical.
     :return: list of string with complete directory fullname
     """
+    import os
+
     run_dirnames = []
 
     if scratch_flag:
@@ -54,14 +56,16 @@ def make_dirnames(list_iter: list,
         base_dir = exec_inputs["base_dir"]
 
     for i in list_iter:
-        run_dirname = "{}/{}/{}-{}/{}-run_{}" .format(
-            base_dir,
-            exec_inputs["case_name"],
-            exec_inputs["params_list_name"],
-            exec_inputs["dm_name"],
-            exec_inputs["case_name"],
-            i
-        )
+        # "<base_dir>/<case_name>/<parlist>-<dm>/<case>-run_<iteration>"
+        run_dirname = os.path.join(base_dir,
+                                   exec_inputs["case_name"],
+                                   "{}-{}" .format(
+                                       exec_inputs["params_list_name"],
+                                       exec_inputs["dm_name"]),
+                                   "{}-run_{}" .format(
+                                       exec_inputs["case_name"],
+                                       str(i))
+                                   )
         run_dirnames.append(run_dirname)
 
     return run_dirnames
