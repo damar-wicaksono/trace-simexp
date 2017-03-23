@@ -54,3 +54,19 @@ def make_filename(inputs: dict, flag: str) -> str:
     info_file = "{}-{}-{}.info" .format(info_file, today, moment)
 
     return info_file
+
+
+def sniff_info_file(info_file_contents: list) -> str:
+    """Sniff the contents of an info file to determine the phase of simulation
+
+    :param info_file_contents: the contents of an info file
+    :return: the info file type
+    """
+    if "***Pre-process Phase Info***" in info_file_contents:
+        return "prepro"
+    elif "***Execute Phase Info***" in info_file_contents:
+        return "exec"
+    elif "***Post-process Phase Info***" in info_file_contents:
+        return "postpro"
+    else:
+        raise TypeError("Cannot determine which type of info file!")

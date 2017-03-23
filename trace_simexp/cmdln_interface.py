@@ -73,3 +73,18 @@ def postpro():
     # Commence the conversion
     postpro.dmx2csv(postpro_inputs)
 
+
+def reset():
+    """trace-simexp reset command line interface"""
+    from trace_simexp import reset, prepro, execute, postpro
+
+    # Get all inputs
+    reset_inputs = reset.get_input()
+
+    # Reset phase
+    if reset_inputs["phase"] == "prepro":
+        prepro.reset(reset_inputs)
+    elif reset_inputs["phase"] == "exec":
+        execute.reset(reset_inputs)
+    elif reset_inputs["phase"] == "postpro":
+        postpro().reset(reset_inputs)

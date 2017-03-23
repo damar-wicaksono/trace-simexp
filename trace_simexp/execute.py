@@ -392,10 +392,13 @@ def clean_dirtree(exec_inputs: dict, dirty_dir_nums: list):
     clean.rm_except(run_dirnames, inp_filenames)
 
 
-def reset(exec_inputs: dict):
-    """Reset the directory structures to the pre-pro phase state
+def reset(reset_inputs: dict):
+    """Reset the directory structures to the pre-processing phase state
 
-    :param exec_inputs: (dict) the input parameters for execute phase
+    This means delete all files within specified run directories except the
+    TRACE input deck
+
+    :param reset_inputs: the required inputs for reset
     """
     import os
     from .util import query_yes_no
@@ -403,38 +406,46 @@ def reset(exec_inputs: dict):
     from .util import make_auxfilenames
     from .task import clean
 
-    # Create dmx link
-    run_dirnames = make_dirnames(exec_inputs["samples"], exec_inputs, False)
-    dmx_filenames = make_auxfilenames(exec_inputs["samples"],
-                                      exec_inputs["case_name"],
-                                      ".dmx")
-
-    dmx_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
-                                                           dmx_filenames)]
-
-    # Create list of scratch directories
-    scratch_dirnames = make_dirnames(exec_inputs["samples"], exec_inputs, True)
+    run_dirnames = make_dirnames(reset_inputs["samples"], reset_inputs, False)
 
     # Create list of TRACE input files not to be removed
-    inp_filenames = make_auxfilenames(exec_inputs["samples"],
-                                      exec_inputs["case_name"],
+    inp_filenames = make_auxfilenames(reset_inputs["samples"],
+                                      reset_inputs["case_name"],
                                       ".inp")
+    inp_fullnames = [os.path.join(a, b) for a, b in zip(run_dirnames,
+                                                        inp_filenames)]
 
-    if query_yes_no("Revert back to pre-pro state?", default="no"):
+    # Create dmx link
+    dmx_filenames = make_auxfilenames(reset_inputs["samples"],
+                                      reset_inputs["case_name"],
+                                      ".dmx")
+    dmx_fullnames = [os.path.join(a, b) for a, b in zip(run_dirnames,
+                                                        dmx_filenames)]
 
-        # Append the info file
-        with open(exec_inputs["info_file"], "a") as info_file:
-            info_file.writelines("***Reverting back to Pre-pro***\n")
-            for i, dmx_fullname in enumerate(dmx_fullnames):
-                if os.path.islink(dmx_fullname):
-                    info_file.writelines("Reverting: {}\n"
-                                         .format(run_dirnames[i]))
+    for inp_fullname, run_dirname in zip(inp_fullnames, run_dirnames):
+        if os.path.exists(run_dirname):
+            if os.path.exists(inp_fullname):
+                print("{} will be revert back to pre-pro state!"
+                      .format(run_dirname))
+            else:
+                print("Warning: {} does not exist!" .format(inp_fullname))
+        else:
+            print("{} does not exist!".format(run_dirname))
 
-        # Clean scratch dirs
-        clean.rm_files(scratch_dirnames)
+    if query_yes_no("Revert select directories to pre-pro state?",
+                    default="no"):
 
-        # Clean dmx links
-        clean.rm_files(dmx_fullnames)
+        # Clean scratch dirs if they do exist
+        if reset_inputs["scratch_dir"] is not None:
+            # Create list of scratch directories
+            scratch_dirnames = make_dirnames(reset_inputs["samples"],
+                                             reset_inputs, True)
+            # Clean scratch dirs
+            clean.rm_files(scratch_dirnames)
+
+
+            # Clean dmx links
+            clean.rm_files(dmx_fullnames)
 
         # Clean the rest
         clean.rm_except(run_dirnames, inp_filenames)

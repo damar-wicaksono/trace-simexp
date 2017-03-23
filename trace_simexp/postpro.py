@@ -37,8 +37,8 @@ def get_input():
 
     # Check if the prepro.info from exec.info is the same as passed by user
     if prepro_info_from_exec != prepro_info_name:
-        raise ValueError("The passed repro.info name does not agree with the" \
-                         "one specified in the exec.info!\n"\
+        raise ValueError("The passed repro.info name does not agree with the"
+                         "one specified in the exec.info!\n"
                          "{:<16s}: {}\n"   
                          "{:<16s}: {}" .format("-prepro argument", 
                                                prepro_info_name,

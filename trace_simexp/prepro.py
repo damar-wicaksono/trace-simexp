@@ -69,7 +69,7 @@ def get_input() -> dict:
     import os
     import re
     from . import cmdln_args
-    from .info_file.common import make_filename
+    from .info_file import common
 
     # Read the command line arguments
     samples, base_dirname, \
@@ -108,7 +108,7 @@ def get_input() -> dict:
     if os.path.isdir(prepro_filename):
         # Append the filename with the full path
         prepro_filename = os.path.join(prepro_filename,
-                                       make_filename(inputs, "prepro"))
+                                       common.make_filename(inputs, "prepro"))
     # Add new entry to the dictionary
     inputs["info_file"] = prepro_filename
 
@@ -117,7 +117,7 @@ def get_input() -> dict:
 
 def read_params(params_list_contents: list,
                 tracin_base_contents: list,
-                comment_char: str="#") -> dict:
+                comment_char: str="#") -> list:
     """Read list of parameters file and create a python dictionary out of it
 
     The nominal parameter values are read from the base tracin file
@@ -231,3 +231,48 @@ def create_dirtree(prepro_inputs: dict,
         else:
             with open(tracin_fullname, "wt") as tracin_file:
                     tracin_file.write(str_tracin)
+
+
+def reset(reset_inputs: dict):
+    """Conduct reset operation for pre-processing phase
+
+    :param reset_inputs: the required inputs for reset
+    """
+    import os
+    from .util import make_dirnames
+    from .util import query_yes_no
+    from .task import clean
+
+    # Make the path
+    case_path = os.path.join(reset_inputs["base_dir"],
+                             reset_inputs["case_name"])
+    parlist_dm = "{}-{}".format(reset_inputs["params_list_name"],
+                                reset_inputs["dm_name"])
+    full_path = os.path.join(case_path, parlist_dm)
+
+    if os.path.exists(full_path):
+        # Create the list of run directories
+        run_dirnames = make_dirnames(reset_inputs["samples"],
+                                     reset_inputs, False)
+
+        for run_dirname in run_dirnames:
+            if os.path.exists(run_dirname):
+                print("{} will be deleted!" .format(run_dirname))
+            else:
+                print("{} does not exist!" .format(run_dirname))
+
+        if query_yes_no("Delete the select run directories?", default="no"):
+            # Remove folders
+            clean.rm_files(run_dirnames)
+
+            # Remove parent directories if they are empty
+            if not os.listdir(full_path):
+                os.rmdir(full_path)
+
+            if not os.listdir(case_path):
+                os.rmdir(case_path)
+        else:
+            pass
+
+    else:
+        print("No specified directory is found. Abort...")
