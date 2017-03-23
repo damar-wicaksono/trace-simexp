@@ -16,6 +16,8 @@ def read(exec_info_contents: list) -> tuple:
     :return: (str) the fullname of prepro info file
         (int) the number of samples in the exec info file
     """
+    scratch_dir = None
+    
     for num_line, line in enumerate(exec_info_contents):
 
         # The fullname of pre-process info file
@@ -34,8 +36,6 @@ def read(exec_info_contents: list) -> tuple:
             dm_name = line.split("-> ")[-1].strip()
         if "Scratch Directory Name" in line:
             scratch_dir = line.split("-> ")[-1].strip()
-        else:
-            scratch_dir = None
 
         # Samples to run
         if "Samples to Run" in line:

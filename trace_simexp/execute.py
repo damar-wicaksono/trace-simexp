@@ -443,11 +443,10 @@ def reset(reset_inputs: dict):
             # Clean scratch dirs
             clean.rm_files(scratch_dirnames)
 
+        # Clean dmx links in the run directories
+        clean.rm_files(dmx_fullnames)
 
-            # Clean dmx links
-            clean.rm_files(dmx_fullnames)
-
-        # Clean the rest
+        # Clean the rest, except the input file itself
         clean.rm_except(run_dirnames, inp_filenames)
 
     else:
