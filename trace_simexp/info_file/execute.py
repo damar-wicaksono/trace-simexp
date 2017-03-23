@@ -13,7 +13,7 @@ def read(exec_info_contents: list):
     """
     for num_line, line in enumerate(exec_info_contents):
 
-        if "prepro.info Name" in line:
+        if "prepro.info Fullname" in line:
             prepro_info = line.split("-> ")[-1].strip()
 
         # Samples to run
