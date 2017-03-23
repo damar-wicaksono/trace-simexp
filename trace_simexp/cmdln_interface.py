@@ -6,12 +6,12 @@
     Module with collections of command line interfaces for trace-simexp package
     to conduct simulation experiment using TRACE
 """
+import sys
+import os
 
 
 def prepro():
     """Command line interface for trace-simexp pre-processing step"""
-    import sys
-    import os
 
     from trace_simexp import prepro
     from trace_simexp import tracin
@@ -21,15 +21,8 @@ def prepro():
     # Construct a dictionary of required inputs from command line arguments,etc
     inputs = prepro.get_input()
 
-    # Check if info file already exists
-    if os.path.exists(inputs["info_file"]):
-        if inputs["overwrite"]:
-            info_file.prepro.write(inputs)
-        else:
-            sys.exit("Prepro info file exist, no overwrite option, exiting...")
-    # Otherwise write new one
-    else:
-        info_file.prepro.write(inputs)
+    # Write an prepro info file
+    info_file.prepro.write(inputs)
 
     # Read list of parameters file, get nominal value, and create a dictionary
     params_dict = prepro.read_params(inputs["params_list_contents"],
@@ -55,8 +48,11 @@ def execute():
     # Consolidate all the required inputs for post-processing phase
     exec_inputs = execute.get_input()
 
-    # Write the execute phase info file
+    # Otherwise, write the execute phase info file
     info_file.execute.write(exec_inputs)
+
+    # Check if the directory structure structures already exists
+    execute.check_dirtree(exec_inputs)
 
     # Commence the calculation in batches
     execute.run_batches(exec_inputs)
