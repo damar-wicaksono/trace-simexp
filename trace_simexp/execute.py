@@ -320,16 +320,15 @@ def check_dirtree(exec_inputs: dict):
     inp_filenames = make_auxfilenames(exec_inputs["samples"],
                                       exec_inputs["case_name"],
                                       ".inp")
-
+    
     # Loop over run directories and input filenames and grab the invalid ones
-    i = 1
-    for run_dirname, inp_filename in zip(run_dirnames, inp_filenames):
+    for i, (run_dirname, inp_filename) in \
+        enumerate(zip(run_dirnames, inp_filenames)):
         if len(os.listdir(run_dirname)) > 1:
             dirty_dirs.append(run_dirname)
-            dirty_dir_nums.append(i)
+            dirty_dir_nums.append(exec_inputs["samples"][i])
         if inp_filename not in os.listdir(run_dirname):
             empty_dirs.append(run_dirname)
-        i += 1
 
     # Check if there is empty run directory
     if empty_dirs:
@@ -355,9 +354,8 @@ def check_dirtree(exec_inputs: dict):
 def clean_dirtree(exec_inputs: dict, dirty_dir_nums: list):
     """Remove all unnecessary files from the specified run directories
 
-    :param exec_inputs:
-    :param dirty_dir_nums:
-    :return:
+    :param exec_inputs: the execute phase inputs as dictionary
+    :param dirty_dir_nums: the sample numbers where the directories are dirty
     """
     import os
     from .util import make_dirnames
@@ -375,16 +373,17 @@ def clean_dirtree(exec_inputs: dict, dirty_dir_nums: list):
     dmx_fullnames = [os.path.join(a, b) for a, b in zip(run_dirnames,
                                                         dmx_filenames)]
 
-    # Create list of scratch directories
-    scratch_dirnames = make_dirnames(dirty_dir_nums, exec_inputs, True)
-
     # Create list of TRACE input files not to be removed
     inp_filenames = make_auxfilenames(dirty_dir_nums,
                                       exec_inputs["case_name"],
                                       ".inp")
 
-    # Clean scratch dirs
-    clean.rm_files(scratch_dirnames)
+    # Clean scratch directories if they do exist
+    if exec_inputs["scratch_dir"] is not None:
+        # Create list of scratch directories
+        scratch_dirnames = make_dirnames(dirty_dir_nums, exec_inputs, True)
+        # Clean scratch dirs
+        clean.rm_files(scratch_dirnames)
 
     # Clean dmx links
     clean.rm_files(dmx_fullnames)
