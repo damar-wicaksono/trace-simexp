@@ -1,5 +1,10 @@
-"""Module to execute TRACE tasks simultaneously for task within a batch 
-and sequentially between batches.
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.task.trace
+    ***********************
+
+    Module to execute TRACE tasks simultaneously for task within a batch and
+    sequentially between batches
 """
 
 __author__ = "Damar Wicaksono"
@@ -13,7 +18,7 @@ def run(trace_commands: list, log_files: list,
     :param log_files: the list of logfullnames
     :param run_dirnames: list of run directory names,
         used as the working directory for the shell command execution
-    :return: - 
+    :param info_filename: exec infofile to be appended
     """
     import subprocess
     import time
@@ -63,10 +68,12 @@ def run(trace_commands: list, log_files: list,
             if done(process):
                 if not success(process):
                     log_file.write("TRACE execution is killed - TimeOutError")
-                    info_file.writelines("Execution Failed: {}\n"
-                              .format(subprocess.list2cmdline(process.args)))
+                    info_file.writelines(
+                        "Execution Failed: {}\n"
+                            .format(subprocess.list2cmdline(process.args)))
                 else:
-                    info_file.writelines("Execution Successful: {}\n"
+                    info_file.writelines(
+                        "Execution Successful: {}\n"
                               .format(subprocess.list2cmdline(process.args)))
                 log_file.close()
                 processes.remove(process)
@@ -106,7 +113,6 @@ def link_xtv(scratch_dirnames: list, run_xtvs: list, scratch_xtvs: list):
         will be created if they do not exist 
     :param run_xtvs: the list of xtv fullnames in the run directory
     :param scratch_xtvs: the list of xtv fullnames in the scratch
-    :return: -
     """
     import subprocess
     import os
