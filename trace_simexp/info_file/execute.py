@@ -1,4 +1,9 @@
-"""Module to parse and generate info file in post-processing phase
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.info_file.execute
+    *******************************
+
+    Module to parse and generate info file of post-processing phase
 """
 
 __author__ = "Damar Wicaksono"
@@ -99,5 +104,5 @@ def write(inputs: dict):
                 info_file.writelines(" {:5d} " .format(inputs["samples"][i]))
             info_file.writelines("\n")
 
-        # Info file header
+        # Mark the end of samples
         info_file.writelines("***  End of Samples  ***\n")

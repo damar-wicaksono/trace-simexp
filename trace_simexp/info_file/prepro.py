@@ -74,6 +74,7 @@ def write(inputs: dict):
                 file.writelines(" {:5d} " .format(inputs["samples"][i]))
             file.writelines("\n")
 
+        # Mark the end of samples
         file.writelines("***  End of Samples  ***\n")
 
 
