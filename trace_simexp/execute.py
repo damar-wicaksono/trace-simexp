@@ -422,32 +422,49 @@ def reset(reset_inputs: dict):
     dmx_fullnames = [os.path.join(a, b) for a, b in zip(run_dirnames,
                                                         dmx_filenames)]
 
+    dirty = False   # Flag for dirty directories
+    broken = False  # Flag for broken directories
+    broken_items = []
     for inp_fullname, run_dirname in zip(inp_fullnames, run_dirnames):
         if os.path.exists(run_dirname):
-            if os.path.exists(inp_fullname):
+            if os.path.exists(inp_fullname) and len(os.listdir(run_dirname))>1:
                 print("{} will be revert back to pre-pro state!"
                       .format(run_dirname))
-            else:
+                dirty = True
+            elif not os.path.exists(inp_fullname):
                 print("Warning: {} does not exist!" .format(inp_fullname))
+                broken_items.append(inp_fullname)
+                broken = True
+            else:
+                print("{} already clean!" .format(run_dirname))
         else:
             print("{} does not exist!".format(run_dirname))
+            broken_items.append(run_dirname)
+            broken = True
 
-    if query_yes_no("Revert select directories to pre-pro state?",
-                    default="no"):
+    if dirty:
+        if query_yes_no("Revert select directories to pre-pro state?",
+                        default="no"):
 
-        # Clean scratch dirs if they do exist
-        if reset_inputs["scratch_dir"] is not None:
-            # Create list of scratch directories
-            scratch_dirnames = make_dirnames(reset_inputs["samples"],
-                                             reset_inputs, True)
-            # Clean scratch dirs
-            clean.rm_files(scratch_dirnames)
+            # Clean scratch dirs if they do exist
+            if reset_inputs["scratch_dir"] is not None:
+                # Create list of scratch directories
+                scratch_dirnames = make_dirnames(reset_inputs["samples"],
+                                                 reset_inputs, True)
+                # Clean scratch dirs
+                clean.rm_files(scratch_dirnames)
 
-        # Clean dmx links in the run directories
-        clean.rm_files(dmx_fullnames)
+            # Clean dmx links in the run directories
+            clean.rm_files(dmx_fullnames)
 
-        # Clean the rest, except the input file itself
-        clean.rm_except(run_dirnames, inp_filenames)
-
+            # Clean the rest, except the input file itself
+            clean.rm_except(run_dirnames, inp_filenames)
+    
+    if broken:
+        # If something Broken 
+        print("Broken item(s). Double check the following:")
+        for item in broken_items:
+            print(item)
+        return None
     else:
-        pass
+        print("Nothing to reset, all clean.")
