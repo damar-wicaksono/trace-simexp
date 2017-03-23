@@ -24,6 +24,7 @@ def get() -> tuple:
         (str) a one line info of the simulation experiment campaign
     """
     import argparse
+    import os
 
     parser = argparse.ArgumentParser(
         description="%(prog)s - trace-simexp Preprocess: Generate TRACE inputs"
@@ -34,7 +35,7 @@ def get() -> tuple:
         "-ns", "--num_samples",
         type=int,
         nargs="+",
-        help="Samples to run",
+        help="Select samples to run",
         required=False
     )
 
@@ -51,7 +52,7 @@ def get() -> tuple:
     parser.add_argument(
         "-as", "--all_samples",
         action="store_true",
-        help="Run all samples (default)",
+        help="Process all samples in design matrix (default)",
         default=False,
         required=False
     )
@@ -93,7 +94,7 @@ def get() -> tuple:
     parser.add_argument(
         "-ow", "--overwrite",
         action="store_true",
-        help="Ovewrite existing directory structures",
+        help="Overwrite existing directory structures",
         default=False,
         required=False
     )
@@ -138,13 +139,13 @@ def get() -> tuple:
         parser.error("Ambiguous, -nr or -as cannot both be present!")
 
     # Read files argument contents
-    tracin_base_fullname = args.base_tracin.name
+    tracin_base_fullname = os.path.abspath(args.base_tracin.name)
     with args.base_tracin as tracin:
         tracin_base_contents = tracin.read().splitlines()
-    design_matrix_fullname = args.design_matrix.name
+    design_matrix_fullname = os.path.abspath(args.design_matrix.name)
     with args.design_matrix as dm_file:
         design_matrix_contents = util.parse_csv(dm_file)
-    params_list_fullname = args.params_list.name
+    params_list_fullname = os.path.abspath(args.params_list.name)
     with args.params_list as params_file:
         params_list_contents = params_file.read().splitlines()
 
@@ -152,7 +153,8 @@ def get() -> tuple:
     num_samples = design_matrix_contents.shape[0]
     num_dimension = design_matrix_contents.shape[1]
 
-    # Sample has to be specified, check the way it was specified and get them
+    # Sample has to be specified, otherwise all available in the design matrix
+    # will be processed. Check the way it was specified and get them
     # Select individual samples
     if args.num_samples is not None:
         samples = get_sample_from_select(args.num_samples, num_samples)
@@ -166,21 +168,23 @@ def get() -> tuple:
     # Check the validity of the design matrix dimension and list of params file
     check_dimension(params_list_contents, num_dimension)
 
-    # Base Directory Name,  guard against possible input closed with "/"
-    # Otherwise there would be an error for directory creation due to "//"
+    # Base Directory Name, most probably supplied in a relative path
     if args.base_dirname is not None:
-        base_dirname = args.base_dirname.split("/")
-        if base_dirname[-1] == "":
-            base_dirname.pop()
-        base_dirname = "/".join(base_dirname)
+        base_dirname = os.path.abspath(args.base_dirname)
     else:
-        base_dirname = args.base_dirname
+        base_dirname = os.getcwd()  # Expand the current work dir. as default
+
+    # Prepro phase info filename, expand to absolute path
+    if args.prepro_filename is not None:
+        prepro_filename = os.path.abspath(args.prepro_filename)
+    else:
+        prepro_filename = os.getcwd()
 
     return (samples, base_dirname,
             tracin_base_fullname, tracin_base_contents,
             design_matrix_fullname, design_matrix_contents,
             params_list_fullname, params_list_contents,
-            args.overwrite, args.info, args.prepro_filename)
+            args.overwrite, args.info, prepro_filename)
 
 
 def get_sample_from_range(ranges: list, num_samples: int) -> list:
