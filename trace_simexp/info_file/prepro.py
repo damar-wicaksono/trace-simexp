@@ -74,6 +74,8 @@ def write(inputs: dict):
                 file.writelines(" {:5d} " .format(inputs["samples"][i]))
             file.writelines("\n")
 
+        file.writelines("***  End of Samples  ***\n")
+
 
 def read(prepro_info_contents: list) -> tuple:
     """Read the info file produced in the pre-processing phase
