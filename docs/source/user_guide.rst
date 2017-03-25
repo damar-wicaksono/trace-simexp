@@ -1,8 +1,11 @@
-.. _trace_simexp_user_guide:
+.. _trace_simexp_reference:
 
-=============================
-``trace_simexp`` User's Guide
-=============================
+==========================
+``trace_simexp`` Reference
+==========================
+
+User's Guide
+============
 
 .. toctree::
    :maxdepth: 2
@@ -13,8 +16,8 @@
    user_guide/aux_files
    user_guide/executables
 
-``trace-simexp`` API Documentation
-==================================
+API Documentation
+=================
 
 .. toctree::
   :maxdepth: 1

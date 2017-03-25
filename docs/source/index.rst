@@ -11,7 +11,7 @@ conduct a computer experiment for thermal-hydraulics system code TRACE!
 
 If you're just getting started with ``trace-simexp``, please start with 
 :ref:`trace_simexp_introduction`. 
-If you already familiar with it, the :ref:`trace_simexp_user_guide` part of the
+If you already familiar with it, the :ref:`trace_simexp_reference` part of the
 documentation provides more detailed reference to the internals of the package.
 Finally, if you are thinking to make modification or extend the capability of 
 the package perhaps it is a good idea to check some 
@@ -26,11 +26,7 @@ better its design philosophy as well as current (and *inherent*) limitations.
   implementation
   about
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+- :ref:`genindex`
+- :ref:`modindex`
+- :ref:`search`
 
