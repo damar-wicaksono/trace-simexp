@@ -24,6 +24,10 @@ Features
  - Iso-probabilistic transformation of the normalized design matrix is 
    available for uniform, discrete, and log-uniform
 
+Complete log of changes can be found in `CHANGELOG`_.
+
+.. _CHANGELOG: ./CHANGELOG.md
+
 Requirements
 -----------
 
