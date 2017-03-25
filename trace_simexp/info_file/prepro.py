@@ -55,8 +55,8 @@ def write(inputs: dict):
                         .format(header[6], "->", inputs["dm_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[7], "->", inputs["dm_fullname"]))
-        file.writelines("{:<30s}{:3s}{:<30}\n"
-                        .format(header[9], "->", inputs["overwrite"]))
+        file.writelines("{:<30s}{:3s}{:<30s}\n"
+                        .format(header[9], "->", str(inputs["overwrite"])))
         file.writelines("{:<30s}{:3s}\n" .format(header[8], "->"))
 
         # Write the requested sampled runs
