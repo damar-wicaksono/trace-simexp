@@ -150,11 +150,11 @@ def get() -> tuple:
     # will be processed. Check the way it was specified and get them
     # Select individual samples
     if args.num_samples is not None:
-        samples = common.get_sample_from_select(args.num_samples,
-                                                avail_samples)
+        samples = common.get_samples(args.num_samples, avail_samples)
     # Use range of samples
     elif args.num_range is not None:
-        samples = common.get_sample_from_range(args.num_range, avail_samples)
+        samples = list(range(args.num_range[0], args.num_range[1]+1))
+        samples = common.get_samples(samples, avail_samples)
     # Select all samples, by default
     else:
         samples = avail_samples
