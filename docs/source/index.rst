@@ -6,42 +6,26 @@
 ``trace-simexp`` Package
 ========================
 
-A computer experiment is a multiple model runs using different values of the
-model parameters. Its design, in particular the selection of the design points
-at which the model will be evaluated; as well as its analysis, in particular the
-analysis of the output variation in relation to the inputs variation, are
-useful for sensitivity and uncertainty analyses of the model subjected to the
-experimentation.
+Welcome to the ``trace_simexp`` package documentation, a python3 package to 
+conduct a computer experiment for thermal-hydraulics system code TRACE!
 
-An important prerequisite of carrying out such experiment is the availability
-of a supporting tool able to handle the related logistical aspects. A
-Python3-based scripting utility has been developed to assist in carrying such
-experiments for thermal-hydraulics system code TRACE.The scope of the utility is
-ranging from the pre-processing of the TRACE input deck amenable for batch
-parallel execution to the post-treatment of the resulting binary xtv/dmx file
-amenable to subsequent sensitivity and uncertainty analyses. This documentation
-describes the development of the tool, including the description of its usage,
-implementations, and assumptions.
-
-trace-simexp Documentation
-==========================
+If you're just getting started with ``trace-simexp``, please start with 
+:ref:`trace_simexp_introduction`. 
+If you already familiar with it, the :ref:`trace_simexp_user_guide` part of the
+documentation provides more detailed reference to the internals of the package.
+Finally, if you are thinking to make modification or extend the capability of 
+the package perhaps it is a good idea to check some 
+:ref:`trace_simexp_implementation` of the current version so you can understand
+better its design philosophy as well as current (and *inherent*) limitations.
 
 .. toctree::
   :maxdepth: 2
 
-  basics
+  introduction
   user_guide
   implementation
-  developer_guide
   about
 
-``trace-simexp`` Modules reference documentation
-================================================
-
-.. toctree::
-  :maxdepth: 1
-
-  modules/cmdln_args
 
 Indices and tables
 ==================

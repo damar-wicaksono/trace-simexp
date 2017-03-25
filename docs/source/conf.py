@@ -17,6 +17,9 @@ import sys
 import os
 import shlex
 
+here = os.path.abspath(os.path.dirname(__file__))
+exec(open('../../trace_simexp/_version.py').read())
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -61,7 +64,7 @@ author = 'Damar Wicaksono'
 # built documents.
 #
 # The short X.Y version.
-version = '0.3'
+version = __version__
 # The full version, including alpha/beta/rc tags.
 release = '1'
 

@@ -1,12 +1,22 @@
-.. _user_guide:
+.. _trace_simexp_user_guide:
 
-************
-User's Guide
-************
+=============================
+``trace_simexp`` User's Guide
+=============================
 
 .. toctree::
    :maxdepth: 2
 
-   user_guide/prepro.rst
-   user_guide/execute.rst
-   user_guide/postpro.rst
+   user_guide/installation
+   user_guide/terminology
+   user_guide/cli
+   user_guide/aux_files
+   user_guide/executables
+
+``trace-simexp`` API Documentation
+==================================
+
+.. toctree::
+  :maxdepth: 1
+
+  modules/cmdln_args
