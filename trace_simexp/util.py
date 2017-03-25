@@ -35,12 +35,12 @@ def create_iter(num_samples: int, num_processors: int):
 
 
 def make_dirnames(list_iter: list,
-                  exec_inputs: dict,
+                  dict_inputs: dict,
                   scratch_flag: bool=False) -> list:
     """Make a complete run directory fullname
 
     :param list_iter: the iterator converted to a list of integer
-    :param exec_inputs: the execution phase inputs in dictionary
+    :param dict_inputs: the inputs of a phase in dictionary
     :param scratch_flag: boolean flag to indicate whether the base dir is in
         the run directory or scratch directory. The downstream naming will be
         identical.
@@ -51,19 +51,19 @@ def make_dirnames(list_iter: list,
     run_dirnames = []
 
     if scratch_flag:
-        base_dir = exec_inputs["scratch_dir"]
+        base_dir = dict_inputs["scratch_dir"]
     else:
-        base_dir = exec_inputs["base_dir"]
+        base_dir = dict_inputs["base_dir"]
 
     for i in list_iter:
         # "<base_dir>/<case_name>/<parlist>-<dm>/<case>-run_<iteration>"
         run_dirname = os.path.join(base_dir,
-                                   exec_inputs["case_name"],
+                                   dict_inputs["case_name"],
                                    "{}-{}" .format(
-                                       exec_inputs["params_list_name"],
-                                       exec_inputs["dm_name"]),
+                                       dict_inputs["params_list_name"],
+                                       dict_inputs["dm_name"]),
                                    "{}-run_{}" .format(
-                                       exec_inputs["case_name"],
+                                       dict_inputs["case_name"],
                                        str(i))
                                    )
         run_dirnames.append(run_dirname)

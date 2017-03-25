@@ -6,11 +6,27 @@
     Module with collections of command line interfaces for trace-simexp package
     to conduct simulation experiment using TRACE
 """
-import sys
-import os
+from ._version import __version__
+
+def main():
+    """Command line interface for echoing what is this all about"""
+    print("trace-simexp version {}" .format(__version__))
+    print("Conduct simulation experiment for TRACE")
+    print("")
+    print("Please use the driver scripts for each of the desired phases:")
+    print("     trace_simexp_prepro     pre-process and generate perturbed "
+          "inputs")
+    print("     trace_simexp_execute    execute the generated perturbed " 
+          "inputs")
+    print("     trace_simexp_postpro    extract select variables from dmx")
+    print("     trace_simexp_reset      return the original state of a given " 
+          "phase")
+    print("     trace_simexp_freeze     freeze current state for archival")
+    print("Use <driver_script> --help to get the help for each")
+    print("")
 
 
-def prepro():
+def cli_prepro():
     """Command line interface for trace-simexp pre-processing step"""
 
     from trace_simexp import prepro
@@ -39,7 +55,7 @@ def prepro():
     prepro.create_dirtree(inputs, params_dict, tracin_template)
 
 
-def execute():
+def cli_execute():
     """trace-simexp execution step command line interface"""
 
     from trace_simexp import execute
@@ -58,7 +74,7 @@ def execute():
     execute.run_batches(exec_inputs)
 
 
-def postpro():
+def cli_postpro():
     """trace-simexp post-processing step command line interface"""
 
     from trace_simexp import postpro
@@ -74,7 +90,7 @@ def postpro():
     postpro.dmx2csv(postpro_inputs)
 
 
-def reset():
+def cli_reset():
     """trace-simexp reset command line interface"""
     from trace_simexp import reset, prepro, execute, postpro
 
@@ -87,4 +103,4 @@ def reset():
     elif reset_inputs["phase"] == "exec":
         execute.reset(reset_inputs)
     elif reset_inputs["phase"] == "postpro":
-        postpro().reset(reset_inputs)
+        postpro.reset(reset_inputs)

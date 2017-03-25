@@ -43,10 +43,11 @@ setup(
       # Provide the following executable scripts
       entry_points={
         "console_scripts": [
-              "trace_simexp_prepro=trace_simexp.cmdln_interface:prepro",
-              "trace_simexp_execute=trace_simexp.cmdln_interface:execute",
-              "trace_simexp_postpro=trace_simexp.cmdln_interface:postpro",
-              "trace_simexp_reset=trace_simexp.cmdln_interface:reset"
+              "trace_simexp=trace_simexp.cmdln_interface:main",
+              "trace_simexp_prepro=trace_simexp.cmdln_interface:cli_prepro",
+              "trace_simexp_execute=trace_simexp.cmdln_interface:cli_execute",
+              "trace_simexp_postpro=trace_simexp.cmdln_interface:cli_postpro",
+              "trace_simexp_reset=trace_simexp.cmdln_interface:cli_reset"
         ]
       },
 
