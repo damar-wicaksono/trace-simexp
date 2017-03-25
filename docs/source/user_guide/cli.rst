@@ -32,15 +32,16 @@ showing all available executables and their usage.
 Pre-process (``trace_simexp_prepro``)
 =====================================
 
-``trace_simexp_prepro`` In the preprocessing step, the base TRACE input deck is modified by changing
+In the pre-processing phase, the base TRACE input deck is modified by changing
 the parameter values of the parameters listed in the list of parameter files
-according to the values listed in the design matrix file. A set of new
-perturbed TRACE input decks will be created and put into separate directories.
+according to the values listed in the design matrix file. 
+A set of new perturbed TRACE input decks will be created and put into 
+separate directories.
 In subsequent execute step, these directories will serve as the run
 directories. 
 
-The preprocessing step driver script can be invoked in the terminal using the 
-following command::
+``trace_simexp_prepro`` is the driver script to carry out the preprocessing 
+phase. It can be invoked in the terminal using the following command::
 
     trace_simexp_prepro {-as, -ns, -nr} <argument to select samples to create> \
                         -b <the base run directory name> \
