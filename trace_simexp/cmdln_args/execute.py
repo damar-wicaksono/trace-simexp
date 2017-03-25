@@ -168,29 +168,18 @@ def get():
 
     # Sample has to be specified, otherwise all samples listed in the prepro
     # info file will be executed. Check the way it was specified and get them
-    # By default all samples is True
-    samples = True
     # Select individual samples.
     if args.num_samples is not None:
-        # Sample number has to be positive
-        if True in [_ < 0 for _ in args.num_samples]:
-            parser.error(
-                "Number of samples with -ns has to be strictly positive!")
-        else:
-            samples = args.num_samples
-
+        samples = args.num_samples
     # Use range of samples
     elif args.num_range is not None:
-        # Sample range number has to be positive
-        if (args.num_range[0] <= 0 or args.num_range[1] <= 0) and \
-                (args.num_range[0] > args.num_range[1]):
-            parser.error("Sample range with -nr has to be strictly positive!"
-                         "and the first is smaller than the second")
-        else:
-            samples = list(range(args.num_range[0], args.num_range[1]+1))
+        samples = list(range(args.num_range[0], args.num_range[1]+1))
+    else:
+        # By default all samples is True
+        samples = True
 
     # Execute phase info filename, expand to absolute path
-    exec_filename = common.expand_path(args.exec_dirname)
+    exec_filename = common.expand_path(args.exec_filename)
 
     # Return all the command line arguments
     return (samples, prepro_info_fullname, prepro_info_contents,

@@ -40,28 +40,7 @@ def check_samples_argument(num_samples: list = None,
         pass
 
 
-def get_sample_from_range(ranges: list, avail_samples: list) -> list:
-    """Get while checking the validity of the requested sample range
-
-    :param ranges: The range of selected samples
-    :param avail_samples: The list of all available samples based on the range
-    :return: The selected samples within specified range, verified
-    """
-    select_samples = list(range(ranges[0], ranges[1] + 1))
-
-    # Check the validity of the sample range
-    if (ranges[0] <= 0 or ranges[1] <= 0) and (ranges[0] > ranges[1]):
-        raise ValueError(
-            "Sample range with -nr has to be strictly positive, "
-            "with the first is smaller than the second!")
-    elif False in [_ in avail_samples for _ in select_samples]:
-        raise ValueError(
-            "Some or all selected samples within range are not in the design!")
-
-    return select_samples
-
-
-def get_sample_from_select(select_samples: list, avail_samples: list) -> list:
+def get_samples(select_samples: list, avail_samples: list) -> list:
     """Get while checking the validity of the requested samples
 
     :param select_samples: The selected samples

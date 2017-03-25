@@ -63,6 +63,7 @@ def get_input() -> dict:
     from . import cmdln_args
     from . import util
     from .info_file import common, prepro
+    from .cmdln_args.common import get_samples
 
     # Read the command line arguments
     samples, \
@@ -75,14 +76,15 @@ def get_input() -> dict:
     base_dir, case_name, params_list_name, dm_name, avail_samples = \
         prepro.read(prepro_info_contents)
 
-    # Check if samples is within the available samples
+    # Sample has to be specified, otherwise all available in the pre-processing
+    # info file will be processed. Check the way it was specified and get them
+    # If it is boolean, then all available samples
     if isinstance(samples, bool) and samples:
-        samples = avail_samples
-    elif set(samples) <= set(avail_samples):
-        samples = samples
+        samples = avail_samples       
     else:
-        raise ValueError("Requested samples is not part of the available ones")
-
+        # Else check its validity with the available samples
+        samples = get_samples(samples, avail_samples)
+ 
     # Get the name of the prepro info file
     prepro_info_name = re.split("[/\\\\]", prepro_info_fullname)[-1]
 
