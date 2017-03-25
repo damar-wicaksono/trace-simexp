@@ -29,8 +29,7 @@ def write(inputs: dict):
               "List of Parameters File",
               "Design Matrix Name",
               "Design Matrix File",
-              "Samples to Run",
-              "Overwrite Directory"]
+              "Samples to Run"]
 
     with open(inputs["info_file"], "wt") as file:
         file.writelines("TRACE Simulation Experiment - Date: {}\n"
@@ -55,8 +54,6 @@ def write(inputs: dict):
                         .format(header[6], "->", inputs["dm_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[7], "->", inputs["dm_fullname"]))
-        file.writelines("{:<30s}{:3s}{:<30s}\n"
-                        .format(header[9], "->", str(inputs["overwrite"])))
         file.writelines("{:<30s}{:3s}\n" .format(header[8], "->"))
 
         # Write the requested sampled runs
