@@ -131,13 +131,13 @@ def get() -> tuple:
                                   args.num_range,
                                   args.all_samples)
 
-    # Process Base TRACE input deck
+    # Read Base TRACE input deck
     tracin_base_fullname, tracin_base_contents = \
         common.get_fullname_and_contents(args.base_tracin)
-    # Process Design matrix file
+    # Read Design matrix file
     design_matrix_fullname, design_matrix_contents = \
         common.get_fullname_and_contents(args.design_matrix, dsv=True)
-    # Process List of parameters file
+    # Read List of parameters file
     params_list_fullname, params_list_contents = \
         common.get_fullname_and_contents(args.params_list)
 
