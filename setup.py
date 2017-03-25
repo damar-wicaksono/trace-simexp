@@ -1,5 +1,4 @@
 """A setuptools based setup module for trace-simexp
-
 """
 from setuptools import setup
 from os import path
@@ -46,7 +45,8 @@ setup(
         "console_scripts": [
               "trace_simexp_prepro=trace_simexp.cmdln_interface:prepro",
               "trace_simexp_execute=trace_simexp.cmdln_interface:execute",
-              "trace_simexp_postpro=trace_simexp.cmdln_interface:postpro"
+              "trace_simexp_postpro=trace_simexp.cmdln_interface:postpro",
+              "trace_simexp_reset=trace_simexp.cmdln_interface:reset"
         ]
       },
 

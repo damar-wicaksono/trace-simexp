@@ -1,4 +1,9 @@
-"""Module to parse command line arguments in the execute phase
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.cmdln_args.execute
+    *******************************
+
+    Module to parse command line arguments used in the execute phase
 """
 from .. import util
 from .._version import __version__
@@ -9,7 +14,8 @@ __author__ = "Damar Wicaksono"
 def get():
     """Get the command line arguments of the execute phase
 
-    :return: the samples to be run can be chosen individually, a range, or all
+    :return: tuple with the following values:
+        the samples to be run can be chosen individually, a range, or all
         available samples. If all the function will return a boolean, otherwise
         its a list of integer.
         (str) the pre-processing phase info file, fullname
@@ -22,7 +28,7 @@ def get():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="%(prog)s - trace-simexp, Execute: Run all TRACE inputs"
+        description="%(prog)s - trace-simexp Execute: Run all TRACE inputs"
     )
 
     # The fullname of info_file from the pre-processing phase
@@ -47,7 +53,7 @@ def get():
         "-ns", "--num_samples",
         type=int,
         nargs="+",
-        help="Samples to run",
+        help="Select samples to run",
         required=False
     )
 
@@ -56,7 +62,7 @@ def get():
         "-nr", "--num_range",
         type=int,
         nargs=2,
-        help="Range of samples to run",
+        help="Range of samples to run, between two values, inclusive",
         required=False
     )
 
@@ -64,7 +70,7 @@ def get():
     parser.add_argument(
         "-as", "--all_samples",
         action="store_true",
-        help="Run all samples",
+        help="Execute all samples in prepro info file (default)",
         default=False,
         required=False
     )
@@ -93,6 +99,15 @@ def get():
         required=True
     )
 
+    # The overwrite flag
+    parser.add_argument(
+        "-ow", "--overwrite",
+        action="store_true",
+        help="Reset existing select run directories",
+        default=False,
+        required=False
+    )
+
     # The info filename
     parser.add_argument(
         "-exec_info", "--exec_filename",
@@ -114,52 +129,57 @@ def get():
 
     # Check if any sample is specified and each are mutually exclusive
     if args.num_samples is None and args.num_range is None \
-            and not args.all_samples:
-        parser.error("Either -ns, -nr, or -as has to be present!")
+            and args.all_samples:
+        parser.error("Ambiguous, -ns, -nr, or -as cannot all be present!")
     elif args.num_samples is not None and args.num_range is not None:
-        parser.error("-ns or -nr cannot both be present!")
+        parser.error("Ambiguous, -ns or -nr cannot both be present!")
     elif args.num_samples is not None and args.all_samples:
-        parser.error("-ns or -as cannot both be present!")
+        parser.error("Ambiguous, -ns or -as cannot both be present!")
     elif args.num_range is not None and args.all_samples:
-        parser.error("-nr or -as cannot both be present!")
-    else:
-        pass
+        parser.error("Ambiguous, -nr or -as cannot both be present!")
 
     # Read file argument contents
-    prepro_info_fullname = args.prepro_info.name
+    prepro_info_fullname = os.path.abspath(args.prepro_info.name)
     with args.prepro_info as prepro_info:
         prepro_info_contents = prepro_info.read().splitlines()
 
     # Check if the executables exist
     if len(args.trace_executable.split("/")) > 1:
-        # Given full path of TRACE exec
+        # Given full/relative path of TRACE exec
         if not os.path.isfile(args.trace_executable):
             raise ValueError("The specified TRACE executable not found!")
+        else:
+            trace_executable = os.path.abspath(args.trace_executable)
     else:
         # Assumed TRACE exec in path
         if not util.cmd_exists(args.trace_executable):
             raise ValueError("The specified TRACE executable not found!")
+        else:
+            trace_executable = args.trace_executable
     if len(args.xtv2dmx_executable.split("/")) > 1:
         # Given full path of XTV2DMX exec
         if not os.path.isfile(args.xtv2dmx_executable):
             raise ValueError("The specified XTV2DMX executable not found!")
+        else:
+            xtv2dmx_executable = os.path.abspath(args.xtv2dmx_executable)
     else:
         # Assumed XTV2DMX exec in path
         if not util.cmd_exists(args.xtv2dmx_executable):
             raise ValueError("The specified XTV2DMX executable not found!")
+        else:
+            xtv2dmx_executable = args.xtv2dmx_executable
 
-    # Guard against possible user input of directory closed with "/"
-    # Otherwise there would be an error for directory creation due to "//"
+    # Expand scratch directory
     if args.scratch_directory is not None:
-        scratch_directory = args.scratch_directory.split("/")
-        if scratch_directory[-1] == "":
-            scratch_directory.pop()
-        scratch_directory = "/".join(scratch_directory)
+        scratch_directory = os.path.abspath(args.scratch_directory)
     else:
         scratch_directory = None
 
-    # Sample has to be specified
-    # Select individual samples
+    # Sample has to be specified, otherwise all samples listed in the prepro
+    # info file will be executed. Check the way it was specified and get them
+    # By default all samples is True
+    samples = True
+    # Select individual samples.
     if args.num_samples is not None:
         # Sample number has to be positive
         if True in [_ < 0 for _ in args.num_samples]:
@@ -178,11 +198,14 @@ def get():
         else:
             samples = list(range(args.num_range[0], args.num_range[1]+1))
 
-    # Select all samples
-    elif args.all_samples is not None:
-        samples = args.all_samples
+    # Execute phase info filename, expand to absolute path
+    if args.exec_filename is not None:
+        exec_filename = os.path.abspath(args.exec_filename)
+    else:
+        exec_filename = os.getcwd()
 
     # Return all the command line arguments
-    return samples, prepro_info_fullname, prepro_info_contents, \
-           args.num_processors, scratch_directory, \
-           args.trace_executable, args.xtv2dmx_executable, args.exec_filename
+    return (samples, prepro_info_fullname, prepro_info_contents,
+            args.num_processors, scratch_directory,
+            trace_executable, xtv2dmx_executable, args.overwrite,
+            exec_filename)
