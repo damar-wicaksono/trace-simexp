@@ -10,8 +10,4 @@ Notes on Implementation
   implementation/perturbation
   implementation/isoprobability
   implementation/data_types
-  implementation/parsing_component
-  implementation/parsing_spacer
-  implementation/parsing_matprop
-  implementation/parsing_senscoef
   implementation/batch_processing
