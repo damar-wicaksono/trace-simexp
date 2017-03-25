@@ -1,4 +1,9 @@
-"""Module to parse and generate info file in pre-processing phase
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.info_file.prepro
+    *****************************
+
+    Module to parse and generate info file of the pre-processing phase
 """
 
 __author__ = "Damar Wicaksono"
@@ -11,8 +16,8 @@ def write(inputs: dict):
     pre-processing phase as well as a link to next phase (execution) to avoid
     redundancy.
 
-    :param inputs: (dict) the command line arguments as dictionary
-    :return: the info_file with the specified filename
+    :param inputs: the command line arguments as dictionary
+    :return: the info_file with the specified filename in the inputs
     """
     from datetime import datetime
 
@@ -24,8 +29,7 @@ def write(inputs: dict):
               "List of Parameters File",
               "Design Matrix Name",
               "Design Matrix File",
-              "Samples to Run",
-              "Overwrite Directory"]
+              "Samples to Run"]
 
     with open(inputs["info_file"], "wt") as file:
         file.writelines("TRACE Simulation Experiment - Date: {}\n"
@@ -35,21 +39,21 @@ def write(inputs: dict):
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[0], "->", inputs["base_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
-                        .format(header[1], "->", inputs["base_dir"]))
+                        .format(header[1], "->", inputs["base_dirname"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[2], "->", inputs["case_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
-                        .format(header[3], "->", inputs["tracin_base_fullname"]))
+                        .format(header[3], "->",
+                                inputs["tracin_base_fullname"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[4], "->", inputs["params_list_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
-                        .format(header[5], "->", inputs["params_list_fullname"]))
+                        .format(header[5], "->",
+                                inputs["params_list_fullname"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[6], "->", inputs["dm_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[7], "->", inputs["dm_fullname"]))
-        file.writelines("{:<30s}{:3s}{:<30}\n"
-                        .format(header[9], "->", inputs["overwrite"]))
         file.writelines("{:<30s}{:3s}\n" .format(header[8], "->"))
 
         # Write the requested sampled runs
@@ -67,17 +71,27 @@ def write(inputs: dict):
                 file.writelines(" {:5d} " .format(inputs["samples"][i]))
             file.writelines("\n")
 
+        # Mark the end of samples
+        file.writelines("***  End of Samples  ***\n")
 
-def read(prepro_info_contents: list):
+
+def read(prepro_info_contents: list) -> tuple:
     """Read the info file produced in the pre-processing phase
 
-    :param prepro_info_contents: (list) the contents of the prepro info file
-    :return: (str) the base directory name
+    :param prepro_info_contents: the contents of the prepro info file
+    :return: a tuple with the following contents
+        (str) the base directory name
         (str) the base case name
         (str) the list of parameters filename, without extension, without path
         (str) the design matrix filename, without extension, without path
         (list) the list of samples to run
     """
+    base_dir = None
+    case_name = None
+    params_list_name = None
+    dm_name = None
+    samples = []
+
     # Loop over lines to obtain the parameter
     for num_line, line in enumerate(prepro_info_contents):
 
@@ -99,12 +113,12 @@ def read(prepro_info_contents: list):
 
         # Samples to run
         if "Samples to Run" in line:
-            samples = []
             i = num_line + 1
             while True:
                 if "***" in prepro_info_contents[i]:
                     break
-                samples.extend([int(_) for _ in prepro_info_contents[i].split()])
+                samples.extend(
+                    [int(_) for _ in prepro_info_contents[i].split()])
                 i += 1
 
     return base_dir, case_name, params_list_name, dm_name, samples

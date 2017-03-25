@@ -1,37 +1,31 @@
 # -*- coding: utf-8 -*-
 """
-command_line.py: Module with collections of command line interfaces for
-trace-simexp
+    trace_simexp.cmdln_interface
+    ****************************
+
+    Module with collections of command line interfaces for trace-simexp package
+    to conduct simulation experiment using TRACE
 """
+import sys
+import os
 
 
 def prepro():
-    """trace-simexp pre-processing step command line interface"""
-
-    import sys
-    import os
+    """Command line interface for trace-simexp pre-processing step"""
 
     from trace_simexp import prepro
     from trace_simexp import tracin
     from trace_simexp import info_file
     from trace_simexp import paramfile
 
-    # Construct a dictionary of required inputs from command line arguments, etc
+    # Construct a dictionary of required inputs from command line arguments,etc
     inputs = prepro.get_input()
 
-    # Check if info file already exists
-    if os.path.exists(inputs["info_file"]):
-        if inputs["overwrite"]:
-            info_file.prepro.write(inputs)
-        else:
-            sys.exit("Prepro info file exist, no overwrite option, exiting...")
-    # Otherwise write new one
-    else:
-        info_file.prepro.write(inputs)
+    # Write an prepro info file
+    info_file.prepro.write(inputs)
 
-    # Read list of parameters file and create a dictionary from it
+    # Read list of parameters file, get nominal value, and create a dictionary
     params_dict = prepro.read_params(inputs["params_list_contents"],
-                                     inputs["info_file"],
                                      inputs["tracin_base_contents"])
 
     # Update the info file with information of list of parameters file
@@ -54,8 +48,11 @@ def execute():
     # Consolidate all the required inputs for post-processing phase
     exec_inputs = execute.get_input()
 
-    # Write the execute phase info file
+    # Otherwise, write the execute phase info file
     info_file.execute.write(exec_inputs)
+
+    # Check if the directory structure structures already exists
+    execute.check_dirtree(exec_inputs)
 
     # Commence the calculation in batches
     execute.run_batches(exec_inputs)
@@ -76,3 +73,18 @@ def postpro():
     # Commence the conversion
     postpro.dmx2csv(postpro_inputs)
 
+
+def reset():
+    """trace-simexp reset command line interface"""
+    from trace_simexp import reset, prepro, execute, postpro
+
+    # Get all inputs
+    reset_inputs = reset.get_input()
+
+    # Reset phase
+    if reset_inputs["phase"] == "prepro":
+        prepro.reset(reset_inputs)
+    elif reset_inputs["phase"] == "exec":
+        execute.reset(reset_inputs)
+    elif reset_inputs["phase"] == "postpro":
+        postpro().reset(reset_inputs)

@@ -1,6 +1,10 @@
-"""Module with utility functions to support the whole trace_simexp package
+# -*- coding: utf-8 -*-
 """
+    trace_simexp.util
+    *****************
 
+    Module with utility functions to support the whole trace_simexp package
+"""
 import itertools
 import subprocess
 import numpy as np
@@ -8,7 +12,7 @@ import numpy as np
 __author__ = "Damar Wicaksono"
 
 
-def create_iter(num_samples: int, num_processors: int) -> itertools.islice:
+def create_iter(num_samples: int, num_processors: int):
     """Create a list of iterator in batch size.
 
     The batch size is depending on the number of processors.
@@ -35,13 +39,15 @@ def make_dirnames(list_iter: list,
                   scratch_flag: bool=False) -> list:
     """Make a complete run directory fullname
 
-    :param list_iter: (list) the iterator converted to a list of integer
-    :param exec_inputs: (dict) the execution phase inputs in dictionary
-    :param scratch_flag: (bool) boolean flag to indicate whether the base dir is
-        in the run directory or scratch directory. The downstream naming will be
+    :param list_iter: the iterator converted to a list of integer
+    :param exec_inputs: the execution phase inputs in dictionary
+    :param scratch_flag: boolean flag to indicate whether the base dir is in
+        the run directory or scratch directory. The downstream naming will be
         identical.
     :return: list of string with complete directory fullname
     """
+    import os
+
     run_dirnames = []
 
     if scratch_flag:
@@ -50,14 +56,16 @@ def make_dirnames(list_iter: list,
         base_dir = exec_inputs["base_dir"]
 
     for i in list_iter:
-        run_dirname = "{}/{}/{}-{}/{}-run_{}" .format(
-            base_dir,
-            exec_inputs["case_name"],
-            exec_inputs["params_list_name"],
-            exec_inputs["dm_name"],
-            exec_inputs["case_name"],
-            i
-        )
+        # "<base_dir>/<case_name>/<parlist>-<dm>/<case>-run_<iteration>"
+        run_dirname = os.path.join(base_dir,
+                                   exec_inputs["case_name"],
+                                   "{}-{}" .format(
+                                       exec_inputs["params_list_name"],
+                                       exec_inputs["dm_name"]),
+                                   "{}-run_{}" .format(
+                                       exec_inputs["case_name"],
+                                       str(i))
+                                   )
         run_dirnames.append(run_dirname)
 
     return run_dirnames
@@ -165,17 +173,17 @@ def cmd_exists(cmd: str):
                            stderr=subprocess.PIPE) == 0
 
 
-def link_exec(exec: str, dir: str):
+def link_exec(executable: str, directory: str):
     """Create a symbolic link between an executable in a designated directory
 
-    :param exec: the path to executable, either relative or absolute
-    :param dir: the directory to create the symbolic link
+    :param executable: the path to executable, either relative or absolute
+    :param directory: the directory to create the symbolic link
     """
     import os
 
     # Get the absolute path
-    abs_exec = os.path.abspath(exec)
-    abs_dir = os.path.abspath(dir)
+    abs_exec = os.path.abspath(executable)
+    abs_dir = os.path.abspath(directory)
 
     # Create symbolic link
     subprocess.call(["ln", "-s", abs_exec, abs_dir])

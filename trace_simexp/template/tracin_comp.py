@@ -1,17 +1,22 @@
-"""Module with functionalities to parse tracin base for component parameters
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.template.tracin_comp
+    *********************************
+
+    Module with functions to parse the base TRACE input deck for parameters
+    related to TRACE component (``comp``)
 """
 
 __author__ = "Damar Wicaksono"
 
 
-def get_nom_val(tracin_lines, param_dict):
+def get_nom_val(tracin_lines: list, param_dict: dict):
     r"""Get the nominal values of component parameters from tracin base file
 
-    :param tracin_lines: (list of str) the tracin base as a list
-    :param param_dict: (dict) the dictionary of the comp parameter
-    :return: (list) the nominal values of the comp parameter
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the comp parameter
+    :return: the nominal values of the comp parameter
     """
-    nom_val = None
 
     # select the type of variable
     if param_dict["var_type"] == "scalar":
@@ -26,15 +31,16 @@ def get_nom_val(tracin_lines, param_dict):
     return nom_val
 
 
-def read_scalar(tracin_lines, param_dict):
+def read_scalar(tracin_lines: list, param_dict: dict):
     r"""Get the nominal values of scalar-type component parameters
 
     Scalar-type component parameters are straightforward. Their location is
     directly defined by the card and word identifiers.
 
-    :param tracin_lines: (list of str) the tracin base as a list
-    :param param_dict: (dict) the dictionary of the comp parameter
-    :return: (float or int) the nominal values of the comp parameter
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the comp parameter
+    :return: the nominal values of the comp parameter specified as scalar.
+        Possible types - float and integer
     """
     nom_val = None
 
@@ -51,11 +57,11 @@ def read_scalar(tracin_lines, param_dict):
                 nom_val = tracin_lines[line_num+offset].split()[word]
 
                 # check what kind of numeric is nom_val
-                if "." in nom_val:
-                    # float
-                    nom_val = float(nom_val)
-                elif "E" in nom_val or "e" in nom_val:
+                if "E" in nom_val or "e" in nom_val:
                     # float in scientific notation
+                    nom_val = float(nom_val)
+                elif "." in nom_val:
+                    # float
                     nom_val = float(nom_val)
                 else:
                     # integer
@@ -66,7 +72,7 @@ def read_scalar(tracin_lines, param_dict):
     return nom_val
 
 
-def read_table(tracin_lines, param_dict):
+def read_table(tracin_lines: list, param_dict: dict) -> list:
     r"""Get the nominal values of tabular-type component parameters
 
     Tabular-type refers to the type that is a set of multiple values of
@@ -74,9 +80,9 @@ def read_table(tracin_lines, param_dict):
     values are defined in tracin as a single long sequence (over multiple lines
     with continuation), but their definition changed.
 
-    :param tracin_lines: (list of str) the tracin base as a list
-    :param param_dict: (dict) the dictionary of the comp parameter
-    :return: (list) the nominal values of the comp parameter
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the comp parameter
+    :return: the nominal values of the comp parameter specified as table
     """
     import re
 
@@ -89,7 +95,7 @@ def read_table(tracin_lines, param_dict):
             if str(param_dict["var_num"]) in tracin_line:
                 offset = 0
                 while True:
-                    # loop to go the line where the parameter is first specified
+                    # loop to go the line where the parameter is 1st specified
                     if param_dict["var_name"] in tracin_lines[line_num+offset]:
                         break
                     else:
@@ -97,7 +103,8 @@ def read_table(tracin_lines, param_dict):
                     offset += 1
                 while True:
                     # loop to read all the available nominal values
-                    if param_dict["var_name"] not in tracin_lines[line_num+offset]:
+                    if param_dict["var_name"] not in \
+                            tracin_lines[line_num+offset]:
                         break
                     else:
                         # grab the line and take only numerical values
@@ -111,56 +118,54 @@ def read_table(tracin_lines, param_dict):
     return nom_val
 
 
-def read_array(tracin_lines, param_dict):
+def read_array(tracin_lines: list, param_dict: dict) -> list:
     r"""Get the nominal values of array-type component parameters
 
     Array time simply means that all values are of single type, not a set of
     types (e.g., time - power pair). Initial fluid velocity in a pipe is an
-    array type variable.
+    array type variable defined for each faces.
 
-    :param tracin_lines: (list of str) the tracin base as a list
-    :param param_dict: (dict) the dictionary of the comp parameter
-    :return: (list) the nominal values of the comp parameter
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the comp parameter
+    :return: the nominal values of the comp parameter specified as array
     """
     # TODO: Complete read_array function()
-    return None
+    return []
 
 
-def put_key(tracin_lines, param_dict):
+def put_key(tracin_lines: list, param_dict: dict) -> list:
     r"""Replace the nominal value of component parameter with key
 
-    :param tracin_lines: (list of str) the tracin base as a list of string
-    :param param_dict: (dict) the dictionary of the perturbed comp parameter
-    :returns:(list of str) the modified base tracin with key for the parameter
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the comp parameter
+    :returns: the modified base TRACE input deck with key for the parameter
         as specified by param_dict
     """
     # select the type of variable
     if param_dict["var_type"] == "scalar":
         tracin_lines = edit_scalar(tracin_lines, param_dict)
     elif param_dict["var_type"] == "table":
-       tracin_lines = edit_table(tracin_lines, param_dict)
+        tracin_lines = edit_table(tracin_lines, param_dict)
     elif param_dict["var_type"] == "array":
-       tracin_lines = edit_array(tracin_lines, param_dict)
+        tracin_lines = edit_array(tracin_lines, param_dict)
     else:
-       raise TypeError("Component parameter variable type not recognized!")
+        raise TypeError("Component parameter variable type not recognized!")
 
     return tracin_lines
 
 
-def edit_scalar(tracin_lines, param_dict):
+def edit_scalar(tracin_lines: list, param_dict: dict) -> list:
     r"""Replace the nominal value of scalar-type component parameters with key
 
     Scalar-type component parameters are straightforward. Their location is
     directly defined by the card and word identifiers.
 
-    :param tracin_lines: (list of str) the tracin base as a list
-    :param param_dict: (dict) the dictionary of the comp parameter
-    :return: (list of str) the modified base tracin with key for the parameter
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the comp parameter, scalar type
+    :return: the modified base TRACE input deck with key for the parameter
         as specified by param_dict
     """
     from ..tracin_util import keygen
-
-    nom_val = None
 
     # loop over lines
     for line_num, tracin_line in enumerate(tracin_lines):
@@ -186,13 +191,13 @@ def edit_scalar(tracin_lines, param_dict):
     return tracin_lines
 
 
-def edit_table(tracin_lines, param_dict):
+def edit_table(tracin_lines: list, param_dict: dict) -> list:
     r"""Replace the nominal values of table-type component parameters with keys
 
-    :param tracin_lines: (list of str) the base tracin as a list of string
-    :param param_dict: (dict) the dictionary of table-type comp. parameter
-    :return: (list of str) the modified base tracin with relevant nominal
-        parameter values replaced with keys
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the comp parameter, table type
+    :return: the modified base TRACE input deck with key for the parameter
+        as specified by param_dict
     """
     import re
     from ..tracin_util import keygen
@@ -205,7 +210,7 @@ def edit_table(tracin_lines, param_dict):
                 i = 0   # table multiple values identifier
                 offset = 0
                 while True:
-                    # loop to go the line where the parameter is first specified
+                    # loop to go the line where the parameter is 1st specified
                     if param_dict["var_name"] in tracin_lines[line_num+offset]:
                         break
                     else:
@@ -213,7 +218,8 @@ def edit_table(tracin_lines, param_dict):
                     offset += 1
                 while True:
                     # loop to replace all the available nominal values
-                    if param_dict["var_name"] not in tracin_lines[line_num+offset]:
+                    if param_dict["var_name"] not in \
+                            tracin_lines[line_num+offset]:
                         break
                     else:
                         # grab the comment in the line
@@ -245,16 +251,17 @@ def edit_table(tracin_lines, param_dict):
     return tracin_lines
 
 
-def edit_array(tracin_lines, param_dict):
+def edit_array(tracin_lines: list, param_dict: dict) -> list:
     r"""Get the nominal values of array-type component parameters
 
     Array time simply means that all values are of single type, not a set of
     types (e.g., time - power pair). Initial fluid velocity in a pipe is an
     array type variable.
 
-    :param tracin_lines: (list of str) the tracin base as a list
-    :param param_dict: (dict) the dictionary of the comp parameter
-    :return: (list) the nominal values of the comp parameter
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the comp parameter, array type
+    :return: the modified base TRACE input deck with key for the parameter
+        as specified by param_dict
     """
     # TODO: Complete edit_array function()
-    return None
+    return []

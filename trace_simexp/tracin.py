@@ -1,4 +1,12 @@
-"""Module to write down trace input deck based on sampled parameter values
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.tracin
+    *******************
+
+    Module with functions to deal with the TRACE input deck, from grabbing
+    the nominal parameter values, create a template (replace parameter of
+    interest with key), and substitute the keys with actual value from the
+    design matrix to create a perturbed input deck
 """
 
 __author__ = "Damar Wicaksono"
@@ -19,7 +27,8 @@ def create(template_lines, params_dict, norm_pert_factors):
 
     # A simple dimension checking
     if len(params_dict) != len(norm_pert_factors):
-        raise ValueError("The # of sampled values and # of parameters unequal!")
+        raise ValueError(
+            "The # of sampled values and # of parameters unequal!")
 
     perturb_dict = dict()
 
@@ -32,7 +41,7 @@ def create(template_lines, params_dict, norm_pert_factors):
         # Perturbed the model parameters
         perturb_param = perturb.perturb_param(param, rescaled_factor)
 
-        # Create dictionary with keys correspond to template lines and perturbed
+        # Create dictionary with keys correspond to template lines & perturbed
         # model parameter values
         perturb_dict.update(perturb.create_dict(param, perturb_param))
 

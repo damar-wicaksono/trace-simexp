@@ -1,4 +1,10 @@
-"""Module to parse component parameter data from list of parameters file
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.paramfile.comp
+    ***************************
+
+    Module to parse component-related parameter specification from the list of
+    parameters file
 """
 
 __author__ = "Damar Wicaksono"
