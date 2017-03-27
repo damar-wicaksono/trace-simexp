@@ -48,8 +48,11 @@ def write(inputs: dict):
     :param inputs: (dict) the required inputs for post-pro phase in a dictionary
     """
     from datetime import datetime
+    from . import common
 
-    header = ["prepro.info Name", "exec.info Name",
+    header = ["exec.info Name", "exec.info Fullname",
+              "Base Directory Name", "Base Case Name",
+              "List of Parameters Name", "Design Matrix Name",
               "APTPlot Executable", "Number of Processors (Host)",
               "List of XTV Variables Name", "List of XTV Variables File", 
               "List of XTV Variables", "Samples to Post-processed"]
@@ -63,73 +66,95 @@ def write(inputs: dict):
         # Info file header
         info_file.writelines("***Post-process Phase Info***\n")
 
-        # prepro.info filename
-        info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[0], "->",
-                                     inputs["prepro_info_name"]))
-
         # exec.info filename
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[1], "->",
+                             .format(header[0], "->",
                                      inputs["exec_info_name"]))
+
+        # exec.info fullname
+        info_file.writelines("{:<30s}{:3s}{:<30s}\n"
+                             .format(header[1], "->",
+                                     inputs["exec_info_fullname"]))
+
+        # Base directory fullname
+        info_file.writelines("{:<30s}{:3s}{:<30s}\n"
+                             .format(header[2], "->",
+                                     inputs["base_dir"]))
+
+        # Base case name
+        info_file.writelines("{:<30s}{:3s}{:<30s}\n"
+                             .format(header[3], "->",
+                                     inputs["case_name"]))
+
+        # List of parameters name
+        info_file.writelines("{:<30s}{:3s}{:<30s}\n"
+                             .format(header[4], "->",
+                                     inputs["params_list_name"]))
+
+        # Design matrix name
+        info_file.writelines("{:<30s}{:3s}{:<30s}\n"
+                             .format(header[5], "->",
+                                     inputs["dm_name"]))
 
         # APTPlot Executable
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[2], "->", inputs["aptplot_exec"]))
+                             .format(header[6], "->", inputs["aptplot_exec"]))
 
         # Number of Processors and hostname
         info_file.writelines("{:<30s}{:3s}{:<3d}({})\n"
-                             .format(header[3], "->",
+                             .format(header[7], "->",
                                      inputs["num_procs"],
                                      inputs["hostname"]))
 
         # List of Graphic Variables Name
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[4], "->",
+                             .format(header[8], "->",
                                      inputs["xtv_vars_name"]))
 
         # List of Graphic Variables File
         info_file.writelines("{:<30s}{:3s}{:<30s}\n"
-                             .format(header[5], "->",
+                             .format(header[9], "->",
                                      inputs["xtv_vars_fullname"]))
 
         # List of Graphic Variables
-        info_file.writelines("{:<30s}{:3s}\n" .format(header[6], "->"))
+        info_file.writelines("{:<30s}{:3s}\n" .format(header[10], "->"))
 
-        for i in range(int(len(inputs["xtv_vars"])/3)):
-            offset1 = i*3
-            offset2 = (i+1)*3
-            for j in range(offset1, offset2 - 1):
-                info_file.writelines(" {:>20s} "
-                                     .format(inputs["xtv_vars"][j]))
-            info_file.writelines(" {:>20s}\n"
-                                 .format(inputs["xtv_vars"][offset2-1]))
+        common.write_by_tens(inputs["xtv_vars"], ">20s", info_file)
+        #for i in range(int(len(inputs["xtv_vars"])/3)):
+        #    offset1 = i*3
+        #    offset2 = (i+1)*3
+        #    for j in range(offset1, offset2 - 1):
+        #        info_file.writelines(" {:>20s} "
+        #                             .format(inputs["xtv_vars"][j]))
+        #    info_file.writelines(" {:>20s}\n"
+        #                         .format(inputs["xtv_vars"][offset2-1]))
 
-        offset1 = int(len(inputs["xtv_vars"])/3) * 3
-        offset2 = len(inputs["xtv_vars"])
-        if offset2 > offset1:
-            for i in range(offset1, offset2):
-                info_file.writelines(" {:>20s} "
-                                     .format(inputs["xtv_vars"][i]))
-            info_file.writelines("\n")
+        #offset1 = int(len(inputs["xtv_vars"])/3) * 3
+        #offset2 = len(inputs["xtv_vars"])
+        #if offset2 > offset1:
+        #    for i in range(offset1, offset2):
+        #        info_file.writelines(" {:>20s} "
+        #                             .format(inputs["xtv_vars"][i]))
+        #    info_file.writelines("\n")
 
-        # Samples to Run
-        info_file.writelines("{:<30s}{:3s}\n" .format(header[7], "->"))
+        # Samples to post-processed
+        info_file.writelines("{:<30s}{:3s}\n" .format(header[11], "->"))
 
-        for i in range(int(len(inputs["samples"])/10)):
-            offset1 = i*10
-            offset2 = (i+1)*10
-            for j in range(offset1, offset2 - 1):
-                info_file.writelines(" {:5d} " .format(inputs["samples"][j]))
-            info_file.writelines(" {:5d}\n"
-                                 .format(inputs["samples"][offset2-1]))
-
-        offset1 = int(len(inputs["samples"])/10) * 10
-        offset2 = len(inputs["samples"])
-        if offset2 > offset1:
-            for i in range(offset1, offset2):
-                info_file.writelines(" {:5d} " .format(inputs["samples"][i]))
-            info_file.writelines("\n")
-
+        common.write_by_tens(inputs["samples"], "5d", info_file)
         # Mark the end of samples
         info_file.writelines("***  End of Samples  ***\n")
+
+        #for i in range(int(len(inputs["samples"])/10)):
+        #    offset1 = i*10
+        #    offset2 = (i+1)*10
+        #    for j in range(offset1, offset2 - 1):
+        #        info_file.writelines(" {:5d} " .format(inputs["samples"][j]))
+        #    info_file.writelines(" {:5d}\n"
+        #                         .format(inputs["samples"][offset2-1]))
+
+        #offset1 = int(len(inputs["samples"])/10) * 10
+        #offset2 = len(inputs["samples"])
+        #if offset2 > offset1:
+        #    for i in range(offset1, offset2):
+        #        info_file.writelines(" {:5d} " .format(inputs["samples"][i]))
+        #    info_file.writelines("\n")
