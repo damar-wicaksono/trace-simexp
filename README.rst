@@ -62,7 +62,7 @@ This will make the following available in the path:
 Further Documentation
 ---------------------
 
-Documentation of ``trace-simexp``is an on-going process.
+Documentation of ``trace-simexp`` is an on-going process.
 The current version can be found in the ``/docs`` folder and
 can be built with the following ``make`` command (given that ``sphinx`` has been
 installed)::
