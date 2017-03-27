@@ -5,7 +5,6 @@
 
     Module to parse command line arguments used in the execute phase
 """
-from .. import util
 from .._version import __version__
 
 __author__ = "Damar Wicaksono"
@@ -24,7 +23,6 @@ def get():
         (str) the trace executable fullname, if not in the path
         (str) the xtv2dmx executable fullname, if not in the path
     """
-    import os
     import argparse
     from . import common
 
