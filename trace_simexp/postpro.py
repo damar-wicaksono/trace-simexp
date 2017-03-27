@@ -169,6 +169,7 @@ def check_dirtree(postpro_inputs: dict):
     import os
     from .util import make_dirnames
     from .util import make_auxfilenames
+    from .task import clean
 
     dirty_dirs = []
     dirty_dir_nums = []
