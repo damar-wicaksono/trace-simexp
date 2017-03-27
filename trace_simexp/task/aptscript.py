@@ -1,5 +1,10 @@
-"""Module to read list of TRACE graphic variable files and create an aptscript
-command
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.task.aptscript
+    ***************************
+    
+    Module to read list of TRACE graphic variable files and create an aptscript
+    command
 """
 
 
@@ -55,4 +60,3 @@ def make_apt(run_filename: str, xtv_vars_name: str,
     apt_script.append("EXIT")
 
     return apt_script
-
