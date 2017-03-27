@@ -5,6 +5,7 @@
 
     Main module for pre-processing activities
 """
+
 __author__ = "Damar Wicaksono"
 
 
@@ -67,8 +68,8 @@ def get_input() -> dict:
     +----------------------+--------------------------------------------------+
     """
     import os
-    import re
     from . import cmdln_args
+    from . import util
     from .info_file import common
 
     # Read the command line arguments
@@ -79,12 +80,10 @@ def get_input() -> dict:
         overwrite, info, prepro_filename = cmdln_args.prepro.get()
     
     # Get the names of directory and files
-    dir_delim = "[/\\\\]"   # Multiple dir. delimiters for WIN compatibility
-    base_name = re.split(dir_delim, base_dirname)[-1]
-    case_name = re.split(dir_delim, tracin_base_fullname)[-1].split(".")[0]
-    dm_name = re.split(dir_delim, dm_fullname)[-1].split(".")[0]
-    params_list_name = re.split(dir_delim,
-                                params_list_fullname)[-1].split(".")[0]
+    base_name = util.get_name(base_dirname)
+    case_name = util.get_name(tracin_base_fullname)
+    dm_name = util.get_name(dm_fullname)
+    params_list_name = util.get_name(params_list_fullname)
 
     # Construct the dictionary
     inputs = {
