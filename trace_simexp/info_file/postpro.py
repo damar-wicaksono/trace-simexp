@@ -118,43 +118,10 @@ def write(inputs: dict):
 
         # List of Graphic Variables
         info_file.writelines("{:<30s}{:3s}\n" .format(header[10], "->"))
-
         common.write_by_tens(inputs["xtv_vars"], ">20s", info_file)
-        #for i in range(int(len(inputs["xtv_vars"])/3)):
-        #    offset1 = i*3
-        #    offset2 = (i+1)*3
-        #    for j in range(offset1, offset2 - 1):
-        #        info_file.writelines(" {:>20s} "
-        #                             .format(inputs["xtv_vars"][j]))
-        #    info_file.writelines(" {:>20s}\n"
-        #                         .format(inputs["xtv_vars"][offset2-1]))
-
-        #offset1 = int(len(inputs["xtv_vars"])/3) * 3
-        #offset2 = len(inputs["xtv_vars"])
-        #if offset2 > offset1:
-        #    for i in range(offset1, offset2):
-        #        info_file.writelines(" {:>20s} "
-        #                             .format(inputs["xtv_vars"][i]))
-        #    info_file.writelines("\n")
 
         # Samples to post-processed
         info_file.writelines("{:<30s}{:3s}\n" .format(header[11], "->"))
-
         common.write_by_tens(inputs["samples"], "5d", info_file)
         # Mark the end of samples
         info_file.writelines("***  End of Samples  ***\n")
-
-        #for i in range(int(len(inputs["samples"])/10)):
-        #    offset1 = i*10
-        #    offset2 = (i+1)*10
-        #    for j in range(offset1, offset2 - 1):
-        #        info_file.writelines(" {:5d} " .format(inputs["samples"][j]))
-        #    info_file.writelines(" {:5d}\n"
-        #                         .format(inputs["samples"][offset2-1]))
-
-        #offset1 = int(len(inputs["samples"])/10) * 10
-        #offset2 = len(inputs["samples"])
-        #if offset2 > offset1:
-        #    for i in range(offset1, offset2):
-        #        info_file.writelines(" {:5d} " .format(inputs["samples"][i]))
-        #    info_file.writelines("\n")
