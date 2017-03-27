@@ -20,6 +20,7 @@ def write(inputs: dict):
     :return: the info_file with the specified filename in the inputs
     """
     from datetime import datetime
+    from . import common
 
     header = ["Base Name",
               "Base Directory Name",
@@ -54,25 +55,13 @@ def write(inputs: dict):
                         .format(header[6], "->", inputs["dm_name"]))
         file.writelines("{:<30s}{:3s}{:<30s}\n"
                         .format(header[7], "->", inputs["dm_fullname"]))
-        file.writelines("{:<30s}{:3s}\n" .format(header[8], "->"))
 
         # Write the requested sampled runs
-        for i in range(int(len(inputs["samples"])/10)):
-            offset1 = i*10
-            offset2 = (i+1)*10
-            for j in range(offset1, offset2 - 1):
-                file.writelines(" {:5d} " .format(inputs["samples"][j]))
-            file.writelines(" {:5d}\n" .format(inputs["samples"][offset2-1]))
-
-        offset1 = int(len(inputs["samples"])/10) * 10
-        offset2 = len(inputs["samples"])
-        if offset2 > offset1:
-            for i in range(offset1, offset2):
-                file.writelines(" {:5d} " .format(inputs["samples"][i]))
-            file.writelines("\n")
-
+        file.writelines("{:<30s}{:3s}\n" .format(header[8], "->"))
+        common.write_by_tens(inputs["samples"], "5d", file)
         # Mark the end of samples
         file.writelines("***  End of Samples  ***\n")
+
 
 
 def read(prepro_info_contents: list) -> tuple:
