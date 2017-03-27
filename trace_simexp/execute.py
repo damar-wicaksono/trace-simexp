@@ -57,7 +57,6 @@ def get_input() -> dict:
     | info_file            | (str) The filename of the exec infofile          |
     +----------------------+--------------------------------------------------+
     """
-    import re
     import os
 
     from . import cmdln_args
@@ -86,7 +85,7 @@ def get_input() -> dict:
         samples = get_samples(samples, avail_samples)
  
     # Get the name of the prepro info file
-    prepro_info_name = re.split("[/\\\\]", prepro_info_fullname)[-1]
+    prepro_info_name = util.get_name(prepro_info_fullname, incl_ext=True)
 
     # Get the name of the machine (hostname)
     hostname = util.get_hostname()
@@ -159,17 +158,6 @@ def run_batches(exec_inputs: dict):
     elif exe_exists(exec_inputs["xtv2dmx_exec"]):
         xtv2dmx_is_in_path = False
         xtv2dmx_exec_name = get_name(exec_inputs["xtv2dmx_exec"], incl_ext=True)
-
-    #if len(exec_inputs["trace_exec"].split("/")) > 1:
-    #    trace_is_in_path = False
-    #    trace_exec_name = exec_inputs["trace_exec"].split("/")[-1]
-    #else:
-    #    trace_is_in_path = True
-    #if len(exec_inputs["xtv2dmx_exec"].split("/")) > 1:
-    #    xtv2dmx_is_in_path = False
-    #    xtv2dmx_exec_name = exec_inputs["xtv2dmx_exec"].split("/")[-1]
-    #else:
-    #    xtv2dmx_is_in_path = True
 
     num_samples = len(exec_inputs["samples"])
     case_name = exec_inputs["case_name"]
