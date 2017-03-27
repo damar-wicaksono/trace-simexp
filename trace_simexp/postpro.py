@@ -28,7 +28,7 @@ def get_input():
     exec_info_fullname, exec_info_contents, \
         xtv_vars_fullname, xtv_vars_contents, \
         aptplot_exec, num_procs, \
-        samples, postpro_filename = cmdln_args.postpro.get()
+        overwrite, samples, postpro_filename = cmdln_args.postpro.get()
 
     # Parse exec.info file
     prepro_info_fullname, base_dir, case_name, params_list_name, \
@@ -39,7 +39,7 @@ def get_input():
     exec_info_name = util.get_name(exec_info_fullname, incl_ext=True)
 
     # Extract the name of the list of xtv variables file
-    xtv_vars_name = util.get_name(xtv_vars_fullname, incl_ext=True)
+    xtv_vars_name = util.get_name(xtv_vars_fullname, incl_ext=False)
 
     # Extract the name of the prepro.info file
     prepro_info_name = util.get_name(prepro_info_fullname, incl_ext=True)
@@ -52,20 +52,6 @@ def get_input():
     else:
         # Else check its validity with the available samples
         samples = get_samples(samples, avail_samples)
-
-    # Check if the prepro.info from exec.info is the same as passed by user
-    # if prepro_info_from_exec != prepro_info_name:
-    #    raise ValueError("The passed repro.info name does not agree with the"
-    #                     "one specified in the exec.info!\n"
-    #                     "{:<16s}: {}\n"
-    #                     "{:<16s}: {}" .format("-prepro argument",
-    #                                           prepro_info_name,
-    #                                           "exec.info",
-    #                                           prepro_info_from_exec))
-
-    # Parse prepro.info file
-    # base_dir, case_name, params_list_name, dm_name, avail_samples = \
-    #    info_file.prepro.read(prepro_info_contents)
 
     # Read the list of TRACE variables name
     xtv_vars = aptscript.read(xtv_vars_contents)
@@ -89,7 +75,8 @@ def get_input():
                       "case_name": case_name,
                       "params_list_name": params_list_name,
                       "dm_name": dm_name,
-                      "hostname": hostname
+                      "hostname": hostname,
+                      "overwrite": overwrite,
                       }
 
     # Create an infofile filename if not provided
@@ -169,6 +156,67 @@ def dmx2csv(postpro_inputs: dict):
             aptplot_links = ["{}/{}".format(run_dirname, aptplot_exec_name)
                              for run_dirname in run_dirnames]
             clean.rm_files(aptplot_links)
+
+
+def check_dirtree(postpro_inputs: dict):
+    """Check the run directory structure whether it is clean for post-processing
+
+    "Clean" means there is at the very least the dmx and no orverlapping csv
+
+    :param postpro_inputs: the postpro phase inputs
+    :return: list of dirty directory tree
+    """
+    import os
+    from .util import make_dirnames
+    from .util import make_auxfilenames
+
+    dirty_dirs = []
+    dirty_dir_nums = []
+    empty_dirs = []
+
+    # Create the list of run directories
+    run_dirnames = make_dirnames(postpro_inputs["samples"], postpro_inputs, False)
+    # Create the list of TRACE dmx files not to be removed
+    dmx_filenames = make_auxfilenames(postpro_inputs["samples"],
+                                      postpro_inputs["case_name"],
+                                      ".dmx")
+    # Create the list of CSV files
+    csv_filenames =  make_auxfilenames(postpro_inputs["samples"],
+                                       postpro_inputs["case_name"],
+                                       "-{}.csv" .format(
+                                           postpro_inputs["xtv_vars_name"]))
+    # CSV fullnames
+    csv_fullnames = [os.path.join(a, b) for a, b in zip(run_dirnames,
+                                                        csv_filenames)]
+
+    # Loop over run directories and input filenames and grab the invalid ones
+    for i, (run_dirname, dmx_filename, csv_filename) in \
+            enumerate(zip(run_dirnames, dmx_filenames, csv_filenames)):
+        if csv_filename in os.listdir(run_dirname):
+            dirty_dirs.append(run_dirname)
+            dirty_dir_nums.append(postpro_inputs["samples"][i])
+        if dmx_filename not in os.listdir(run_dirname):
+            empty_dirs.append(run_dirname)
+
+    # Check if there is empty run directory
+    if empty_dirs:
+        for empty_dir in empty_dirs:
+            print("{} does not contain the correct input file!"
+                  .format(empty_dir))
+        raise ValueError("Some input file does not exist!")
+    # Check if there is dirty run directory
+    elif dirty_dirs:
+        if not postpro_inputs["overwrite"]:
+            for dirty_dir in dirty_dirs:
+                print("{} run directory is dirty!"
+                      .format(dirty_dir))
+            raise ValueError("One or more run directories are dirty and no"
+                             " overwrite flag!")
+        else:
+            # Clean the directory first
+            clean.rm_files(csv_fullnames)
+    else:
+        pass
 
 
 def reset(postpro_inputs: dict):

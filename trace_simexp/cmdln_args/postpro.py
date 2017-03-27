@@ -92,6 +92,15 @@ def get():
         required=False
     )
 
+    # The overwrite flag
+    parser.add_argument(
+        "-ow", "--overwrite",
+        action="store_true",
+        help="Reset existing select run directories",
+        default=False,
+        required=False
+    )
+
     # The info filename
     parser.add_argument(
         "-postpro_info", "--postpro_filename",
@@ -148,4 +157,4 @@ def get():
     return (exec_info_fullname, exec_info_contents,
             xtv_vars_fullname, xtv_vars_contents,
             aptplot_executable, args.num_processors,
-            samples, postpro_filename)
+            samples, args.overwrite, postpro_filename)
