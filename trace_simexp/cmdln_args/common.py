@@ -105,12 +105,18 @@ def get_executable(exec_name: str) -> str:
     """
     from .. import util
 
-    if util.cmd_exists(exec_name):
-        # Assume the executable is in the path
-        return exec_name
-    elif util.exe_exists(exec_name):
-        # Maybe it is specified with directory instead, then return full path
-        return os.path.abspath(exec_name)
+    if os.path.split(exec_name)[0]:
+        # Not an empty string at the beginning of exec means dir is specified
+        if util.exe_exists(exec_name):
+            # It is specified with directory instead, then return full path
+            return os.path.abspath(exec_name)
+        else:
+            # Not found, raise error
+            raise ValueError("The executable {} not found!" .format(exec_name))
     else:
-        # Not found, raise error
-        raise ValueError("The executable {} not found!" .format(exec_name))
+        if util.cmd_exists(exec_name):
+            # Assume the executable is in the path
+            return exec_name
+        else:
+            # Not found, raise error
+            raise ValueError("The executable {} not found!" .format(exec_name))

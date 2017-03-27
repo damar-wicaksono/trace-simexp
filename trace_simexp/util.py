@@ -212,14 +212,13 @@ def get_name(name: str, incl_ext: bool=False) -> str:
     :param incl_ext: flag to include the extension if it is a file
     :return: the name of the directory or the file, excluding path 
     """
-    import re
+    import os
 
-    dir_delim = "[/\\\\]"
     ext_delim = "."
 
     # Filter the directory delimiter and get the last element
     # It is assumed here that if it is a directory, it will not end with "/"
-    name = re.split(dir_delim, name)[-1]
+    name = os.path.split(name)[-1]
     if ext_delim in name:
         # Then it is a file with an extension
         if incl_ext:
