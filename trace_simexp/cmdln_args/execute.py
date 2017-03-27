@@ -137,31 +137,34 @@ def get():
     prepro_info_fullname, prepro_info_contents = \
         common.get_fullname_and_contents(args.prepro_info)
 
-    # Check if the executables exist
-    if len(args.trace_executable.split("/")) > 1:
+    # Check and get the executables, both TRACE and XTV2DMX
+    trace_executable = common.get_executable(args.trace_executable)
+    xtv2dmx_executable = common.get_executable(args.xtv2dmx_executable)
+
+    #if len(args.trace_executable.split("/")) > 1:
         # Given full/relative path of TRACE exec
-        if not os.path.isfile(args.trace_executable):
-            raise ValueError("The specified TRACE executable not found!")
-        else:
-            trace_executable = os.path.abspath(args.trace_executable)
-    else:
-        # Assumed TRACE exec in path
-        if not util.cmd_exists(args.trace_executable):
-            raise ValueError("The specified TRACE executable not found!")
-        else:
-            trace_executable = args.trace_executable
-    if len(args.xtv2dmx_executable.split("/")) > 1:
-        # Given full path of XTV2DMX exec
-        if not os.path.isfile(args.xtv2dmx_executable):
-            raise ValueError("The specified XTV2DMX executable not found!")
-        else:
-            xtv2dmx_executable = os.path.abspath(args.xtv2dmx_executable)
-    else:
-        # Assumed XTV2DMX exec in path
-        if not util.cmd_exists(args.xtv2dmx_executable):
-            raise ValueError("The specified XTV2DMX executable not found!")
-        else:
-            xtv2dmx_executable = args.xtv2dmx_executable
+    #    if not os.path.isfile(args.trace_executable):
+    #        raise ValueError("The specified TRACE executable not found!")
+    #    else:
+    #        trace_executable = os.path.abspath(args.trace_executable)
+    #else:
+    #    # Assumed TRACE exec in path
+    #    if not util.cmd_exists(args.trace_executable):
+    #        raise ValueError("The specified TRACE executable not found!")
+    #    else:
+    #        trace_executable = args.trace_executable
+    #if len(args.xtv2dmx_executable.split("/")) > 1:
+    #    # Given full path of XTV2DMX exec
+    #    if not os.path.isfile(args.xtv2dmx_executable):
+    #        raise ValueError("The specified XTV2DMX executable not found!")
+    #    else:
+    #        xtv2dmx_executable = os.path.abspath(args.xtv2dmx_executable)
+    #else:
+    #    # Assumed XTV2DMX exec in path
+    #    if not util.cmd_exists(args.xtv2dmx_executable):
+    #        raise ValueError("The specified XTV2DMX executable not found!")
+    #    else:
+    #        xtv2dmx_executable = args.xtv2dmx_executable
 
     # Expand scratch directory
     scratch_directory = common.expand_path(args.scratch_directory, None)

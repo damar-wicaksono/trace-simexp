@@ -143,18 +143,33 @@ def run_batches(exec_inputs: dict):
     from .util import create_iter
     from .util import make_dirnames
     from .util import make_auxfilenames
+    from .util import exe_exists
+    from .util import cmd_exists
+    from .util import get_name
 
-    # Check if the trace_executable and xtv2dmx_executable are in the path
-    if len(exec_inputs["trace_exec"].split("/")) > 1:
-        trace_is_in_path = False
-        trace_exec_name = exec_inputs["trace_exec"].split("/")[-1]
-    else:
+    # Check if TRACE Executable is in the path
+    if cmd_exists(exec_inputs["trace_exec"]):
         trace_is_in_path = True
-    if len(exec_inputs["xtv2dmx_exec"].split("/")) > 1:
-        xtv2dmx_is_in_path = False
-        xtv2dmx_exec_name = exec_inputs["xtv2dmx_exec"].split("/")[-1]
-    else:
+    elif exe_exists(exec_inputs["trace_exec"]):
+        trace_is_in_path = False
+        trace_exec_name = get_name(exec_inputs["trace_exec"], incl_ext=True)
+    # Check if XTV2DMX Executable is in the path
+    if cmd_exists(exec_inputs["xtv2dmx_exec"]):
         xtv2dmx_is_in_path = True
+    elif exe_exists(exec_inputs["xtv2dmx_exec"]):
+        xtv2dmx_is_in_path = False
+        xtv2dmx_exec_name = get_name(exec_inputs["xtv2dmx_exec"], incl_ext=True)
+
+    #if len(exec_inputs["trace_exec"].split("/")) > 1:
+    #    trace_is_in_path = False
+    #    trace_exec_name = exec_inputs["trace_exec"].split("/")[-1]
+    #else:
+    #    trace_is_in_path = True
+    #if len(exec_inputs["xtv2dmx_exec"].split("/")) > 1:
+    #    xtv2dmx_is_in_path = False
+    #    xtv2dmx_exec_name = exec_inputs["xtv2dmx_exec"].split("/")[-1]
+    #else:
+    #    xtv2dmx_is_in_path = True
 
     num_samples = len(exec_inputs["samples"])
     case_name = exec_inputs["case_name"]

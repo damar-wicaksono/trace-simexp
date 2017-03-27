@@ -79,7 +79,7 @@ def get_fullname_and_contents(file_object, dsv: bool = False) -> tuple:
 
     :param file_object: The file object read by argparse
     :param dsv: Flag whether the file is Delimiter Separated Value
-    :return: The tuple with following contents
+    :return: A tuple with following contents
         (str) the filename in full (path + filename)
         (list) the contents of the file as list
     """
@@ -94,3 +94,23 @@ def get_fullname_and_contents(file_object, dsv: bool = False) -> tuple:
             file_contents = file.read().splitlines()
 
     return fullname, file_contents
+
+
+def get_executable(exec_name: str) -> str:
+    """Check and get the executable, whether in PATH or somewhere else
+    
+    :param exec_name: the name of the executable
+    :return: the name of the executable, verified. If it is not on the path,
+        the filename + path will be returned
+    """
+    from .. import util
+
+    if util.cmd_exists(exec_name):
+        # Assume the executable is in the path
+        return exec_name
+    elif util.exe_exists(exec_name):
+        # Maybe it is specified with directory instead, then return full path
+        return os.path.abspath(exec_name)
+    else:
+        # Not found, raise error
+        raise ValueError("The executable {} not found!" .format(exec_name))

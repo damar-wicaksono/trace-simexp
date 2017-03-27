@@ -159,15 +159,29 @@ def parse_csv(csv_file) -> np.ndarray:
     return output
 
 
-def cmd_exists(cmd: str):
-    """Check if a command is available in the path
+def cmd_exists(cmd: str) -> bool:
+    """Check if a command is available in the PATH
 
+    Use shell command `which` to check whether an executable is in the path
+    
+    :param cmd: the name of the executable, assumed in the PATH
+    :return: True if it is in the path, False otherwise
+    """
+    return subprocess.call("which " + cmd, shell=True, stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE) == 0
+
+
+def exe_exists(cmd: str) -> bool:
+    """Check if a command is available in the specified path
+    
+    Use shell command `type` to check whether a file is an executable
+    
     **Reference:**
     (1) Answer by `hasen`
        stackoverflow.com/questions/377017/test-if-executable-exists-in-python
-
-    :param cmd: the command string
-    :return: (bool) True if it is in the path, False otherwise
+    
+    :param cmd: the name of the executable
+    :return: True if such executable exists, False otherwise
     """
     return subprocess.call("type " + cmd, shell=True, stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE) == 0
@@ -187,3 +201,31 @@ def link_exec(executable: str, directory: str):
 
     # Create symbolic link
     subprocess.call(["ln", "-s", abs_exec, abs_dir])
+
+
+def get_name(name: str, incl_ext: bool=False) -> str:
+    """ Get the name of a directory of file, specified in path
+    
+    Path can either be relative or absolute
+    
+    :param name: the name of a directory or a file, specified in path
+    :param incl_ext: flag to include the extension if it is a file
+    :return: the name of the directory or the file, excluding path 
+    """
+    import re
+
+    dir_delim = "[/\\\\]"
+    ext_delim = "."
+
+    # Filter the directory delimiter and get the last element
+    # It is assumed here that if it is a directory, it will not end with "/"
+    name = re.split(dir_delim, name)[-1]
+    if ext_delim in name:
+        # Then it is a file with an extension
+        if incl_ext:
+            return name
+        else:
+            return name.split(ext_delim)[0]
+    else:
+        # Then it is a directory
+        return name
