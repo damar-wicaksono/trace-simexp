@@ -16,6 +16,59 @@ def get_input():
     and list of trace graphic variables
 
     :return: all the inputs for post-processing phase in a dictionary
+    
+    +----------------------+--------------------------------------------------+
+    | Key                  | Value                                            |
+    +======================+==================================================+
+    | prepro_info_name     | (str) The name of the passed prepro infofile     |
+    +----------------------+--------------------------------------------------+
+    | prepro_info_fullname | (str) The name and full path of the passed prepro|
+    |                      | infofile                                         |
+    +----------------------+--------------------------------------------------+
+    | exec_info_name       | (str) The name of the passed execute infofile    |
+    +----------------------+--------------------------------------------------+
+    | exec_info_fullname   | (str) The name and full path of the passed       |
+    |                      | execute infofile                                 |
+    +----------------------+--------------------------------------------------+
+    | exec_info_contents   | (list, str) The contents of the execute infofile |
+    +----------------------+--------------------------------------------------+
+    | xtv_vars_name        | (str or None) The name of the list of TRACE      |
+    |                      | graphics variable file                           |
+    +----------------------+--------------------------------------------------+
+    | xtv_vars_fullname    | (str) The name and full path of the list of TRACE|
+    |                      | graphics variable file                           |
+    +----------------------+--------------------------------------------------+
+    | xtv_vars             | (list, str) The list of TRACE graphic variables, |
+    |                      | parsed from the specified file                   |
+    +----------------------+--------------------------------------------------+
+    | aptplot_exec         | (str) The executable for APTPLOT tool either the |
+    |                      | full path or assumed to be accessible in the path|
+    +----------------------+--------------------------------------------------+
+    | num_procs            | (int) The number of processors to post-process   |
+    |                      | TRACE perturbed cases outputs simultaneously     |
+    +----------------------+--------------------------------------------------+
+    | samples              | (list, int) List of samples to be executed       |
+    |                      | must be in accordance between prepro and command |
+    |                      | line arguments                                   |
+    +----------------------+--------------------------------------------------+
+    | base_dir             | (str) The base directory of the simulation       |
+    |                      | campaign                                         |
+    +----------------------+--------------------------------------------------+
+    | case_name            | (str) The name of the base TRACE input deck      |
+    +----------------------+--------------------------------------------------+
+    | params_list_name     | (str) The name of the list of parameters file    |
+    +----------------------+--------------------------------------------------+
+    | dm_name              | (str) The name of the design matrix file         |
+    +----------------------+--------------------------------------------------+
+    | hostname             | (str) The name of the machine the campaign was   |
+    |                      | executed                                         |
+    +----------------------+--------------------------------------------------+
+    | overwrite            | (bool) The flag to continue the pre-processing   |
+    |                      | step even though info files and directory        |
+    |                      | structures already exist                         |
+    +----------------------+--------------------------------------------------+
+    | info_file            | (str) The filename of the post-pro infofile      |
+    +----------------------+--------------------------------------------------+
     """
     import os
     from .task import aptscript
@@ -161,7 +214,9 @@ def dmx2csv(postpro_inputs: dict):
 def check_dirtree(postpro_inputs: dict):
     """Check the run directory structure whether it is clean for post-processing
 
-    "Clean" means there is at the very least the dmx and no orverlapping csv
+    "Clean" means there is at the very least the appropriate dmx file and no 
+    overlapping csv file. If there is no dmx then raise error, if there is 
+    overlapping csv, check if overwrite is allowed
 
     :param postpro_inputs: the postpro phase inputs
     :return: list of dirty directory tree
