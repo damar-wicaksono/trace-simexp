@@ -54,6 +54,10 @@ def get_input() -> dict:
     | hostname             | (str) The name of the machine the campaign was   |
     |                      | executed                                         |
     +----------------------+--------------------------------------------------+
+    | overwrite            | (bool) The flag to continue the pre-processing   |
+    |                      | step even though info files and directory        |
+    |                      | structures already exist                         |
+    +----------------------+--------------------------------------------------+
     | info_file            | (str) The filename of the exec infofile          |
     +----------------------+--------------------------------------------------+
     """
