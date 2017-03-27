@@ -28,7 +28,7 @@ def get_input():
     exec_info_fullname, exec_info_contents, \
         xtv_vars_fullname, xtv_vars_contents, \
         aptplot_exec, num_procs, \
-        overwrite, samples, postpro_filename = cmdln_args.postpro.get()
+        samples, overwrite, postpro_filename = cmdln_args.postpro.get()
 
     # Parse exec.info file
     prepro_info_fullname, base_dir, case_name, params_list_name, \
