@@ -24,7 +24,6 @@ def read(exec_info_contents: list) -> tuple:
         # The fullname of pre-process info file
         if "prepro.info Fullname" in line:
             prepro_info = line.split("-> ")[-1].strip()
-
         # The base directory name
         if "Base Directory Name" in line:
             base_dir = line.split("-> ")[-1].strip()
