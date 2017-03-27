@@ -5,7 +5,6 @@
 
     Module to parse command line arguments used in the execute phase
 """
-from .. import util
 from .._version import __version__
 
 __author__ = "Damar Wicaksono"
@@ -24,11 +23,11 @@ def get():
         (str) the trace executable fullname, if not in the path
         (str) the xtv2dmx executable fullname, if not in the path
     """
-    import os
     import argparse
+    from . import common
 
     parser = argparse.ArgumentParser(
-        description="%(prog)s - trace-simexp Execute: Run all TRACE inputs"
+        description="%(prog)s - Execute: Run all TRACE inputs"
     )
 
     # The fullname of info_file from the pre-processing phase
@@ -128,81 +127,35 @@ def get():
     args = parser.parse_args()
 
     # Check if any sample is specified and each are mutually exclusive
-    if args.num_samples is None and args.num_range is None \
-            and args.all_samples:
-        parser.error("Ambiguous, -ns, -nr, or -as cannot all be present!")
-    elif args.num_samples is not None and args.num_range is not None:
-        parser.error("Ambiguous, -ns or -nr cannot both be present!")
-    elif args.num_samples is not None and args.all_samples:
-        parser.error("Ambiguous, -ns or -as cannot both be present!")
-    elif args.num_range is not None and args.all_samples:
-        parser.error("Ambiguous, -nr or -as cannot both be present!")
+    common.check_samples_argument(args.num_samples, 
+                                  args.num_range, 
+                                  args.all_samples)
 
-    # Read file argument contents
-    prepro_info_fullname = os.path.abspath(args.prepro_info.name)
-    with args.prepro_info as prepro_info:
-        prepro_info_contents = prepro_info.read().splitlines()
+    # Read Pre-processing phase info file 
+    prepro_info_fullname, prepro_info_contents = \
+        common.get_fullname_and_contents(args.prepro_info)
 
-    # Check if the executables exist
-    if len(args.trace_executable.split("/")) > 1:
-        # Given full/relative path of TRACE exec
-        if not os.path.isfile(args.trace_executable):
-            raise ValueError("The specified TRACE executable not found!")
-        else:
-            trace_executable = os.path.abspath(args.trace_executable)
-    else:
-        # Assumed TRACE exec in path
-        if not util.cmd_exists(args.trace_executable):
-            raise ValueError("The specified TRACE executable not found!")
-        else:
-            trace_executable = args.trace_executable
-    if len(args.xtv2dmx_executable.split("/")) > 1:
-        # Given full path of XTV2DMX exec
-        if not os.path.isfile(args.xtv2dmx_executable):
-            raise ValueError("The specified XTV2DMX executable not found!")
-        else:
-            xtv2dmx_executable = os.path.abspath(args.xtv2dmx_executable)
-    else:
-        # Assumed XTV2DMX exec in path
-        if not util.cmd_exists(args.xtv2dmx_executable):
-            raise ValueError("The specified XTV2DMX executable not found!")
-        else:
-            xtv2dmx_executable = args.xtv2dmx_executable
+    # Check and get the executables, both TRACE and XTV2DMX
+    trace_executable = common.get_executable(args.trace_executable)
+    xtv2dmx_executable = common.get_executable(args.xtv2dmx_executable)
 
     # Expand scratch directory
-    if args.scratch_directory is not None:
-        scratch_directory = os.path.abspath(args.scratch_directory)
-    else:
-        scratch_directory = None
+    scratch_directory = common.expand_path(args.scratch_directory, None)
 
     # Sample has to be specified, otherwise all samples listed in the prepro
     # info file will be executed. Check the way it was specified and get them
-    # By default all samples is True
-    samples = True
     # Select individual samples.
     if args.num_samples is not None:
-        # Sample number has to be positive
-        if True in [_ < 0 for _ in args.num_samples]:
-            parser.error(
-                "Number of samples with -ns has to be strictly positive!")
-        else:
-            samples = args.num_samples
-
+        samples = args.num_samples
     # Use range of samples
     elif args.num_range is not None:
-        # Sample range number has to be positive
-        if (args.num_range[0] <= 0 or args.num_range[1] <= 0) and \
-                (args.num_range[0] > args.num_range[1]):
-            parser.error("Sample range with -nr has to be strictly positive!"
-                         "and the first is smaller than the second")
-        else:
-            samples = list(range(args.num_range[0], args.num_range[1]+1))
+        samples = list(range(args.num_range[0], args.num_range[1]+1))
+    else:
+        # By default all samples is True
+        samples = True
 
     # Execute phase info filename, expand to absolute path
-    if args.exec_filename is not None:
-        exec_filename = os.path.abspath(args.exec_filename)
-    else:
-        exec_filename = os.getcwd()
+    exec_filename = common.expand_path(args.exec_filename)
 
     # Return all the command line arguments
     return (samples, prepro_info_fullname, prepro_info_contents,

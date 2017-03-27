@@ -40,28 +40,7 @@ def check_samples_argument(num_samples: list = None,
         pass
 
 
-def get_sample_from_range(ranges: list, avail_samples: list) -> list:
-    """Get while checking the validity of the requested sample range
-
-    :param ranges: The range of selected samples
-    :param avail_samples: The list of all available samples based on the range
-    :return: The selected samples within specified range, verified
-    """
-    select_samples = list(range(ranges[0], ranges[1] + 1))
-
-    # Check the validity of the sample range
-    if (ranges[0] <= 0 or ranges[1] <= 0) and (ranges[0] > ranges[1]):
-        raise ValueError(
-            "Sample range with -nr has to be strictly positive, "
-            "with the first is smaller than the second!")
-    elif False in [_ in avail_samples for _ in select_samples]:
-        raise ValueError(
-            "Some or all selected samples within range are not in the design!")
-
-    return select_samples
-
-
-def get_sample_from_select(select_samples: list, avail_samples: list) -> list:
+def get_samples(select_samples: list, avail_samples: list) -> list:
     """Get while checking the validity of the requested samples
 
     :param select_samples: The selected samples
@@ -100,7 +79,7 @@ def get_fullname_and_contents(file_object, dsv: bool = False) -> tuple:
 
     :param file_object: The file object read by argparse
     :param dsv: Flag whether the file is Delimiter Separated Value
-    :return: The tuple with following contents
+    :return: A tuple with following contents
         (str) the filename in full (path + filename)
         (list) the contents of the file as list
     """
@@ -115,3 +94,29 @@ def get_fullname_and_contents(file_object, dsv: bool = False) -> tuple:
             file_contents = file.read().splitlines()
 
     return fullname, file_contents
+
+
+def get_executable(exec_name: str) -> str:
+    """Check and get the executable, whether in PATH or somewhere else
+    
+    :param exec_name: the name of the executable
+    :return: the name of the executable, verified. If it is not on the path,
+        the filename + path will be returned
+    """
+    from .. import util
+
+    if os.path.split(exec_name)[0]:
+        # Not an empty string at the beginning of exec means dir is specified
+        if util.exe_exists(exec_name):
+            # It is specified with directory instead, then return full path
+            return os.path.abspath(exec_name)
+        else:
+            # Not found, raise error
+            raise ValueError("The executable {} not found!" .format(exec_name))
+    else:
+        if util.cmd_exists(exec_name):
+            # Assume the executable is in the path
+            return exec_name
+        else:
+            # Not found, raise error
+            raise ValueError("The executable {} not found!" .format(exec_name))

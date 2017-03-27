@@ -57,12 +57,12 @@ def get_input() -> dict:
     | info_file            | (str) The filename of the exec infofile          |
     +----------------------+--------------------------------------------------+
     """
-    import re
     import os
 
     from . import cmdln_args
     from . import util
     from .info_file import common, prepro
+    from .cmdln_args.common import get_samples
 
     # Read the command line arguments
     samples, \
@@ -75,16 +75,17 @@ def get_input() -> dict:
     base_dir, case_name, params_list_name, dm_name, avail_samples = \
         prepro.read(prepro_info_contents)
 
-    # Check if samples is within the available samples
+    # Sample has to be specified, otherwise all available in the pre-processing
+    # info file will be processed. Check the way it was specified and get them
+    # If it is boolean, then all available samples
     if isinstance(samples, bool) and samples:
-        samples = avail_samples
-    elif set(samples) <= set(avail_samples):
-        samples = samples
+        samples = avail_samples       
     else:
-        raise ValueError("Requested samples is not part of the available ones")
-
+        # Else check its validity with the available samples
+        samples = get_samples(samples, avail_samples)
+ 
     # Get the name of the prepro info file
-    prepro_info_name = re.split("[/\\\\]", prepro_info_fullname)[-1]
+    prepro_info_name = util.get_name(prepro_info_fullname, incl_ext=True)
 
     # Get the name of the machine (hostname)
     hostname = util.get_hostname()
@@ -141,18 +142,22 @@ def run_batches(exec_inputs: dict):
     from .util import create_iter
     from .util import make_dirnames
     from .util import make_auxfilenames
+    from .util import exe_exists
+    from .util import cmd_exists
+    from .util import get_name
 
-    # Check if the trace_executable and xtv2dmx_executable are in the path
-    if len(exec_inputs["trace_exec"].split("/")) > 1:
-        trace_is_in_path = False
-        trace_exec_name = exec_inputs["trace_exec"].split("/")[-1]
-    else:
+    # Check if TRACE Executable is in the path
+    if cmd_exists(exec_inputs["trace_exec"]):
         trace_is_in_path = True
-    if len(exec_inputs["xtv2dmx_exec"].split("/")) > 1:
-        xtv2dmx_is_in_path = False
-        xtv2dmx_exec_name = exec_inputs["xtv2dmx_exec"].split("/")[-1]
-    else:
+    elif exe_exists(exec_inputs["trace_exec"]):
+        trace_is_in_path = False
+        trace_exec_name = get_name(exec_inputs["trace_exec"], incl_ext=True)
+    # Check if XTV2DMX Executable is in the path
+    if cmd_exists(exec_inputs["xtv2dmx_exec"]):
         xtv2dmx_is_in_path = True
+    elif exe_exists(exec_inputs["xtv2dmx_exec"]):
+        xtv2dmx_is_in_path = False
+        xtv2dmx_exec_name = get_name(exec_inputs["xtv2dmx_exec"], incl_ext=True)
 
     num_samples = len(exec_inputs["samples"])
     case_name = exec_inputs["case_name"]

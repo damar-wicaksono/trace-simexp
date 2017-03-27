@@ -16,7 +16,7 @@ def make_filename(inputs: dict, flag: str) -> str:
 
     Generic filename:
 
-    <phase>-<case_name>-<parlist>-<dm>-<samples>-<YYMMDD>-<HHMMSS>.info
+    <phase>-<case_name>-<parlist>-<dm>-<samples>-<YYMMDD>-<HHMMSS>.nfo
 
     for postprocessing phase there is additional tag for the TRACE graphic
     variable file after the samples and before the date.
@@ -51,7 +51,7 @@ def make_filename(inputs: dict, flag: str) -> str:
     today = time.strftime("%y%m%d")
     moment = time.strftime("%H%M%S")
 
-    info_file = "{}-{}-{}.info" .format(info_file, today, moment)
+    info_file = "{}-{}-{}.nfo" .format(info_file, today, moment)
 
     return info_file
 

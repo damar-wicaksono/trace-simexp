@@ -13,7 +13,8 @@ def read(exec_info_contents: list) -> tuple:
     """Read the exec info file produced in the execution phase
 
     :param exec_info_contents: (str) the fullname of the exec.info file
-    :return: (str) the fullname of prepro info file
+    :return: A tuple with the following contents
+        (str) the fullname of prepro info file
         (int) the number of samples in the exec info file
     """
     scratch_dir = None
