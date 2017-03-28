@@ -32,7 +32,7 @@ The table below lists the complete options/flag in detail.
 === ============ ================= ========== ======== ============================================== =========
 No. Short Name   Long Name         Type       Required Description                                    Default
 === ============ ================= ========== ======== ============================================== =========
-1   -h           --help            flag       No       Show help message                              None
+1   -h           --help            flag       No       Show help message                              False
 2   -ns          --num_samples     integer(s) No       Pre-process the selected samples               None
 3   -nr          --num_range       2 integers No       Pre-process the range of samples, inclusive    None
 4   -as          --all_sample      flag/bool  No       Pre-process all samples in design matrix       True
@@ -43,7 +43,7 @@ No. Short Name   Long Name         Type       Required Description              
 9   -info        --info            string     No       Short message of the experiment                None
 10  -prepro_info --prepro_filename string     No       The pre-process info filename                  See below
 11  -ow          --overwrite       flag       No       Flag to overwrite existing directory structure False
-12  -V           --version         flag       No       Show the program's version number and exit     None
+12  -V           --version         flag       No       Show the program's version number and exit     False
 === ============ ================= ========== ======== ============================================== =========
 
 The directories created is nested in the following form::
@@ -67,7 +67,7 @@ input deck, the script execution will also produce an info file (from here on
 in will be called *prepro info file*). The info file is produced by default
 with the following naming convention::
 
-    prepro-<tracin>-<parlist>-<dm>-<sample_start>_<sample_end>-<date>-<time>.info
+    prepro-<tracin_name>-<parlist_name>-<dm_name>-<sample_start>_<sample_end>-<YYMMDD>-<HHMMSS>.info
 
 The file is used to document the command line arguments specified when the
 script was called. It will also be used in the subsequent step.

@@ -29,7 +29,7 @@ The table below gives the complete options/flags in detail.
 === ========== ==================== ========== ======== ================================================= =========
 No. Short Name Long Name            Type       Required Description                                       Default
 === ========== ==================== ========== ======== ================================================= =========
-1   -h         --help               flag       No       Show help message and exit                        None
+1   -h         --help               flag       No       Show help message and exit                        False
 2   -prepro    --prepro_info        string     Yes      The prepro info file (path+name)                  None
 3   -nprocs    --num_processors     integer    No       The number of processors (batch process size)     1
 4   -ns        --num_samples        integer(s) No       Execute select samples                            None
@@ -40,13 +40,13 @@ No. Short Name Long Name            Type       Required Description             
 9   -xtv2dmx   --xtv2dmx_executable string     Yes      The XTV2DMX executable, in PATH or specified      None
 10  -ow        --overwrite          flag       No       Flag to overwrite existing directory              None
 11  -exec_info --exec_filename      string     No       The execute phase info filename                   See below
-12  -V         --version            flag       No       Show the program's version number and exit        None
+12  -V         --version            flag       No       Show the program's version number and exit        False
 === ========== ==================== ========== ======== ================================================= =========
 
 The script execution will also produce an info file (from here on in will be called *exec info file*).
 The info file is produced by default with the following naming convention::
 
-    exec-<tracin name>-<parlist name>-<dm name>-<sample_start>_<sample_end>-<YYMMDD>-<HHMMSS>.nfo
+    exec-<tracin_name>-<parlist_name>-<dm_name>-<sample_start>_<sample_end>-<YYMMDD>-<HHMMSS>.nfo
 
 The file is used to document the command line arguments specified when the script was called,
 to log the process run for diagnostic purpose, as well as
