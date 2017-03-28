@@ -260,7 +260,8 @@ def reset(reset_inputs: dict):
             else:
                 print("{} does not exist!" .format(run_dirname))
 
-        if query_yes_no("Delete the select run directories?", default="no"):
+        if query_yes_no("Delete the select run directories?"
+                        " (Warning: this will delete them all)", default="no"):
             # Remove folders
             clean.rm_files(run_dirnames)
 
