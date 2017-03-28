@@ -278,41 +278,69 @@ def check_dirtree(postpro_inputs: dict):
 def reset(postpro_inputs: dict):
     """Reset the directory structures to the execute phase state
 
-    :param postpro_inputs: (dict) the input parameters for post-processing phase
+    :param postpro_inputs: the input parameters for post-processing phase
     """
     import os
     from .util import make_dirnames
+    from .util import make_auxfilenames
     from .util import query_yes_no
     from .task import clean
 
-    # Empty list
-    csv_fullnames = list()
+    dirty_nums = 0
 
-    # Create a list of csv files
-    run_dirnames = make_dirnames(postpro_inputs["samples"],
-                                 postpro_inputs,
+    # Create the list of run directories
+    run_dirnames = make_dirnames(postpro_inputs["samples"], postpro_inputs,
                                  False)
 
-    for i, run_dirname in enumerate(run_dirnames):
-        csv_filename = "{}-run_{}-{}.csv" \
-            .format(postpro_inputs["case_name"],
-                    postpro_inputs["samples"][i],
-                    postpro_inputs["xtv_vars_name"])
-        csv_fullname = "{}/{}".format(run_dirname, csv_filename)
-        csv_fullnames.append(csv_fullname)
+    # Create the list of CSV files
+    csv_filenames = make_auxfilenames(postpro_inputs["samples"],
+                                      postpro_inputs["case_name"],
+                                      "-{}.csv".format(
+                                          postpro_inputs["xtv_vars_name"]))
+    # CSV fullnames
+    csv_fullnames = [os.path.join(a, b) for a, b in zip(run_dirnames,
+                                                        csv_filenames)]
+
+    # Print message
+    for csv_fullname in csv_fullnames:
+        if os.path.isfile(csv_fullname):
+            print("{} will be deleted." .format(csv_fullname))
+            dirty_nums += 1
 
     # Do the cleanup
-    if query_yes_no("Delete all CSV files?", default="no"):
-
-        # Append the info file
-        with open(postpro_inputs["info_file"], "a") as info_file:
-            info_file.writelines("***Removing csv files***\n")
-            for csv_file in csv_fullnames:
-                if os.path.isfile(csv_file):
-                    info_file.writelines("Removing: {}\n".format(csv_file))
-                else:
-                    info_file.writelines("File not found: {}\n"
-                                         .format(csv_file))
-
-        # Delete
+    if query_yes_no("Delete all CSV files?", default="no") and dirty_nums > 0:
         clean.rm_files(csv_fullnames)
+    else:
+        print("{} no csv file can be found.")
+
+    # Empty list
+    #csv_fullnames = list()
+
+    # Create a list of csv files
+    #run_dirnames = make_dirnames(postpro_inputs["samples"],
+    #                             postpro_inputs,
+    #                             False)
+
+    #for i, run_dirname in enumerate(run_dirnames):
+    #    csv_filename = "{}-run_{}-{}.csv" \
+    #        .format(postpro_inputs["case_name"],
+    #                postpro_inputs["samples"][i],
+    #                postpro_inputs["xtv_vars_name"])
+    #    csv_fullname = "{}/{}".format(run_dirname, csv_filename)
+    #    csv_fullnames.append(csv_fullname)
+
+    # Do the cleanup
+    #
+    #
+    #    # Append the info file
+    #    with open(postpro_inputs["info_file"], "a") as info_file:
+    #        info_file.writelines("***Removing csv files***\n")
+    #        for csv_file in csv_fullnames:
+    #            if os.path.isfile(csv_file):
+    #                info_file.writelines("Removing: {}\n".format(csv_file))
+    #            else:
+    #                info_file.writelines("File not found: {}\n"
+    #                                     .format(csv_file))
+    #
+        # Delete
+    #    clean.rm_files(csv_fullnames)
