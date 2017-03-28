@@ -32,7 +32,7 @@ The table below lists the complete options/flag in detail.
 === ============ ================= ========== ======== ============================================== =========
 No. Short Name   Long Name         Type       Required Description                                    Default
 === ============ ================= ========== ======== ============================================== =========
-1   -h           --help            flag       No       Show help message                              None
+1   -h           --help            flag       No       Show help message                              False
 2   -ns          --num_samples     integer(s) No       Pre-process the selected samples               None
 3   -nr          --num_range       2 integers No       Pre-process the range of samples, inclusive    None
 4   -as          --all_sample      flag/bool  No       Pre-process all samples in design matrix       True
@@ -43,7 +43,7 @@ No. Short Name   Long Name         Type       Required Description              
 9   -info        --info            string     No       Short message of the experiment                None
 10  -prepro_info --prepro_filename string     No       The pre-process info filename                  See below
 11  -ow          --overwrite       flag       No       Flag to overwrite existing directory structure False
-12  -V           --version         flag       No       Show the program's version number and exit     None
+12  -V           --version         flag       No       Show the program's version number and exit     False
 === ============ ================= ========== ======== ============================================== =========
 
 The directories created is nested in the following form::
@@ -67,7 +67,7 @@ input deck, the script execution will also produce an info file (from here on
 in will be called *prepro info file*). The info file is produced by default
 with the following naming convention::
 
-    prepro-<tracin>-<parlist>-<dm>-<sample_start>_<sample_end>-<date>-<time>.info
+    prepro-<tracin_name>-<parlist_name>-<dm_name>-<sample_start>_<sample_end>-<YYMMDD>-<HHMMSS>.info
 
 The file is used to document the command line arguments specified when the
 script was called. It will also be used in the subsequent step.
@@ -77,62 +77,80 @@ Example
 
 For example, upon executing the following command::
 
-    trace_simexp_prepro -tracin ./simulation/base/febaTrans214.inp \
-                        -dm ./simulation/dmfiles/optLHS_110_2.csv \
-                        -parlist ./simulation/paramfiles/febaVars2Params.inp \
-                        -info "FEBA Test No. 214, 110 Samples, 2 Parameters"
+    trace_simexp_prepro -ns 1 3 5 \
+                        -tracin ./simulation/febaTrans216.inp \
+                        -dm ./simulation/lhs_200_27.csv \
+                        -parlist ./simulation/feba216Vars27.inp \
+                        -info "FEBA Test No. 214, 110 samples (select 1,3,5), 27 Parameters" \
+                        -prepro_info ./nfo
 
-A set of directory will be created::
+A set of directory will be created in the current working directory::
 
     .
     |
-    +---simulation
-    |   +---febaTrans214
-    |       +---febaVars7Params-optLHS_110_2
-    |           +---febaTrans214-run_1
-    |                   febaTrans214-run_1.inp
-    |           +---febaTrans214-run_2
-    |                   febaTrans214-run_2.inp
-    |           +---febaTrans214-run_2
-    |                   febaTrans214-run_3.inp
-    ...
-    |           +---febaTrans214-run_110
-    |                   febaTrans214-run_110.inp
+    +---febaTrans214
+    |   +---febaVars7Params-optLHS_110_2
+    |       +---febaTrans214-run_1
+    |           febaTrans214-run_1.inp
+    |       +---febaTrans214-run_2
+    |           febaTrans214-run_2.inp
+    |       +---febaTrans214-run_3
+    |           febaTrans214-run_3.inp
 
 Based on the command above, the prepro info file will be created with the
-following name::
+following name under the ``./nfo`` folders::
 
-    prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110-<160327>-<002107>.info
+    prepro-febaTrans216-feba216Vars27-lhs_200_27-1_5-170328-120237.nfo.info
 
 The file has the following (abridged) contents::
 
-    TRACE Simulation Experiment - Date: 2016-03-27 00:21:07.196979
-    FEBA Test No. 214, 110 Samples, 2 Parameters
-    ***Preprocessing Phase Info***
-    Base Name                     -> simulation
+    TRACE Simulation Experiment - Date: 2017-03-28 12:02:37.678582
+    FEBA Test No. 214, 110 samples (select 1,3,5), 27 Parameters
+    ***Pre-process Phase Info***
+    Base Name                     -> trace-simexp
     Base Directory Name           -> /afs/psi.ch/project/stars/workspace/RND/SB-RND-ACT-006-13/WD41/projects/trace-simexp
-    Base Case Name                -> febaTrans214
-    Base Case File                -> /afs/psi.ch/project/stars/workspace/RND/SB-RND-ACT-006-13/WD41/projects/trace-simexp/simulation/base/febaTrans214.inp
-    List of Parameters Name       -> febaVars2Params
-    List of Parameters File       -> /afs/psi.ch/project/stars/workspace/RND/SB-RND-ACT-006-13/WD41/projects/trace-simexp/simulation/paramfiles/febaVars2Params.inp
-    Design Matrix Name            -> optLHS_110_2
-    Design Matrix File            -> /afs/psi.ch/project/stars/workspace/RND/SB-RND-ACT-006-13/WD41/projects/trace-simexp/simulation/dmfiles/optLHS_110_2.csv
+    Base Case Name                -> febaTrans216
+    Base Case File                -> /afs/psi.ch/project/stars/workspace/RND/SB-RND-ACT-006-13/WD41/projects/trace-simexp/simulation/febaTrans216.inp
+    List of Parameters Name       -> feba216Vars27
+    List of Parameters File       -> /afs/psi.ch/project/stars/workspace/RND/SB-RND-ACT-006-13/WD41/projects/trace-simexp/simulation/feba216Vars27.inp
+    Design Matrix Name            -> lhs_200_27
+    Design Matrix File            -> /afs/psi.ch/project/stars/workspace/RND/SB-RND-ACT-006-13/WD41/projects/trace-simexp/simulation/lhs_200_27.csv
     Samples to Run                ->
-    1      2      3      4      5      6      7      8      9     10
-     ...
-    101    102    103    104    105    106    107    108    109    110
+         1      3      5
     ***  End of Samples  ***
     *** 1***
-    Sensitivity Coefficient with ID *1039* is specified
-    Parameter type: scalar
+    Component *break* ID *40*, parameter *ptb* is specified
+    Parameter type: table
     Parameter perturbation mode: 3 (multiplicative)
-    Parameter distribution: logunif
-    1st distribution parameter: 0.250
-    2nd distribution parameter: 4.000
+    Perturbation factor probability distribution:
+    - distribution: *unif*
+    - min: 0.9
+    - max: 1.1
     *** 2***
-    Sensitivity Coefficient with ID *1011* is specified
+    Component *fill* ID *10*, parameter *tltb* is specified
+    Parameter type: table
+    Parameter perturbation mode: 2 (additive)
+    Perturbation factor probability distribution:
+    - distribution: *unif*
+    - min: -5.0
+    - max: 5.0
+    ...
+    ***26***
+    Sensitivity Coefficient with ID *1044* is specified
     Parameter type: scalar
-    Parameter perturbation mode: 3 (multiplicative)
-    Parameter distribution: logunif
-    1st distribution parameter: 0.500
-    2nd distribution parameter: 2.000
+    Parameter perturbation mode: 2 (additive)
+    Perturbation factor probability distribution:
+    - distribution: *unif*
+    - min: -50.0
+    - max: 50.0
+    ***27***
+    Spacer grid with Grid ID *1*, parameter *spmatid* is specified
+    Parameter type: scalar
+    Parameter perturbation mode: 1 (substitutive)
+    Perturbation factor probability distribution:
+    - distribution: *discrete*
+    - 8: 0.25
+    - 2: 0.1
+    - 10: 0.15
+    - 6: 0.5
+

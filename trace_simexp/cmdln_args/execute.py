@@ -13,7 +13,7 @@ __author__ = "Damar Wicaksono"
 def get():
     """Get the command line arguments of the execute phase
 
-    :return: tuple with the following values:
+    :return: tuple with the following values
         the samples to be run can be chosen individually, a range, or all
         available samples. If all the function will return a boolean, otherwise
         its a list of integer.
@@ -153,6 +153,10 @@ def get():
     else:
         # By default all samples is True
         samples = True
+
+    # Check the validity of the number of processors
+    if args.num_processors <= 0:
+        raise ValueError("The number of processors must be > 0")
 
     # Execute phase info filename, expand to absolute path
     exec_filename = common.expand_path(args.exec_filename)

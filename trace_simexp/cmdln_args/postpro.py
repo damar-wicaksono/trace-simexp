@@ -1,23 +1,35 @@
-"""Module to parse command line arguments in post-processing phase
+# -*- coding: utf-8 -*-
 """
-from .. import util
+    trace_simexp.cmdln_args.postpro
+    *******************************
+    
+    Module to parse command line arguments used in the post-processing phase
+"""
 from .._version import __version__
 
 __author__ = "Damar Wicaksono"
 
 
 def get():
-    """Get the command line arguments of the postpro phase
-
-    :return: (str) the exec.info file, fullname
+    """Get the command line arguments of the post-pro phase
+    
+    :return: a tuple with the following contents
+        (str) the exec.nfo file, fullname
+        (list) the contents of the exec.nfo 
         (str) the list of TRACE variables file, fullname
+        (list) the contents of the list of TRACE variables file
         (str) the aptplot executable, fullname if not in the path
+        (int) the number of processors used
+        (bool/list) if not specified samples return True, otherwise
+        it is a list of samples to be post-processed
+        (str) the postpro info filename if specified, otherwise the 
+        current working directory
     """
-    import os
     import argparse
+    from . import common
 
     parser = argparse.ArgumentParser(
-        description="%(prog)s - trace-simexp Postpro: Postprocess the TRACE dmx"
+        description="%(prog)s - Postpro: Postprocess the TRACE dmx"
     )
 
     # The fullname of info_file from the execution phase
@@ -28,15 +40,7 @@ def get():
         required=True
     )
 
-    # The fullname of info_file from the pre-processing phase
-    parser.add_argument(
-        "-prepro", "--prepro_file",
-        type=argparse.FileType("rt"),
-        help="The pre-processing phase info file",
-        required=True
-    )
-
-    # The list of trace variables to be extraced
+    # The list of trace variables to be extracted
     parser.add_argument(
         "-vars", "--xtv_variables",
         type=argparse.FileType("rt"),
@@ -61,9 +65,45 @@ def get():
         required=False
     )
 
+    # Select which samples to run
+    parser.add_argument(
+        "-ns", "--num_samples",
+        type=int,
+        nargs="+",
+        help="Select samples to run",
+        required=False
+    )
+
+    # Select a range of samples to run
+    parser.add_argument(
+        "-nr", "--num_range",
+        type=int,
+        nargs=2,
+        help="Range of samples to run, between two values, inclusive",
+        required=False
+    )
+
+    # Select all of the available samples
+    parser.add_argument(
+        "-as", "--all_samples",
+        action="store_true",
+        help="Execute all samples in prepro info file (default)",
+        default=False,
+        required=False
+    )
+
+    # The overwrite flag
+    parser.add_argument(
+        "-ow", "--overwrite",
+        action="store_true",
+        help="Reset existing select run directories",
+        default=False,
+        required=False
+    )
+
     # The info filename
     parser.add_argument(
-        "-postpro", "--postpro_file",
+        "-postpro_info", "--postpro_filename",
         type=str,
         help="The post-process info filename "
              "(by default, will be created in the current working directory)",
@@ -81,32 +121,40 @@ def get():
     # Get the command line arguments
     args = parser.parse_args()
 
-    # Read the files content into list
-    exec_info_fullname = args.exec_file.name
-    with args.exec_file as exec_file:
-        exec_info_contents = exec_file.read().splitlines()
-    prepro_info_fullname = args.prepro_file.name
-    with args.prepro_file as prepro_file:
-        prepro_info_contents = prepro_file.read().splitlines()
-    xtv_vars_fullname = args.xtv_variables.name
-    with args.xtv_variables as xtv_vars_file:
-        xtv_vars_contents = xtv_vars_file.read().splitlines()
+    # Check if any sample is specified and each are mutually exclusive
+    common.check_samples_argument(args.num_samples,
+                                  args.num_range,
+                                  args.all_samples)
 
-    # Check if the executable for aptplot exist and valid
-    if len(args.aptplot_executable.split("/")) > 1:
-        # Given full path of AptPlot exec
-        if not os.path.isfile(args.aptplot_executable):
-            raise ValueError("The specified AptPlot executable not found!")
-    else:
-        # Assumed Aptplot exec in path
-        if not util.cmd_exists(args.aptplot_executable):
-            raise ValueError("The specified AptPlot executable not found!")
+    # Read the contents of the execute phase info file
+    exec_info_fullname, exec_info_contents = \
+        common.get_fullname_and_contents(args.exec_file)
+    # Read the contents of the list of TRACE graphic variables file
+    xtv_vars_fullname, xtv_vars_contents = \
+        common.get_fullname_and_contents(args.xtv_variables)
+
+    # Check and get the executable for APTPLOT
+    aptplot_executable = common.get_executable(args.aptplot_executable)
 
     # Check the validity of the number of processors
     if args.num_processors <= 0:
         raise ValueError("The number of processors must be > 0")
 
-    return exec_info_fullname, exec_info_contents, \
-           prepro_info_fullname, prepro_info_contents, \
-           xtv_vars_fullname, xtv_vars_contents, \
-           args.aptplot_executable, args.num_processors, args.postpro_file
+    # Sample does not have to be explicitly specified, by default all will be
+    # post-processed.
+    # Select individual samples
+    if args.num_samples is not None:
+        samples = args.num_samples
+    elif args.num_range is not None:
+        samples = list(range(args.num_range[0], args.num_range[1]+1))
+    else:
+        # By default post-process all samples
+        samples = True
+
+    # Execute phase info filename, expand to absolute path
+    postpro_filename = common.expand_path(args.postpro_filename)
+
+    return (exec_info_fullname, exec_info_contents,
+            xtv_vars_fullname, xtv_vars_contents,
+            aptplot_executable, args.num_processors,
+            samples, args.overwrite, postpro_filename)

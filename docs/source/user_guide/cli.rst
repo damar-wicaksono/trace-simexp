@@ -4,10 +4,10 @@
 Command Line Interface
 ======================
 
-``trace_simexp`` is controlled using command-line interface (CLI).
-All user's interaction with ``trace_simexp`` is done through a set of 
-executables (or *driver scripts*) which are made available to the user 
-in the path upon successfull installation of the package.
+``trace_simexp`` is controlled using command-line interface (CLI),
+all user's interaction with the functionalities provided by the package
+is done through a set of executables (or *driver scripts*)
+which are made available to the user in the path upon successful installation of the package.
 The driver scripts include:
 
 .. toctree::
@@ -48,5 +48,4 @@ Short description of each driver script is the following:
 +---------------------------------------------------+-----------------------------------+
 
 
-If you simply execute ``trace_simexp`` a welcome screen will be displayed
-showing all available executables and their usage.
+If you simply execute ``trace_simexp`` a welcome screen will be displayed showing all available executables and their usage.

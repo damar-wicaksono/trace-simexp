@@ -70,3 +70,28 @@ def sniff_info_file(info_file_contents: list) -> str:
         return "postpro"
     else:
         raise TypeError("Cannot determine which type of info file!")
+
+
+def write_by_tens(collection: list, fmt: str, info_file):
+    """Write element of a list in an open file line by line, max 10/line
+    
+    :param collection: the list of processed samples
+    :param fmt: the format of string
+    :param info_file: the info file to be written
+    """
+    for i in range(int(len(collection) / 10)):
+        offset1 = i * 10
+        offset2 = (i + 1) * 10
+        for j in range(offset1, offset2 - 1):
+            fmt_str = " {{:{}}} " .format(fmt)
+            info_file.writelines(fmt_str .format(collection[j]))
+        fmt_str = " {{:{}}}\n".format(fmt)
+        info_file.writelines(fmt_str .format(collection[offset2 - 1]))
+
+    offset1 = int(len(collection) / 10) * 10
+    offset2 = len(collection)
+    if offset2 > offset1:
+        for i in range(offset1, offset2):
+            fmt_str = " {{:{}}} " .format(fmt)
+            info_file.writelines(fmt_str .format(collection[i]))
+        info_file.writelines("\n")

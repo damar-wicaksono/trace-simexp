@@ -86,6 +86,9 @@ def cli_postpro():
     # Write the execute phase info file
     info_file.postpro.write(postpro_inputs)
 
+    # Check if the directory structure structures already exists
+    postpro.check_dirtree(postpro_inputs)
+
     # Commence the conversion
     postpro.dmx2csv(postpro_inputs)
 

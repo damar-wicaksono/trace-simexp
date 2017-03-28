@@ -3,12 +3,12 @@
 Execute (``trace_simexp_execute``)
 ==================================
 
-In the execute step, all the input decks that were created in the pre-processing
-step are executed sequentially in batch.
+In the execute step,
+all the input decks that were created in the pre-processing step are executed sequentially in batch.
 This means that the script will traverse the run directories created before and
 execute TRACE using the input deck inside sequentially.
-The size of a batch is controlled by the number of processors supplied by the
-user through the command line argument.
+The size of a batch is controlled by the number of processors supplied by
+the user through the command line argument.
 
 ``trace_simexp_execute`` is the driver script to carry out the execute step.
 It can be invoked in the terminal using the following command::
@@ -20,8 +20,7 @@ It can be invoked in the terminal using the following command::
                          -trace <the trace executable> \
                          -xtv2dmx <the xtv2dmx executable>
 
-Brief explanation on the required arguments can be printed on the screen
-using the following command::
+Brief explanation on the required arguments can be printed on the screen using the following command::
 
     trace_simexp_execute --help
 
@@ -30,7 +29,7 @@ The table below gives the complete options/flags in detail.
 === ========== ==================== ========== ======== ================================================= =========
 No. Short Name Long Name            Type       Required Description                                       Default
 === ========== ==================== ========== ======== ================================================= =========
-1   -h         --help               flag       No       Show help message and exit                        None
+1   -h         --help               flag       No       Show help message and exit                        False
 2   -prepro    --prepro_info        string     Yes      The prepro info file (path+name)                  None
 3   -nprocs    --num_processors     integer    No       The number of processors (batch process size)     1
 4   -ns        --num_samples        integer(s) No       Execute select samples                            None
@@ -41,104 +40,93 @@ No. Short Name Long Name            Type       Required Description             
 9   -xtv2dmx   --xtv2dmx_executable string     Yes      The XTV2DMX executable, in PATH or specified      None
 10  -ow        --overwrite          flag       No       Flag to overwrite existing directory              None
 11  -exec_info --exec_filename      string     No       The execute phase info filename                   See below
-12  -V         --version            flag       No       Show the program's version number and exit        None
+12  -V         --version            flag       No       Show the program's version number and exit        False
 === ========== ==================== ========== ======== ================================================= =========
 
-The script execution will also produce an info file (from here on
-in will be called *exec info file*). The info file is produced by default
-with the following naming convention::
+The script execution will also produce an info file (from here on in will be called *exec info file*).
+The info file is produced by default with the following naming convention::
 
-    exec-<tracin name>-<parlist name>-<dm name>-<sample_start>_<sample_end>-<YYMMDD>-<HHMMSS>.nfo
+    exec-<tracin_name>-<parlist_name>-<dm_name>-<sample_start>_<sample_end>-<YYMMDD>-<HHMMSS>.nfo
 
-The file is used to document the command line arguments specified when the
-script was called, to log the process run for diagnostic purpose, as well as be
-used in the subsequent (post-processing) step.
+The file is used to document the command line arguments specified when the script was called,
+to log the process run for diagnostic purpose, as well as
+be used in the subsequent (post-processing) step.
 See below for the example of the contents.
 
-Simultaneous execution of multiple TRACE simulation often requires large amount
-of disk space even for a single case.
+Simultaneous execution of multiple TRACE simulation often requires large amount of disk space even for a single case.
 To save disk space, the utility takes two measures.
-First, the binary ``xtv`` file is not written directly in the running
-directory during the execution.
-Instead a soft link is created inside the running directory, linked to the
-actual ``xtv`` file written in a *scratch* directory.
-This approach was adopted to limit the disk space usage in a STARS project
-working directory (or *the activity folder*) that is a backup volume and
-limited to 200 [GB] currently.
+First, the binary ``xtv`` file is not written directly in the running directory during the execution.
+Instead a soft link is created inside the running directory,
+linked to the actual ``xtv`` file written in a *scratch* directory.
+This approach was adopted to limit the disk space usage in a STARS project working directory (or *the activity folder*)
+that is a backup volume and limited to 200 [GB] currently.
 The so-called *scratch* directory usually resides in a non-backup volume.
-This measure is optional and is applied when ``-scratch`` option is provided
-with a valid directory. Otherwise, the ``xtv`` will be written directly in
-the run directory.
+This measure is optional and is applied when ``-scratch`` option is provided with a valid directory.
+Otherwise, the ``xtv`` will be written directly in the run directory.
 
-Second, after each execution, the resulting `xtv` file will be directly
-converted to the more space efficient *dmx* format. This is done by using
-`xtv2dmx` utility. As such, the path to the scratch directory as well as the
-path to the executable for `xtv2dmx` utility are needed to be supplied during
-the call.
+Second, after each execution, the resulting `xtv` file will be directly converted to the more space efficient *dmx* format.
+This is done by using `xtv2dmx` utility.
+As such, the path to the scratch directory as well as
+the path to the executable for `xtv2dmx` utility are needed to be supplied during the call.
 This option is always active and at this point cannot be override.
 
 Example
 -------
 
 Following the previous example, executing the following command will
-execute all of the TRACE input decks created in the previous step using 5
-processors (or, parallel jobs with multiple batches each of size 5)::
+execute all of the TRACE input decks created in the previous step::
 
-    python execute.py -prepro prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info \
-                      -scratch /afs/psi.ch/group/lrs/scratch/grp.lrs.scr001.nb/wicaksono_d/ \
-                      -trace trace_v5.0p3.uq_extended \
-                      -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
-                      -nprocs 5 >& 214_1060_7.log &
+    trace_simexp_execute -prepro ./nfo/prepro-febaTrans216-feba216Vars27-lhs_200_27-1_5-170328-120237.nfo \
+                         -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
+                         -trace trace_v5.0p3.uq_extended \
+                         -exec_info ./nfo
 
-**Remarks**: The utility was so far tested in the ``lclrs`` machines. To keep the
-kerberos token active for a long session, it is advised to use the ``k5run -B``
-command and put the job in the background with the following command instead::
+By default, if not specified, all samples available in the prepro info file will be executed.
+Also by default, the dmx file will be produced inside each respective run directory if a scratch directory is not specified.
+Finally, by default the execution will be carried out sequentially in batch of size 1 (the number of processors).
 
-    k5run -B python execute.py -prepro prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info \
-                               -scratch /afs/psi.ch/group/lrs/scratch/grp.lrs.scr001.nb/wicaksono_d/ \
-                               -trace trace_v5.0p3.uq_extended \
-                               -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
-                               -nprocs 5 >& 214_1060_7.log &
+.. note::
 
-Based on the command above, the prepro info file will be created with the
-following name::
+    The utility was so far tested in the one of the ``lclrs`` machines.
+    To keep the ``kerberos`` token active for a long session,
+    it is advised to use the ``k5run -B`` command and put the job in the background
+    with the following command instead::
 
-    exec-febaTrans214-febaVars2Params-optLHS_110_2-1_110-<160327>-<002107>.nfo
+        k5run -B    trace_simexp_execute -prepro ./nfo/prepro-febaTrans216-feba216Vars27-lhs_200_27-1_5-170328-120237.nfo \
+                                         -xtv2dmx xtv2dmx_v6.5.2_inst01.sh \
+                                         -trace trace_v5.0p3.uq_extended \
+                                         -exec_info ./nfo >& 216_3_27.log &
+
+    the ``216_3_27.log`` file is an arbitrary file to redirect standard output
+    and standard error.
+
+Based on the command above, the prepro info file will be created with the following name::
+
+   exec-febaTrans216-feba216Vars27-lhs_200_27-1_5-170328-122617.nfo
 
 The file has the following (abridged with the ellipsis) contents::
 
-    TRACE Simulation Experiment - Date: 2016-03-27 00:26:06.547934
+    TRACE Simulation Experiment - Date: 2017-03-28 12:26:17.939115
     ***Execute Phase Info***
-    prepro.info Filename          -> prepro-febaTrans214-febaVars2Params-optLHS_110_2-1_110.info
+    prepro.info Name              -> prepro-febaTrans216-feba216Vars27-lhs_200_27-1_5-170328-120237.nfo
+    prepro.info File              -> /afs/psi.ch/project/stars/workspace/RND/SB-RND-ACT-006-13/WD41/projects/trace-simexp/nfo/prepro-febaTrans2
+    Base Directory Name           -> /afs/psi.ch/project/stars/workspace/RND/SB-RND-ACT-006-13/WD41/projects/trace-simexp
+    Base Case Name                -> febaTrans216
+    List of Parameters Name       -> feba216Vars27
+    Design Matrix Name            -> lhs_200_27
     TRACE Executable              -> trace_v5.0p3.uq_extended
     XTV2DMX Executable            -> xtv2dmx_v6.5.2_inst01.sh
-    Scratch Directory Name        -> /afs/psi.ch/group/lrs/scratch/grp.lrs.scr001.nb/wicaksono_d
-    Number of Processors          -> 5  (lclrs73)
+    Number of Processors          -> 1  (lclrs71)
     Samples to Run                ->
-      1      2      3      4      5      6      7      8      9     10
-     11     12     13     14     15     16     17     18     19     20
-    ...
-    101    102    103    104    105    106    107    108    109    110
+        1      3      5
+    ***  End of Samples  ***
     *** Batch Execution -     1 ***
-    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_1
-    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_3
-    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_5
-    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_2
-    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_4
-    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_1.xtv -d febaTrans214-run_1.dmx
-    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_3.xtv -d febaTrans214-run_3.dmx
-    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_5.xtv -d febaTrans214-run_5.dmx
-    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_2.xtv -d febaTrans214-run_2.dmx
-    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_4.xtv -d febaTrans214-run_4.dmx
-    ...
-    *** Batch Execution -    22 ***
-    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_106
-    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_108
-    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_110
-    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_107
-    Execution Successfull: trace_v5.0p3.uq_extended -p febaTrans214-run_109
-    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_106.xtv -d febaTrans214-run_106.dmx
-    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_108.xtv -d febaTrans214-run_108.dmx
-    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_110.xtv -d febaTrans214-run_110.dmx
-    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_107.xtv -d febaTrans214-run_107.dmx
-    Execution Successfull: xtv2dmx_v6.5.2_inst01.sh -r febaTrans214-run_109.xtv -d febaTrans214-run_109.dmx
+    Execution Successful: trace_v5.0p3.uq_extended -p febaTrans216-run_1
+    Execution Successful: xtv2dmx_v6.5.2_inst01.sh -r febaTrans216-run_1.xtv -d febaTrans216-run_1.dmx
+    *** Batch Execution -     2 ***
+    Execution Successful: trace_v5.0p3.uq_extended -p febaTrans216-run_3
+    Execution Successful: xtv2dmx_v6.5.2_inst01.sh -r febaTrans216-run_3.xtv -d febaTrans216-run_3.dmx
+    *** Batch Execution -     3 ***
+    Execution Successful: trace_v5.0p3.uq_extended -p febaTrans216-run_5
+    Execution Successful: xtv2dmx_v6.5.2_inst01.sh -r febaTrans216-run_5.xtv -d febaTrans216-run_5.dmx
+
