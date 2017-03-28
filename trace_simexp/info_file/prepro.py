@@ -63,7 +63,6 @@ def write(inputs: dict):
         file.writelines("***  End of Samples  ***\n")
 
 
-
 def read(prepro_info_contents: list) -> tuple:
     """Read the info file produced in the pre-processing phase
 
@@ -104,7 +103,7 @@ def read(prepro_info_contents: list) -> tuple:
         if "Samples to Run" in line:
             i = num_line + 1
             while True:
-                if "***" in prepro_info_contents[i]:
+                if "***  End of Samples  ***" in prepro_info_contents[i]:
                     break
                 samples.extend(
                     [int(_) for _ in prepro_info_contents[i].split()])
