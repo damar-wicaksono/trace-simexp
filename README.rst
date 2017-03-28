@@ -29,7 +29,7 @@ Complete log of changes can be found in `CHANGELOG`_.
 .. _CHANGELOG: ./CHANGELOG.md
 
 Requirements
------------
+------------
 
 The module was developed and tested using the `Anaconda Python`_ distribution
 of Python v3.5.
@@ -58,6 +58,7 @@ This will make the following available in the path:
  - ``trace_simexp_prepro`` executable
  - ``trace_simexp_execute`` executable
  - ``trace_simexp_postpro`` executable
+ - ``trace_simexp_reset`` executable
 
 Further Documentation
 ---------------------
@@ -70,8 +71,7 @@ installed)::
     make html
 
 to build the html version of the documentation.
-Note that the html documentation used ``rtd``theme which can be installed via
-``pip``::
+Note that the html documentation used ``rtd``theme which can be installed via ``pip``::
 
     pip install sphinx-rtd-theme
 

@@ -9,35 +9,55 @@
 __author__ = "Damar Wicaksono"
 
 
-def read(info_fullname: str):
-    """Read the info file produced in the post-processing phase
+def read(postpro_info_contents: list) -> tuple:
+    """Parse the info file produced in the post-processing phase
     
-    :param info_fullname: the fullname of the post-pro info file
+    :param postpro_info_contents: the contents of the post-process phase info
     :return: a tuple with the following contents
-        (str) the run directory name
-        (str) the name of the aptscript
+        (str) the fullname of execute info file
+        (str) the base directory
+        (str) the name of the base TRACE input deck, sans extension
+        (str) the name of the list of parameters file, sans extension
+        (str) the name of the design matrix file, sans extension
+        (str) the name of the list of TRACE graphic variables file, sans ext.
+        (list, int) the post-processed samples
     """
-    
-    # Read file
-    with open(info_fullname, "rt") as info_file:
-        info_lines = info_file.read().splitlines()
-        
     # Loop over lines to obtain the parameters
-    for num_line, line in enumerate(info_lines):
+    for num_line, line in enumerate(postpro_info_contents):
 
         # Execute Info File
-        if "exec.info Name" in line:
-            exec_info = line.split("-> ")[-1].strip()
-            
-        # The name of aptplot script
-        if "List of XTV Variables File" in line:
-            apt_name = line.split("-> ")[-1].strip()
-            apt_name = apt_name.split("/")[-1]
-            apt_name = apt_name.split(".")[0]
-   
-    return exec_info, apt_name
-    
-    
+        if "exec.info File" in line:
+            exec_info_fullname = line.split("-> ")[-1].strip()
+        # The base directory name
+        if "Base Directory Name" in line:
+            base_dir = line.split("-> ")[-1].strip()
+        # The base case name
+        if "Base Case Name" in line:
+            case_name = line.split("-> ")[-1].strip()
+        # The list of parameters file name
+        if "List of Parameters Name" in line:
+            params_list_name = line.split("-> ")[-1].strip()
+        # The design matrix file name
+        if "Design Matrix Name" in line:
+            dm_name = line.split("-> ")[-1].strip()
+        # The list of TRACE graphic variables name
+        if "List of XTV Variables Name" in line:
+            xtv_vars_name = line.split("-> ")[-1].strip()
+        # Post-processed samples
+        if "Samples to Post-process" in line:
+            samples = []
+            i = num_line + 1
+            while True:
+                if "***  End of Samples  ***" in postpro_info_contents[i]:
+                    break
+                samples.extend(
+                    [int(_) for _ in postpro_info_contents[i].split()])
+                i += 1
+
+    return (exec_info_fullname, base_dir, case_name, params_list_name,
+            dm_name, xtv_vars_name, samples)
+
+
 def write(inputs: dict):
     """Write a summary of the post-processing phase (a.k.a postpro.info)
 
@@ -51,7 +71,7 @@ def write(inputs: dict):
               "List of Parameters Name", "Design Matrix Name",
               "APTPlot Executable", "Number of Processors (Host)",
               "List of XTV Variables Name", "List of XTV Variables File", 
-              "List of XTV Variables", "Samples to Post-processed"]
+              "List of XTV Variables", "Samples to Post-process"]
 
     with open(inputs["info_file"], "wt") as info_file:
 

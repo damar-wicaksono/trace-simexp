@@ -62,7 +62,8 @@ The info file is produced by default with the following naming convention::
 The file is used to document the command line arguments specified when the script was called as well as to log all the shell commands run during the execution.
 See below for example of the contents.
 
-**Example**
+Example
+-------
 
 Following the previous example,
 executing the following command will post-processed all of the TRACE ``dmx`` files produced in the previous step
@@ -101,7 +102,7 @@ The file has the following (abridged) contents::
     List of XTV Variables File    -> /afs/psi.ch/project/stars/workspace/RND/SB-RND-ACT-006-13/WD41/projects/trace-simexp/simulation/xtvVars.in
     List of XTV Variables         ->
             rftn-20A69R29         rftn-20A89R29        rftn-20A109R29              pn-30A04         pn-1A17R01T01         pn-1A13R01T01
-    Samples to Post-processed     ->
+    Samples to Post-process       ->
          1      3      5
     ***  End of Samples  ***
     *** Batch Execution -     1 ***

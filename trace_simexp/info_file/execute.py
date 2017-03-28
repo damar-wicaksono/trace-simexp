@@ -12,10 +12,15 @@ __author__ = "Damar Wicaksono"
 def read(exec_info_contents: list) -> tuple:
     """Read the exec info file produced in the execution phase
 
-    :param exec_info_contents: (str) the fullname of the exec.info file
+    :param exec_info_contents: the contents of the execute phase info file
     :return: A tuple with the following contents
         (str) the fullname of prepro info file
-        (int) the number of samples in the exec info file
+        (str) the base directory
+        (str) the name of the base TRACE input deck, without extension
+        (str) the name of the list of parameters file, without extension
+        (str) the name of the design matrix file, without extension
+        (str) the scratch directory
+        (list, int) list of executed samples as reported in the exec info file
     """
     scratch_dir = None
     
@@ -23,31 +28,33 @@ def read(exec_info_contents: list) -> tuple:
 
         # The fullname of pre-process info file
         if "prepro.info File" in line:
-            prepro_info = line.split("-> ")[-1].strip()
-        # The base directory name
+            prepro_info_fullname = line.split("-> ")[-1].strip()
+        # The base directory
         if "Base Directory Name" in line:
             base_dir = line.split("-> ")[-1].strip()
         # The base case name
         if "Base Case Name" in line:
             case_name = line.split("-> ")[-1].strip()
+        # The list of parameters file name
         if "List of Parameters Name" in line:
             params_list_name = line.split("-> ")[-1].strip()
+        # The design matrix file name
         if "Design Matrix Name" in line:
             dm_name = line.split("-> ")[-1].strip()
+        # The scratch directory
         if "Scratch Directory Name" in line:
             scratch_dir = line.split("-> ")[-1].strip()
-
-        # Samples to run
+        # Executed samples
         if "Samples to Run" in line:
             samples = []
             i = num_line + 1
             while True:
-                if "***" in exec_info_contents[i]:
+                if "***  End of Samples  ***" in exec_info_contents[i]:
                     break
                 samples.extend([int(_) for _ in exec_info_contents[i].split()])
                 i += 1
 
-    return (prepro_info, base_dir, case_name, params_list_name,
+    return (prepro_info_fullname, base_dir, case_name, params_list_name,
             dm_name, scratch_dir, samples)
 
 

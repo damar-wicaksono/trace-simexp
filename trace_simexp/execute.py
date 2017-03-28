@@ -452,7 +452,8 @@ def reset(reset_inputs: dict):
             broken = True
 
     if dirty:
-        if query_yes_no("Revert select directories to pre-pro state?",
+        if query_yes_no("Revert select directories to pre-process state?"
+                        " Warning: this will delete all except *.inp file.",
                         default="no"):
 
             # Clean scratch dirs if they do exist
@@ -476,4 +477,4 @@ def reset(reset_inputs: dict):
             print(item)
         return None
     else:
-        print("Nothing to reset, all clean.")
+        print("Nothing to reset anymore, all clean.")
