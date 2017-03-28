@@ -13,10 +13,10 @@ def read(info_fullname: str):
     """Read the info file produced in the post-processing phase
     
     :param info_fullname: the fullname of the post-pro info file
-    :return: (str) the run directory name
+    :return: a tuple with the following contents
+        (str) the run directory name
         (str) the name of the aptscript
     """
-    from . import prepro
     
     # Read file
     with open(info_fullname, "rt") as info_file:
@@ -24,22 +24,18 @@ def read(info_fullname: str):
         
     # Loop over lines to obtain the parameters
     for num_line, line in enumerate(info_lines):
-        
-        # Prepro Info File 
-        if "prepro.info Name" in line:
-            prepro_info = line.split("-> ")[-1].strip()
 
         # Execute Info File
         if "exec.info Name" in line:
             exec_info = line.split("-> ")[-1].strip()
             
         # The name of aptplot script
-        if "List of XTV Variables Files" in line:
+        if "List of XTV Variables File" in line:
             apt_name = line.split("-> ")[-1].strip()
             apt_name = apt_name.split("/")[-1]
             apt_name = apt_name.split(".")[0]
    
-    return prepro_info, exec_info, apt_name
+    return exec_info, apt_name
     
     
 def write(inputs: dict):
@@ -50,7 +46,7 @@ def write(inputs: dict):
     from datetime import datetime
     from . import common
 
-    header = ["exec.info Name", "exec.info Fullname",
+    header = ["exec.info Name", "exec.info File",
               "Base Directory Name", "Base Case Name",
               "List of Parameters Name", "Design Matrix Name",
               "APTPlot Executable", "Number of Processors (Host)",

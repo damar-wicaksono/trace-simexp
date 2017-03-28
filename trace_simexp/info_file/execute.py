@@ -22,7 +22,7 @@ def read(exec_info_contents: list) -> tuple:
     for num_line, line in enumerate(exec_info_contents):
 
         # The fullname of pre-process info file
-        if "prepro.info Fullname" in line:
+        if "prepro.info File" in line:
             prepro_info = line.split("-> ")[-1].strip()
         # The base directory name
         if "Base Directory Name" in line:
@@ -64,7 +64,7 @@ def write(inputs: dict):
     from datetime import datetime
     from . import common
 
-    header = ["prepro.info Name", "prepro.info Fullname",
+    header = ["prepro.info Name", "prepro.info File",
               "Base Directory Name", "Base Case Name",
               "List of Parameters Name", "Design Matrix Name",
               "TRACE Executable", "XTV2DMX Executable",
