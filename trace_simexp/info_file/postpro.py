@@ -44,7 +44,7 @@ def read(postpro_info_contents: list) -> tuple:
         if "List of XTV Variables Name" in line:
             xtv_vars_name = line.split("-> ")[-1].strip()
         # Post-processed samples
-        if "Samples to Run" in line:
+        if "Samples to Post-process" in line:
             samples = []
             i = num_line + 1
             while True:
@@ -53,7 +53,7 @@ def read(postpro_info_contents: list) -> tuple:
                 samples.extend(
                     [int(_) for _ in postpro_info_contents[i].split()])
                 i += 1
-   
+
     return (exec_info_fullname, base_dir, case_name, params_list_name,
             dm_name, xtv_vars_name, samples)
 
@@ -71,7 +71,7 @@ def write(inputs: dict):
               "List of Parameters Name", "Design Matrix Name",
               "APTPlot Executable", "Number of Processors (Host)",
               "List of XTV Variables Name", "List of XTV Variables File", 
-              "List of XTV Variables", "Samples to Post-processed"]
+              "List of XTV Variables", "Samples to Post-process"]
 
     with open(inputs["info_file"], "wt") as info_file:
 
