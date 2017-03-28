@@ -21,9 +21,9 @@ def get():
         (str) the aptplot executable, fullname if not in the path
         (int) the number of processors used
         (bool/list) if not specified samples return True, otherwise
-            it is a list of samples to be post-processed
+        it is a list of samples to be post-processed
         (str) the postpro info filename if specified, otherwise the 
-            current working directory
+        current working directory
     """
     import argparse
     from . import common

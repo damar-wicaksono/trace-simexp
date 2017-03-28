@@ -10,7 +10,7 @@ __author__ = "Damar Wicaksono"
 
 
 def get_input():
-    """Get all the inputs for post-processing phase of the simulation experiment
+    """Get all the inputs for post-processing phase of the experiment runs
 
     The source of inputs are: command line arguments, exec.info file, 
     and list of trace graphic variables
