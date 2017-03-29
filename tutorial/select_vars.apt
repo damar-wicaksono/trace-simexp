@@ -1,0 +1,13 @@
+rftn-20A19R29  # clad temperature at    45 [mm]
+rftn-20A34R29  # clad temperature at   590 [mm]
+rftn-20A49R29  # clad temperature at 1'135 [mm]
+rftn-20A69R29  # clad temperature at 1'680 [mm]
+rftn-20A89R29  # clad temperature at 2'235 [mm]
+rftn-20A109R29 # clad temperature at 2'770 [mm]
+rftn-20A124R29 # clad temperature at 3'315 [mm]
+rftn-20A139R29 # clad temperature at 3'860 [mm]
+pn-30A04       # pressure reference tap at the upper plenum
+pn-1A17R01T01  # top pressure probe
+pn-1A13R01T01  # middle pressure probe
+pn-1A01R01T01  # bottom pressure probe
+cb1            # Liquid carryover, running integral of liq. mass flow over edge
