@@ -24,7 +24,7 @@ No. Parameter Description                                              Unit     
 3   phi       mixing vane angle from parallel with the top of the grid :math:`[^o]`  :math:`[0.,45.]` :math:`0.`        Assumed
 4   wetperm   spacer grid wetted perimeter                             :math:`[m]`   :math:`\geq 0.`  :math:`1.803`     Derived
 5   height    spacer grid axial height                                 :math:`[m]`   :math:`\geq 0.`  :math:`3.8E-2`    Specified
-6   strhick   grid strap thickness                                     :math:`[m]`   :math:`\geq 0.`  :math:`1.3275E-3` Derived
+6   strthick  grid strap thickness                                     :math:`[m]`   :math:`\geq 0.`  :math:`1.3275E-3` Derived
 7   spmatid   spacer grid material number                              :math:`[-]`   :math:`[-]`      Inconel 718       Assumed
 === ========= ======================================================== ============= ================ ================= =========
 
@@ -60,17 +60,17 @@ The perturbation factor affects the actual value of model parameter through thre
 
 The table below summarizes the specification of the perturbation factor associated with each of the model parameters
 
-=== ========= ==================== ================ ====================== =====================
+=== ========= ==================== ================ ====================== =======================
 No. Parameter Mode of Perturbation Distribution     Dist. Parameters       Remarks
-=== ========= ==================== ================ ====================== =====================
-1   spbloc    multiplicative       uniform          min = 0.75, max = 1.25 :math:`\pm 25\%`
-2   vnbloc    substitutive         uniform          min = 0.0, max = 0.5   
+=== ========= ==================== ================ ====================== =======================
+1   spbloc    multiplicative       uniform          min = 0.75, max = 1.25 nominal :math:`\pm 25\%`
+2   vnbloc    substitutive         uniform          min = 0.0, max = 0.5   direct substitution
 3   phi       substitutive         discrete uniform {0.,15.,30.,45.}       to reduce input space
-4   wetperm   multiplicative       uniform          min = 0.75, max = 1.25 :math:`\pm 25\%`
-5   height    multiplicative       uniform          min = 0.75, max = 1.25 :math:`\pm 25\%`
-6   strhick   multiplicative       uniform          min = 0.75, max = 1.25 :math:`\pm 25\%`
+4   wetperm   multiplicative       uniform          min = 0.75, max = 1.25 nominal :math:`\pm 25\%`
+5   height    multiplicative       uniform          min = 0.75, max = 1.25 nominal :math:`\pm 25\%`
+6   strthick  multiplicative       uniform          min = 0.75, max = 1.25 nominal :math:`\pm 25\%`
 7   spmatid   substitutive         discrete uniform {2,6,7,8,9,10,11,12}   no preferred choice
-=== ========= ==================== ================ ====================== =====================
+=== ========= ==================== ================ ====================== =======================
 
 The nature of the present analysis is rather exploratory, 
 with a main purpose to see how the predicted cladding temperature is dispersed due to the uncertainties of the model parameters.
@@ -80,14 +80,17 @@ This, strictly speaking, is not a correct assumption as the strap thickness and 
 The same goes for the mixing vane angle and the vane blockage ratio.
 However, for simplicity, in line with the purposed of the analysis, the independent assumption is kept.
 
-Preparing the List of Parameters File
-=====================================
-
-Preparing the Design Matrix File
-================================
-
 Conducting Simulation Experiment 
 ================================
+
+Preparing the List of Parameters File
+-------------------------------------
+
+Preparing the Design Matrix File
+--------------------------------
+
+Conducting the Experiment
+-------------------------
 
 Results
 =======
@@ -100,3 +103,6 @@ Variation in Clad Temperature Evolution
 Scatterplot Sensitivity Analysis
 --------------------------------
 
+.. image:: ../../figures/temp_max.png
+
+.. image:: ../../figures/quench_time.png
