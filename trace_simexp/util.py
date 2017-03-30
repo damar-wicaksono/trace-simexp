@@ -1,6 +1,10 @@
-"""Module with utility functions to support the whole trace_simexp package
+# -*- coding: utf-8 -*-
 """
+    trace_simexp.util
+    *****************
 
+    Module with utility functions to support the whole trace_simexp package
+"""
 import itertools
 import subprocess
 import numpy as np
@@ -8,7 +12,7 @@ import numpy as np
 __author__ = "Damar Wicaksono"
 
 
-def create_iter(num_samples: int, num_processors: int) -> itertools.islice:
+def create_iter(num_samples: int, num_processors: int):
     """Create a list of iterator in batch size.
 
     The batch size is depending on the number of processors.
@@ -31,33 +35,37 @@ def create_iter(num_samples: int, num_processors: int) -> itertools.islice:
 
 
 def make_dirnames(list_iter: list,
-                  exec_inputs: dict,
+                  dict_inputs: dict,
                   scratch_flag: bool=False) -> list:
     """Make a complete run directory fullname
 
-    :param list_iter: (list) the iterator converted to a list of integer
-    :param exec_inputs: (dict) the execution phase inputs in dictionary
-    :param scratch_flag: (bool) boolean flag to indicate whether the base dir is
-        in the run directory or scratch directory. The downstream naming will be
+    :param list_iter: the iterator converted to a list of integer
+    :param dict_inputs: the inputs of a phase in dictionary
+    :param scratch_flag: boolean flag to indicate whether the base dir is in
+        the run directory or scratch directory. The downstream naming will be
         identical.
     :return: list of string with complete directory fullname
     """
+    import os
+
     run_dirnames = []
 
     if scratch_flag:
-        base_dir = exec_inputs["scratch_dir"]
+        base_dir = dict_inputs["scratch_dir"]
     else:
-        base_dir = exec_inputs["base_dir"]
+        base_dir = dict_inputs["base_dir"]
 
     for i in list_iter:
-        run_dirname = "{}/{}/{}-{}/{}-run_{}" .format(
-            base_dir,
-            exec_inputs["case_name"],
-            exec_inputs["params_list_name"],
-            exec_inputs["dm_name"],
-            exec_inputs["case_name"],
-            i
-        )
+        # "<base_dir>/<case_name>/<parlist>-<dm>/<case>-run_<iteration>"
+        run_dirname = os.path.join(base_dir,
+                                   dict_inputs["case_name"],
+                                   "{}-{}" .format(
+                                       dict_inputs["params_list_name"],
+                                       dict_inputs["dm_name"]),
+                                   "{}-run_{}" .format(
+                                       dict_inputs["case_name"],
+                                       str(i))
+                                   )
         run_dirnames.append(run_dirname)
 
     return run_dirnames
@@ -151,31 +159,72 @@ def parse_csv(csv_file) -> np.ndarray:
     return output
 
 
-def cmd_exists(cmd: str):
-    """Check if a command is available in the path
+def cmd_exists(cmd: str) -> bool:
+    """Check if a command is available in the PATH
 
+    Use shell command `which` to check whether an executable is in the path
+    
+    :param cmd: the name of the executable, assumed in the PATH
+    :return: True if it is in the path, False otherwise
+    """
+    return subprocess.call("which " + cmd, shell=True, stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE) == 0
+
+
+def exe_exists(cmd: str) -> bool:
+    """Check if a command is available in the specified path
+    
+    Use shell command `type` to check whether a file is an executable
+    
     **Reference:**
     (1) Answer by `hasen`
        stackoverflow.com/questions/377017/test-if-executable-exists-in-python
-
-    :param cmd: the command string
-    :return: (bool) True if it is in the path, False otherwise
+    
+    :param cmd: the name of the executable
+    :return: True if such executable exists, False otherwise
     """
     return subprocess.call("type " + cmd, shell=True, stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE) == 0
 
 
-def link_exec(exec: str, dir: str):
+def link_exec(executable: str, directory: str):
     """Create a symbolic link between an executable in a designated directory
 
-    :param exec: the path to executable, either relative or absolute
-    :param dir: the directory to create the symbolic link
+    :param executable: the path to executable, either relative or absolute
+    :param directory: the directory to create the symbolic link
     """
     import os
 
     # Get the absolute path
-    abs_exec = os.path.abspath(exec)
-    abs_dir = os.path.abspath(dir)
+    abs_exec = os.path.abspath(executable)
+    abs_dir = os.path.abspath(directory)
 
     # Create symbolic link
     subprocess.call(["ln", "-s", abs_exec, abs_dir])
+
+
+def get_name(name: str, incl_ext: bool=False) -> str:
+    """ Get the name of a directory of file, specified in path
+    
+    Path can either be relative or absolute
+    
+    :param name: the name of a directory or a file, specified in path
+    :param incl_ext: flag to include the extension if it is a file
+    :return: the name of the directory or the file, excluding path 
+    """
+    import os
+
+    ext_delim = "."
+
+    # Filter the directory delimiter and get the last element
+    # It is assumed here that if it is a directory, it will not end with "/"
+    name = os.path.split(name)[-1]
+    if ext_delim in name:
+        # Then it is a file with an extension
+        if incl_ext:
+            return name
+        else:
+            return name.split(ext_delim)[0]
+    else:
+        # Then it is a directory
+        return name

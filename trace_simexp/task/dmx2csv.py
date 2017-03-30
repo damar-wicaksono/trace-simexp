@@ -1,4 +1,9 @@
-"""Module to prepare and execute extraction of variables from the dmx to a csv
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.task.dmx2csv
+    *************************
+    
+    Module to prepare and execute extraction of variables from the dmx to a csv
 """
 
 __author__ = "Damar Wicaksono"

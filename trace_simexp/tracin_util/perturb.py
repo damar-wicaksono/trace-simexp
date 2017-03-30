@@ -1,18 +1,23 @@
-"""Module to perturb model parameters according to the sampled factors
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.tracin_util.perturb
+    ********************************
+
+    Module to perturb model parameters according to the sampled factors
 """
 
 __author__ = "Damar Wicaksono"
 
 
-def rescale_perturb(param_dict, norm_value):
+def rescale_perturb(param_dict: dict, norm_value: float):
     r"""Rescale the perturbation factor according to the specified distribution
 
     The perturbation factor is taken from a design matrix normalized between
     0 to 1. The function will rescale this factor according to the distribution
     specified in the dictionary.
 
-    :param param_dict: (dict) the parameter dictionary
-    :param norm_value: (float) the normalized [0,1] perturbation factor
+    :param param_dict: the perturbed parameter specification
+    :param norm_value: the normalized [0,1] perturbation factor
     :returns: the rescaled value of the perturbation factor
     """
     from . import rescale
@@ -47,7 +52,7 @@ def rescale_perturb(param_dict, norm_value):
     return value
 
 
-def perturb_param(param_dict, scaled_val):
+def perturb_param(param_dict: dict, scaled_val) -> list:
     r"""Perturb the model parameter according to the mode of perturbation
 
     The function will perturb the nominal value of model parameter with the
@@ -57,9 +62,9 @@ def perturb_param(param_dict, scaled_val):
         2. `2`: Additive perturbation
         3. `3`: Multiplicative perturbation
 
-    :param param_dict: (dict) the parameter dictionary
+    :param param_dict: the perturbed parameter specification
     :param scaled_val: (float or int) the scaled perturbation factor
-    :returns: (list of str) the perturbed parameter value written in string
+    :returns: the perturbed parameter value written in formatted string
     """
     import numpy as np
 
@@ -75,34 +80,37 @@ def perturb_param(param_dict, scaled_val):
         # Mode 1 - Substitutive
         pert_val = np.repeat(scaled_val, len(nom_val))
 
-    elif param_dict["var_mode"] == 2:
+    elif var_mode == 2:
         # Mode 2 - Additive
         pert_val = nom_val + scaled_val
 
-    elif param_dict["var_mode"] == 3:
+    elif var_mode == 3:
         # Mode 3 - Multiplicative
         pert_val = nom_val * scaled_val
+    else:
+        raise ValueError(
+            "Mode of variation is 1, 2, or 3, but {}!".format(var_mode))
 
     str_output = []
     # Write down the perturbed value
     for i in range(len(pert_val)):
-        str_val = "%{}" .format(param_dict["str_fmt"])
+        str_val = "%{}".format(param_dict["str_fmt"])
         str_val = str_val % pert_val[i]
         str_output.append(str_val)
 
     return str_output
 
 
-def create_dict(param_dict, perturbed_param):
+def create_dict(param_dict: dict, perturbed_param) -> dict:
     r"""Create a key-value pair between template key & the perturbed parameter
 
     This key-value pair will be collected and use for substitution in the
     tracin template. The function will generate this key and value pair for
     a given parameter dictionary.
 
-    :param param_dict: (dict) the parameter dictionary
+    :param param_dict: the perturbed parameter specification
     :param perturbed_param: (variant) the perturbed parameter value
-    :returns: (dict) the key-value pair
+    :returns: the key-value pair
     """
     from . import keygen
 
@@ -113,7 +121,8 @@ def create_dict(param_dict, perturbed_param):
         key = keygen.create(param_dict, template=False, index=None)
         perturb_dict.update({key: perturbed_param[0]})
 
-    elif param_dict["var_type"] == "table" or param_dict["var_type"] == "array":
+    elif param_dict["var_type"] == "table" or \
+                    param_dict["var_type"] == "array":
         for i in range(len(perturbed_param)):
             key = keygen.create(param_dict, template=False, index=i)
             perturb_dict.update({key: perturbed_param[i]})

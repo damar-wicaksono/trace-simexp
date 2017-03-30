@@ -1,4 +1,9 @@
-"""Main module for execute functionalities - Execute Phase
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.execute
+    ********************
+
+    Main module for execute phase related activities
 """
 
 __author__ = "Damar Wicaksono"
@@ -9,32 +14,82 @@ def get_input() -> dict:
 
     The source of inputs are: command line arguments and prepro.info file
 
-    :return: (dict) the inputs collected as dictionary
+    :return: All the inputs required for execute phase in a dictionary
+
+    +----------------------+--------------------------------------------------+
+    | Key                  | Value                                            |
+    +======================+==================================================+
+    | prepro_info_name     | (str) The name of the passed prepro infofile     |
+    +----------------------+--------------------------------------------------+
+    | prepro_info_fullname | (str) The name and full path of the passed prepro|
+    |                      | infofile                                         |
+    +----------------------+--------------------------------------------------+
+    | prepro_info_contents | (list, str) The contents of the prepro infofile  |
+    +----------------------+--------------------------------------------------+
+    | num_procs            | (int) The number of processors to execute TRACE  |
+    |                      | perturbed cases simultaneously                   |
+    +----------------------+--------------------------------------------------+
+    | scratch_dir          | (str or None) The scratch directory, if None     |
+    |                      | the dmx link will not be created                 |
+    +----------------------+--------------------------------------------------+
+    | trace_exec           | (str) The executable for TRACE either full path  |
+    |                      | or assumed to be accessible in the path          |
+    +----------------------+--------------------------------------------------+
+    | xtv2dmx_exec         | (str) The executable for XTV2DMX tool either the |
+    |                      | full path or assumed to be accessible in the path|
+    +----------------------+--------------------------------------------------+
+    | base_dir             | (str) The base directory of the simulation       |
+    |                      | campaign                                         |
+    +----------------------+--------------------------------------------------+
+    | case_name            | (str) The name of the base TRACE input deck      |
+    +----------------------+--------------------------------------------------+
+    | params_list_name     | (str) The name of the list of parameters file    |
+    +----------------------+--------------------------------------------------+
+    | dm_name              | (str) The name of the design matrix file         |
+    +----------------------+--------------------------------------------------+
+    | samples              | (list, int) List of samples to be executed       |
+    |                      | must be in accordance between prepro and command |
+    |                      | line arguments                                   |
+    +----------------------+--------------------------------------------------+
+    | hostname             | (str) The name of the machine the campaign was   |
+    |                      | executed                                         |
+    +----------------------+--------------------------------------------------+
+    | overwrite            | (bool) The flag to continue the pre-processing   |
+    |                      | step even though info files and directory        |
+    |                      | structures already exist                         |
+    +----------------------+--------------------------------------------------+
+    | info_file            | (str) The filename of the exec infofile          |
+    +----------------------+--------------------------------------------------+
     """
+    import os
+
     from . import cmdln_args
-    from . import info_file
     from . import util
+    from .info_file import common, prepro
+    from .cmdln_args.common import get_samples
 
     # Read the command line arguments
     samples, \
         prepro_info_fullname, prepro_info_contents, \
         num_procs, scratch_dir, \
-        trace_exec, xtv2dmx_exec, exec_filename = cmdln_args.execute.get()
+        trace_exec, xtv2dmx_exec, \
+        overwrite, exec_filename = cmdln_args.execute.get()
 
     # Read the pre-processing phase info file
     base_dir, case_name, params_list_name, dm_name, avail_samples = \
-        info_file.prepro.read(prepro_info_contents)
+        prepro.read(prepro_info_contents)
 
-    # Check if samples is within the available samples
+    # Sample has to be specified, otherwise all available in the pre-processing
+    # info file will be processed. Check the way it was specified and get them
+    # If it is boolean, then all available samples
     if isinstance(samples, bool) and samples:
-        samples = avail_samples
-    elif set(samples) <= set(avail_samples):
-        samples = samples
+        samples = avail_samples       
     else:
-        raise ValueError("Requested samples is not part of the available ones")
-
+        # Else check its validity with the available samples
+        samples = get_samples(samples, avail_samples)
+ 
     # Get the name of the prepro info file
-    prepro_info_name = prepro_info_fullname.split("/")[-1]
+    prepro_info_name = util.get_name(prepro_info_fullname, incl_ext=True)
 
     # Get the name of the machine (hostname)
     hostname = util.get_hostname()
@@ -42,6 +97,7 @@ def get_input() -> dict:
     # Construct the dictionary
     exec_inputs = {
         "prepro_info_name": prepro_info_name,
+        "prepro_info_fullname": prepro_info_fullname,
         "prepro_info_contents": prepro_info_contents,
         "num_procs": num_procs,
         "scratch_dir": scratch_dir,
@@ -52,13 +108,16 @@ def get_input() -> dict:
         "params_list_name": params_list_name,
         "dm_name": dm_name,
         "samples": samples,
-        "hostname": hostname
+        "hostname": hostname,
+        "overwrite": overwrite,
     }
 
     # Create an infofile filename if not provided
-    if exec_filename is None:
-        exec_filename = info_file.common.make_filename(exec_inputs, "exec")
-
+    if os.path.isdir(exec_filename):
+        # Append the filename with the full path
+        exec_filename = os.path.join(exec_filename,
+                                     common.make_filename(exec_inputs, "exec"))
+    # Add new entry to the dictionary
     exec_inputs["info_file"] = exec_filename
 
     return exec_inputs
@@ -87,18 +146,22 @@ def run_batches(exec_inputs: dict):
     from .util import create_iter
     from .util import make_dirnames
     from .util import make_auxfilenames
+    from .util import exe_exists
+    from .util import cmd_exists
+    from .util import get_name
 
-    # Check if the trace_executable and xtv2dmx_executable are in the path
-    if len(exec_inputs["trace_exec"].split("/")) > 1:
-        trace_is_in_path = False
-        trace_exec_name = exec_inputs["trace_exec"].split("/")[-1]
-    else:
+    # Check if TRACE Executable is in the path
+    if cmd_exists(exec_inputs["trace_exec"]):
         trace_is_in_path = True
-    if len(exec_inputs["xtv2dmx_exec"].split("/")) > 1:
-        xtv2dmx_is_in_path = False
-        xtv2dmx_exec_name = exec_inputs["xtv2dmx_exec"].split("/")[-1]
-    else:
+    elif exe_exists(exec_inputs["trace_exec"]):
+        trace_is_in_path = False
+        trace_exec_name = get_name(exec_inputs["trace_exec"], incl_ext=True)
+    # Check if XTV2DMX Executable is in the path
+    if cmd_exists(exec_inputs["xtv2dmx_exec"]):
         xtv2dmx_is_in_path = True
+    elif exe_exists(exec_inputs["xtv2dmx_exec"]):
+        xtv2dmx_is_in_path = False
+        xtv2dmx_exec_name = get_name(exec_inputs["xtv2dmx_exec"], incl_ext=True)
 
     num_samples = len(exec_inputs["samples"])
     case_name = exec_inputs["case_name"]
@@ -143,7 +206,9 @@ def run_batches(exec_inputs: dict):
         # Create a bunch of trace input deck to be passed to the exec (no ext)
         inp_filenames = make_auxfilenames(list_iter, case_name, "")
 
-        # If TRACE executable not in the path, create a symbolic link in run dir
+        # If TRACE executable is not in the path, create a symlink in run dir
+        # Because for batch run to work with TRACE it has to be executed in
+        # the respective directory
         if trace_is_in_path:
             trace_exec = exec_inputs["trace_exec"]
         else:
@@ -151,14 +216,14 @@ def run_batches(exec_inputs: dict):
                 link_exec(exec_inputs["trace_exec"], run_dirname)
             trace_exec = "./{}" .format(trace_exec_name)
 
-        # Create a bunch of trace commands
+        # Create a bunch of TRACE commands
         trace_commands = trace.make_commands(trace_exec, inp_filenames)
 
         # Execute TRACE commands
         trace.run(trace_commands, log_fullnames,
                   run_dirnames, exec_inputs["info_file"])
 
-        # Create bunch of dmx files
+        # Create bunch of DMX files
         dmx_filenames = make_auxfilenames(list_iter, case_name, ".dmx")
         dmx_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
                                                                dmx_filenames)]
@@ -169,7 +234,7 @@ def run_batches(exec_inputs: dict):
                 "{}/{}" .format(a, b) for a, b in zip(scratch_dirnames,
                                                       dmx_filenames)]
 
-            # Link the dmx in the scratch to the one in run directory
+            # Link the DMX in the scratch to the one in run directory
             xtv2dmx.link_dmx(dmx_fullnames, scratch_dmx_fullnames)
 
         # If XTV2DMX exec. not in the path, create a symbolic link in run dir
@@ -180,12 +245,12 @@ def run_batches(exec_inputs: dict):
                 link_exec(exec_inputs["xtv2dmx_exec"], run_dirname)
             xtv2dmx_exec = "./{}" .format(xtv2dmx_exec_name)
 
-        # Create bunch of xtv2dmx commands
+        # Create bunch of XTV2DMX commands
         xtv2dmx_commands = xtv2dmx.make_commands(xtv2dmx_exec,
                                                  xtv_filenames,
                                                  dmx_filenames)
 
-        # Execute xtv2dmx commands
+        # Execute XTV2DMX commands
         xtv2dmx.run(xtv2dmx_commands, log_fullnames,
                     run_dirnames, exec_inputs["info_file"])
 
@@ -242,10 +307,107 @@ def run_batches(exec_inputs: dict):
             clean.rm_files(aux_files)
 
 
-def reset(exec_inputs: dict):
-    """Reset the directory structures to the pre-pro phase state
+def check_dirtree(exec_inputs: dict):
+    """Check the run directory structure whether it is clean
 
-    :param exec_inputs: (dict) the input parameters for execute phase
+    "Clean" means there is no other file other than the TRACE input deck itself
+
+    :param exec_inputs: the execute phase inputs
+    :return: list of dirty directory tree
+    """
+    import os
+    from .util import make_dirnames
+    from .util import make_auxfilenames
+
+    dirty_dirs = []
+    dirty_dir_nums = []
+    empty_dirs = []
+
+    # Create the list of run directories
+    run_dirnames = make_dirnames(exec_inputs["samples"], exec_inputs, False)
+    # Create the list of TRACE input files not to be removed
+    inp_filenames = make_auxfilenames(exec_inputs["samples"],
+                                      exec_inputs["case_name"],
+                                      ".inp")
+    
+    # Loop over run directories and input filenames and grab the invalid ones
+    for i, (run_dirname, inp_filename) in \
+        enumerate(zip(run_dirnames, inp_filenames)):
+        if len(os.listdir(run_dirname)) > 1:
+            dirty_dirs.append(run_dirname)
+            dirty_dir_nums.append(exec_inputs["samples"][i])
+        if inp_filename not in os.listdir(run_dirname):
+            empty_dirs.append(run_dirname)
+
+    # Check if there is empty run directory
+    if empty_dirs:
+        for empty_dir in empty_dirs:
+            print("{} does not contain the correct input file!"
+                  .format(empty_dir))
+        raise ValueError("Some input file does not exist!")
+    # Check if there is dirty run directory
+    elif dirty_dirs:
+        if not exec_inputs["overwrite"]:
+            for dirty_dir in dirty_dirs:
+                print("{} run directory is dirty!"
+                      .format(dirty_dir))
+            raise ValueError("One or more run directories are dirty and no"
+                             " overwrite flag!")
+        else:
+            # Clean the directory first
+            clean_dirtree(exec_inputs, dirty_dir_nums)
+    else:
+        pass
+
+
+def clean_dirtree(exec_inputs: dict, dirty_dir_nums: list):
+    """Remove all unnecessary files from the specified run directories
+
+    :param exec_inputs: the execute phase inputs as dictionary
+    :param dirty_dir_nums: the sample numbers where the directories are dirty
+    """
+    import os
+    from .util import make_dirnames
+    from .util import make_auxfilenames
+    from .task import clean
+
+    # Create the list of run directories
+    run_dirnames = make_dirnames(dirty_dir_nums, exec_inputs, False)
+
+    # Create dmx link
+    dmx_filenames = make_auxfilenames(dirty_dir_nums,
+                                      exec_inputs["case_name"],
+                                      ".dmx")
+
+    dmx_fullnames = [os.path.join(a, b) for a, b in zip(run_dirnames,
+                                                        dmx_filenames)]
+
+    # Create list of TRACE input files not to be removed
+    inp_filenames = make_auxfilenames(dirty_dir_nums,
+                                      exec_inputs["case_name"],
+                                      ".inp")
+
+    # Clean scratch directories if they do exist
+    if exec_inputs["scratch_dir"] is not None:
+        # Create list of scratch directories
+        scratch_dirnames = make_dirnames(dirty_dir_nums, exec_inputs, True)
+        # Clean scratch dirs
+        clean.rm_files(scratch_dirnames)
+
+    # Clean dmx links
+    clean.rm_files(dmx_fullnames)
+
+    # Clean the rest
+    clean.rm_except(run_dirnames, inp_filenames)
+
+
+def reset(reset_inputs: dict):
+    """Reset the directory structures to the pre-processing phase state
+
+    This means delete all files within specified run directories except the
+    TRACE input deck
+
+    :param reset_inputs: the required inputs for reset
     """
     import os
     from .util import query_yes_no
@@ -253,41 +415,66 @@ def reset(exec_inputs: dict):
     from .util import make_auxfilenames
     from .task import clean
 
-    # Create dmx link
-    run_dirnames = make_dirnames(exec_inputs["samples"], exec_inputs, False)
-    dmx_filenames = make_auxfilenames(exec_inputs["samples"],
-                                      exec_inputs["case_name"],
-                                      ".dmx")
-
-    dmx_fullnames = ["{}/{}" .format(a, b) for a, b in zip(run_dirnames,
-                                                           dmx_filenames)]
-
-    # Create list of scratch directories
-    scratch_dirnames = make_dirnames(exec_inputs["samples"], exec_inputs, True)
+    run_dirnames = make_dirnames(reset_inputs["samples"], reset_inputs, False)
 
     # Create list of TRACE input files not to be removed
-    inp_filenames = make_auxfilenames(exec_inputs["samples"],
-                                      exec_inputs["case_name"],
+    inp_filenames = make_auxfilenames(reset_inputs["samples"],
+                                      reset_inputs["case_name"],
                                       ".inp")
+    inp_fullnames = [os.path.join(a, b) for a, b in zip(run_dirnames,
+                                                        inp_filenames)]
 
-    if query_yes_no("Revert back to pre-pro state?", default="no"):
+    # Create dmx link
+    dmx_filenames = make_auxfilenames(reset_inputs["samples"],
+                                      reset_inputs["case_name"],
+                                      ".dmx")
+    dmx_fullnames = [os.path.join(a, b) for a, b in zip(run_dirnames,
+                                                        dmx_filenames)]
 
-        # Append the info file
-        with open(exec_inputs["info_file"], "a") as info_file:
-            info_file.writelines("***Reverting back to Pre-pro***\n")
-            for i, dmx_fullname in enumerate(dmx_fullnames):
-                if os.path.islink(dmx_fullname):
-                    info_file.writelines("Reverting: {}\n"
-                                         .format(run_dirnames[i]))
+    dirty = False   # Flag for dirty directories
+    broken = False  # Flag for broken directories
+    broken_items = []
+    for inp_fullname, run_dirname in zip(inp_fullnames, run_dirnames):
+        if os.path.exists(run_dirname):
+            if os.path.exists(inp_fullname) and len(os.listdir(run_dirname))>1:
+                print("{} will be revert back to pre-pro state!"
+                      .format(run_dirname))
+                dirty = True
+            elif not os.path.exists(inp_fullname):
+                print("Warning: {} does not exist!" .format(inp_fullname))
+                broken_items.append(inp_fullname)
+                broken = True
+            else:
+                print("{} already clean!" .format(run_dirname))
+        else:
+            print("{} does not exist!".format(run_dirname))
+            broken_items.append(run_dirname)
+            broken = True
 
-        # Clean scratch dirs
-        clean.rm_files(scratch_dirnames)
+    if dirty:
+        if query_yes_no("Revert select directories to pre-process state?"
+                        " Warning: this will delete all except *.inp file.",
+                        default="no"):
 
-        # Clean dmx links
-        clean.rm_files(dmx_fullnames)
+            # Clean scratch dirs if they do exist
+            if reset_inputs["scratch_dir"] is not None:
+                # Create list of scratch directories
+                scratch_dirnames = make_dirnames(reset_inputs["samples"],
+                                                 reset_inputs, True)
+                # Clean scratch dirs
+                clean.rm_files(scratch_dirnames)
 
-        # Clean the rest
-        clean.rm_except(run_dirnames, inp_filenames)
+            # Clean dmx links in the run directories
+            clean.rm_files(dmx_fullnames)
 
+            # Clean the rest, except the input file itself
+            clean.rm_except(run_dirnames, inp_filenames)
+    
+    if broken:
+        # If something Broken 
+        print("Broken item(s). Double check the following:")
+        for item in broken_items:
+            print(item)
+        return None
     else:
-        pass
+        print("Nothing to reset anymore, all clean.")

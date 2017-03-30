@@ -1,5 +1,4 @@
 """A setuptools based setup module for trace-simexp
-
 """
 from setuptools import setup
 from os import path
@@ -8,14 +7,15 @@ here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
 with open(path.join(here, "README.rst"), encoding="utf-8") as f:
-      long_description = f.read()
+    long_description = f.read()
 
+exec(open('trace_simexp/_version.py').read())
 setup(
       name="trace-simexp",
 
       # Versions comply with semantic versioning, see
       # http://semver.org/
-      version="0.3.0",
+      version=__version__,
 
       description="Script utility to assist simulation experiment with TRACE",
       long_description=long_description,
@@ -43,11 +43,13 @@ setup(
       # Provide the following executable scripts
       entry_points={
         "console_scripts": [
-              "trace_simexp_prepro=trace_simexp.command_line:prepro",
-              "trace_simexp_execute=trace_simexp.command_line:execute",
-              "trace_simexp_postpro=trace_simexp.command_line:postpro"
+              "trace_simexp=trace_simexp.cmdln_interface:main",
+              "trace_simexp_prepro=trace_simexp.cmdln_interface:cli_prepro",
+              "trace_simexp_execute=trace_simexp.cmdln_interface:cli_execute",
+              "trace_simexp_postpro=trace_simexp.cmdln_interface:cli_postpro",
+              "trace_simexp_reset=trace_simexp.cmdln_interface:cli_reset"
         ]
       },
 
-      zip_safe=False
+      zip_safe=False, install_requires=['numpy', 'scipy']
 )
