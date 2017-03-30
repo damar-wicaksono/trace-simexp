@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org)
 
+[Unreleased]
+
+### Added
+- Tutorial on how to use trace-simexp is being developed and tested
+
 ## [0.4.0] - 2016-03-28
 
 ### Added
@@ -51,6 +56,7 @@ and this project adheres to [Semantic Versioning](http://semver.org)
 ### Added
 - Fully functioning `trace_simexp_prepro`
 
+[Unreleased]: https://bitbucket.org/lrs-uq/trace-simexp/branch/feature%2Ftutorial
 [0.4.0]: https://bitbucket.org/lrs-uq/trace-simexp/branches/compare/v0.4.0%0Dv0.3.0
 [0.3.0]: https://bitbucket.org/lrs-uq/trace-simexp/branches/compare/v0.3.0%0Dv0.2.0
 [0.2.0]: https://bitbucket.org/lrs-uq/trace-simexp/branches/compare/v0.2.0%0Dv0.1.0
