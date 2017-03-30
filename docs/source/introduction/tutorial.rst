@@ -226,7 +226,7 @@ Additionally, 12 processors are assigned to execute the samples simultaneously
 
 .. note::
 
-    To failed operation due to broken interactive session to the ``lclrs`` machine, 
+    To avoid failed operation due to broken interactive session to the ``lclrs`` machine, 
     it is advised to send the job in the background while keeping the credential using::
 
         k5run -B trace_simexp_execute -prepro prepro-tutorial.nfo \
