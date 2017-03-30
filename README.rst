@@ -24,8 +24,12 @@ Features
  - Iso-probabilistic transformation of the normalized design matrix is 
    available for uniform, discrete, and log-uniform
 
+Complete log of changes can be found in `CHANGELOG`_.
+
+.. _CHANGELOG: ./CHANGELOG.md
+
 Requirements
------------
+------------
 
 The module was developed and tested using the `Anaconda Python`_ distribution
 of Python v3.5.
@@ -54,10 +58,26 @@ This will make the following available in the path:
  - ``trace_simexp_prepro`` executable
  - ``trace_simexp_execute`` executable
  - ``trace_simexp_postpro`` executable
- - ``trace_simexp_create_h5`` executable
+ - ``trace_simexp_reset`` executable
 
 Further Documentation
 ---------------------
+
+Documentation of ``trace-simexp`` is an on-going process.
+The current version can be found in the ``/docs`` folder and
+can be built with the following ``make`` command (given that ``sphinx`` has been
+installed)::
+
+    make html
+
+to build the html version of the documentation.
+Note that the html documentation used ``rtd``theme which can be installed via ``pip``::
+
+    pip install sphinx-rtd-theme
+
+The index file can then be found in::
+
+    ./docs/build/html/index.html
 
 A set of documentations is available for ``trace-simexp``. 
 The user's guide can be found in the *Usage* section while the contributor's 

@@ -1,5 +1,10 @@
-"""Module to execute XTV2DMX tasks simultaneously for task within a batch
-and sequentially between batches.
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.task.xtv2dmx
+    *************************
+
+    Module to execute XTV2DMX tasks simultaneously for task within a batch and
+    sequentially between batches
 """
 
 __author__ = "Damar Wicaksono"
@@ -93,8 +98,8 @@ def make_commands(xtv2dmx_executable: str,
     The conversion includes compression to reduce space requirements
 
     :param xtv2dmx_executable: the name of the xtv2dmx executable
-    :param xtv_fullnames: the list of xtv filenames to be converted
-    :param xtv2dmx_cmds: the list of dmx filenames as target output
+    :param xtv_filenames: the list of xtv filenames to be converted
+    :param dmx_filenames: the list of dmx filenames as target output
     :return: a list of xtv2dmx shell command to be executed
     """
     xtv2dmx_commands = []
@@ -121,7 +126,7 @@ def link_dmx(run_dmxs: list, scratch_dmxs: list):
     for run_dmx, scratch_dmx in zip(run_dmxs, scratch_dmxs):
         
         # Delete file and link if they exist
-        if os.path.isfile(run_dmx):
+        if os.path.islink(run_dmx):
             subprocess.call(["rm", "-f", run_dmx])
         if os.path.isfile(scratch_dmx):
             subprocess.call(["rm", "-f", scratch_dmx])

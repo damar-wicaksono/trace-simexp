@@ -1,4 +1,10 @@
-"""Module to parse material property specification from list of parameters file
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.paramfile.matprop
+    ******************************
+
+    Module to parse material property parameter specification from the list of
+    parameters file
 """
 
 __author__ = "Damar Wicaksono"
@@ -34,7 +40,7 @@ def parse(line) -> dict:
     return matprop_dict
 
 
-def create_msg(matprop_dict) -> list:
+def create_msg(matprop_dict) -> str:
     """Create a string of parsed parameters
 
     :param matprop_dict: (dict) the parsed component parameter

@@ -1,15 +1,21 @@
-"""Module with functionalities to parse tracin base file for spacer grid params
+# -*- coding: utf-8 -*-
+"""
+    trace_simexp.template.tracin_spacer
+    ***********************************
+
+    Module with functions to parse base TRACE input deck file for parameters
+    related to spacer grid (``spacer``)
 """
 
 __author__ = "Damar Wicaksono"
 
 
-def get_nom_val(tracin_lines, param_dict):
+def get_nom_val(tracin_lines: list, param_dict: dict):
     r"""Get nominal value of spacer grid parameters from the tracin base
 
-    :param tracin_lines: (list of str) the tracin read into python as list
-    :param param_dict: (dict) dictionary of the parameter to be updated
-    :returns: (float) for all spacer grid parameters except "spmatid"
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of the spacer grid parameter
+    :return: (float) for all spacer grid parameters except "spmatid",
         (int) spacer grid material choices "spmatid"
     """
     import re
@@ -42,16 +48,16 @@ def get_nom_val(tracin_lines, param_dict):
         return float(nom_val)
 
 
-def put_key(tracin_lines, param_dict):
+def put_key(tracin_lines: list, param_dict: dict) -> list:
     r"""Function to replace the nominal value of grid parameters with key
 
     the key is used for templating purpose and will later be substituted with
     sampled value
 
-    :param tracin_lines: (list of str) the base tracin as a list of string
-    :param param_dict: (dict) the dictionary of grid parameters
-    :returns: (list of str) the base tracin with line(s) replaced with key
-        according to the grid parameters specification
+    :param tracin_lines: the base TRACE input deck
+    :param param_dict: specification of spacer grid related parameters
+    :return: the base TRACE input deck with line(s) replaced with key according
+        to the grid parameters specification
     """
     import re
     from ..tracin_util import keygen
@@ -75,7 +81,7 @@ def put_key(tracin_lines, param_dict):
                 card[word] = keygen.create(param_dict, 
                                            template=True, 
                                            index=None)
-                card = "".join("%14s" %k for k in card)
+                card = "".join("%14s" % k for k in card)
                 # replace the line of tracin with the new one
                 tracin_lines[line_num+offset] = card
                 break
