@@ -7,16 +7,16 @@
 ========================
 
 Welcome to the ``trace_simexp`` package documentation, a python3 package to 
-conduct a computer experiment for thermal-hydraulics system code TRACE!
+conduct a computer experiment for the thermal-hydraulics system code TRACE!
 
-If you're just getting started with ``trace-simexp``, please start with 
-:ref:`trace_simexp_introduction`. 
-If you already familiar with it, the :ref:`trace_simexp_reference` part of the
-documentation provides more detailed reference to the internals of the package.
-Finally, if you are thinking to make modification or extend the capability of 
-the package perhaps it is a good idea to check some 
-:ref:`trace_simexp_implementation` of the current version so you can understand
-better its design philosophy as well as current (and *inherent*) limitations.
+If you're just getting started with ``trace-simexp``, please start with
+:ref:`trace_simexp_introduction`.  If you are already familiar with it, the
+:ref:`trace_simexp_reference` part of the documentation provides more detailed
+reference to the internals of the package.  Finally, if you are thinking to
+make modification or extend the capability of the package perhaps it is a good
+idea to check some :ref:`trace_simexp_implementation` of the current version so
+you can understand better its design philosophy as well as its current (and
+*inherent*) limitations.
 
 .. toctree::
   :maxdepth: 2
