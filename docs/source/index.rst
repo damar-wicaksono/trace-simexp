@@ -21,7 +21,7 @@ better its design philosophy as well as current (and *inherent*) limitations.
 .. toctree::
   :maxdepth: 2
 
-  introduction
+  introduction/index.rst
   user_guide
   implementation
   about

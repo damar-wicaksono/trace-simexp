@@ -14,3 +14,4 @@ logfiles/
 docs/build
 # Ad Hoc
 temporary/
+.Rproj.user
