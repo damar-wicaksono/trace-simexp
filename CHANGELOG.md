@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org)
 
 [Unreleased]
 
-### Added
-- Tutorial on how to use trace-simexp is being developed and tested
+## [0.5.0] - 2017-04-16
 
-## [0.4.0] - 2016-03-28
+### Added
+- Tutorial on how to use trace-simexp using a simple use case
+
+## [0.4.0] - 2017-03-28
 
 ### Added
 - Fully functioning `trace_simexp_reset`
@@ -24,7 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org)
 - The correct header for in post-process info file is "Samples to Post-process", 
   not "Samples to Post-processed"
   
-## [0.3.0] - 2016-03-28
+## [0.3.0] - 2017-03-28
 
 ### Added
 - Fully functioning `trace_simexp_postpro`
@@ -36,7 +38,7 @@ and this project adheres to [Semantic Versioning](http://semver.org)
 - samples to process in the info file is now written with the common function
   `trace_simexp.info_file.write_by_tens()`
 
-## [0.2.0] - 2016-03-27
+## [0.2.0] - 2017-03-27
 
 ### Added
 - Fully functioning `trace_simexp_execute`
@@ -51,12 +53,13 @@ and this project adheres to [Semantic Versioning](http://semver.org)
 - `os.path.split()` is now used in place of parsing manually delimiter
    "/" or "\"
 
-## 0.1.0 - 2016-03-25
+## 0.1.0 - 2017-03-25
 
 ### Added
 - Fully functioning `trace_simexp_prepro`
 
-[Unreleased]: https://bitbucket.org/lrs-uq/trace-simexp/branch/feature%2Ftutorial
+[Unreleased]: https://bitbucket.org/lrs-uq/trace-simexp/branches/compare/develop%0Dv0.5.0
+[0.5.0]: https://bitbucket.org/lrs-uq/trace-simexp/branches/compare/v0.5.0%0Dv0.4.0
 [0.4.0]: https://bitbucket.org/lrs-uq/trace-simexp/branches/compare/v0.4.0%0Dv0.3.0
 [0.3.0]: https://bitbucket.org/lrs-uq/trace-simexp/branches/compare/v0.3.0%0Dv0.2.0
 [0.2.0]: https://bitbucket.org/lrs-uq/trace-simexp/branches/compare/v0.2.0%0Dv0.1.0
