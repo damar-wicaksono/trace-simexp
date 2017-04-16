@@ -15,3 +15,5 @@ docs/build
 # Ad Hoc
 temporary/
 .Rproj.user
+# Windows Thumbs
+Thumbs.db
