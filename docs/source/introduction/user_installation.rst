@@ -4,9 +4,8 @@
 Installing ``trace-simexp``
 ===========================
 
-Obtaining and installing ``trace-simexp`` is simple.
-First is to download the current version hosted in bitbucket_.
-and install it to your machine locally.
+Obtaining and installing ``trace-simexp`` is simple.  First is to download the
+current version hosted in bitbucket_ and install it to your machine locally.
 ``trace-simexp`` is written in python3 and can be installed using ``pip``::
 
     > git clone https://bitbucket.org/lrs-uq/trace-simexp
