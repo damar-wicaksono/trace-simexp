@@ -71,7 +71,7 @@ installed)::
     make html
 
 to build the html version of the documentation.
-Note that the html documentation used ``rtd``theme which can be installed via ``pip``::
+Note that the html documentation used ``rtd`` theme which can be installed via ``pip``::
 
     pip install sphinx-rtd-theme
 
