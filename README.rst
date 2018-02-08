@@ -40,9 +40,9 @@ No additional package except the base installation of the distribution is requir
 Installation
 ------------
 
-``trace-simexp`` is hosted on `BitBucket`_.
+``trace-simexp`` is hosted on `GitHub`_.
 
-.. _BitBucket: https://bitbucket.org/lrs-uq/trace-simexp
+.. _GitHub: https://github.com/damar-wicaksono/trace-simexp
 
 after cloning the source::
 
@@ -86,18 +86,6 @@ Both sections are also combined into a single document in Microsoft Word and
 pdf formats as a `STARS`_ Memorandum document.
 
 .. _STARS: https://www.psi.ch/stars/
-
-Contribute
-----------
-
-``trace-simexp`` is hosted on a private repository on `BitBucket`_ under the `Global Sensitivity Analysis`_ project.
-Only those who is a team member of `lrs-uq`_ has access and is allowed to read and/or write. 
-
-- Issue Tracker: https://bitbucket.org/lrs-uq/trace-simexp/issues
-- Source Code: https://bitbucket.org/lrs-uq/trace-simexp
-
-.. _lrs-uq: https://bitbucket.org/lrs-uq
-.. _Global Sensitivity Analysis: https://bitbucket.org/account/user/lrs-uq/projects/GSA
 
 License
 -------
