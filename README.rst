@@ -79,13 +79,12 @@ The index file can then be found in::
 
     ./docs/build/html/index.html
 
-A set of documentations is available for ``trace-simexp``. 
+Currently, a bare minimum set of documentations is available for ``trace-simexp``.
 The user's guide can be found in the *Usage* section while the contributor's 
 guide can be found in the *Implementation* section.
-Both sections are also combined into a single document in Microsoft Word and 
-pdf formats as a `STARS`_ Memorandum document.
+The latest version of the documentation is hosted on `readthedocs`_.
 
-.. _STARS: https://www.psi.ch/stars/
+.. _readthedocs: http://trace-simexp.readthedocs.io/en/latest/index.html
 
 License
 -------
