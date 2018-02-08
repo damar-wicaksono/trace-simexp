@@ -46,7 +46,7 @@ Installation
 
 after cloning the source::
 
-    git clone git@bitbucket.org:lrs-uq/trace-simexp.git
+    git clone git@github.com:damar-wicaksono/trace-simexp.git
 
 the installation can be done easily from the local source directory::
 
