@@ -28,6 +28,6 @@ The general processing flowchart of the module is shown in the figure below.
 .. toctree::
     :maxdepth: 2
 
+    features
     user_installation
     tutorial
-    features
